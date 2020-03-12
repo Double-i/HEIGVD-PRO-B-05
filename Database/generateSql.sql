@@ -3,68 +3,70 @@ CREATE DATABASE EasyToolz;
 USE EasyToolz;
 
 CREATE TABLE `tag` (
-  `id` int,
-  `name` enum('Bricolage'),
-  PRIMARY KEY (`id`)
+  `ID` int,
+  `name` varchar(10),
+  PRIMARY KEY (`ID`)
 );
 
 CREATE TABLE `material` (
-  `id` int,
+  `ID` int,
   `name` varchar(45),
   `description` varchar(45),
-  `User_userName` varchar(255),
-  PRIMARY KEY (`id`),
-  KEY `FK` (`User_userName`)
+  `owner` varchar(45),
+  `tagID` int,
+  PRIMARY KEY (`ID`),
+  KEY `FK` (`owner`, `tagID`)
 );
 
-CREATE TABLE `materialimage` (
+CREATE TABLE `materialImage` (
   `pathToImg` varchar(255),
-  `Material_id` int,
+  `materialID` int,
   PRIMARY KEY (`pathToImg`),
-  KEY `FK` (`Material_id`)
+  KEY `FK` (`materialID`)
 );
 
-CREATE TABLE `emprunt` (
-  `id` int,
+CREATE TABLE `loan` (
+  `ID` int,
   `dateStart` date,
   `dateEnd` date,
   `dateReturn` date,
-  `state` enum('Confirme','En attente','Refuse'),
-  `User_userName` varchar(255),
-  `Material_id` int,
-  PRIMARY KEY (`id`),
-  KEY `FK` (`User_userName`, `Material_id`)
+  `state` enum('pending','unavailable','available'),
+  `borrower` varchar(45),
+  `loaner` varchar(45),
+  `materialID` int,
+  PRIMARY KEY (`ID`),
+  KEY `FK` (`borrower`, `loaner`, `materialID`)
 );
 
 CREATE TABLE `user` (
-  `userName` varchar(255),
+  `userName` varchar(45),
   `firstName` varchar(45),
   `lastName` varchar(45),
   `password` varchar(45),
-  `isadmin` tinyint,
+  `isAdmin` tinyint,
   `profilImg` varchar(45),
   PRIMARY KEY (`userName`)
 );
 
-CREATE TABLE `material_tag` (
-  `Material_id` int,
-  `Tag_id` int,
-  KEY `PK,FK` (`Material_id`, `Tag_id`)
+CREATE TABLE `materialTag` (
+  `tagID` int,
+  `materialID` int,
+  KEY `PK,FK` (`tagID`, `materialID`)
 );
 
 CREATE TABLE `report` (
-  `User_userName` varchar(255),
-  `Material_id` int,
-  `flag` enum('Racisme','Nudité'),
-  KEY `FK` (`User_userName`, `Material_id`)
+  `materialID` int,
+  `reportWriter` varchar(255),
+  `flag` enum('Racisme','Nudite'),
+  KEY `FK` (`materialID`, `reportWriter`)
 );
 
 CREATE TABLE `notification` (
-  `id` int,
+  `ID` int,
   `message` varchar(45),
-  `User_userName` varchar(255),
-  PRIMARY KEY (`id`),
-  KEY `FK` (`User_userName`)
+  `recipient` varchar(255),
+  PRIMARY KEY (`ID`),
+  KEY `FK` (`recipient`)
 );
 
 CREATE TABLE `conversation` (

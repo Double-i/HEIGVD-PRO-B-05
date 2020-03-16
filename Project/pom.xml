@@ -56,44 +56,81 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!--Configure frontend-->
+            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.9.1</version>
-                <configuration>
-                    <installDirectory>target</installDirectory>
-                </configuration>
+
                 <executions>
                     <execution>
-                        <id>install node and npm</id>
+                        <id>Install node and npm</id>
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
+                        <phase>generate-resources</phase>
                         <configuration>
                             <nodeVersion>v12.16.1</nodeVersion>
                             <npmVersion>6.13.4</npmVersion>
                         </configuration>
                     </execution>
+
                     <execution>
                         <id>npm install</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
+                        <phase>generate-resources</phase>
                         <configuration>
                             <arguments>install</arguments>
                         </configuration>
                     </execution>
+
                     <execution>
-                        <id>webpack build</id>
+                        <id>npm build</id>
                         <goals>
-                            <goal>webpack</goal>
+                            <goal>npm</goal>
                         </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nodeVersion>v10.15.2</nodeVersion>
+                    <workingDirectory>src/main/frontend</workingDirectory>
+                </configuration>
+
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Copy my react app into my Spring Boot target static folder</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/classes/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/frontend/build</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+            <!--End configure frontend-->
+
 
         </plugins>
     </build>

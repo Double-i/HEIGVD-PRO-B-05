@@ -23,7 +23,8 @@ public class User {
     @NotNull
     private boolean isAdmin;
 
-    public User() {}
+    // Required for creating JSON parsing
+    public User(){}
 
     public User(String userName, String firstName, String lastName, String password, boolean isAdmin){
         this.userName = userName;

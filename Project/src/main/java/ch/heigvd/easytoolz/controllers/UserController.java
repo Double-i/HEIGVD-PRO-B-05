@@ -35,13 +35,14 @@ public class UserController {
     public User update(@RequestBody User newUser, @PathVariable String username){
         return userRepository.findById(username)
                 .map(oldUser -> {
-                    oldUser.setFirstName(newUser.getFirstName());
-                    oldUser.setLastName(newUser.getLastName());
-                    oldUser.setAdmin(newUser.isAdmin());
-                    oldUser.setUserName(newUser.getUserName());
+                    if(newUser.getFirstName() != null) oldUser.setFirstName(newUser.getFirstName());
+                    if(newUser.getLastName() != null) oldUser.setLastName(newUser.getLastName());
+                    if(oldUser.isAdmin() != newUser.isAdmin()) oldUser.setAdmin(newUser.isAdmin());
                     return userRepository.save(oldUser);
                 })
-                .orElse(null);
+                .orElseThrow(
+                    () -> new UserNotFoundException(username)
+                );
     }
 
     @GetMapping("/search")
@@ -52,7 +53,7 @@ public class UserController {
         return userRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
-    @RequestMapping(method=RequestMethod.POST)
+    @PostMapping
     public User store(@RequestBody User user){
         return userRepository.save(user);
     }

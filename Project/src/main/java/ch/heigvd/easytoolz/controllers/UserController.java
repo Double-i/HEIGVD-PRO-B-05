@@ -6,10 +6,12 @@ import ch.heigvd.easytoolz.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+// TODO : One day remove this comment
 // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#reference
 // https://spring.io/guides/tutorials/rest/
 
@@ -43,6 +45,15 @@ public class UserController {
                 .orElseThrow(
                     () -> new UserNotFoundException(username)
                 );
+    }
+
+    @DeleteMapping("/{username}")
+    public void delete(@PathVariable String username){
+        userRepository.findById(username).ifPresentOrElse(user -> {
+            userRepository.delete(user);
+        }, () -> {
+            throw new UserNotFoundException(username);
+        });
     }
 
     @GetMapping("/search")

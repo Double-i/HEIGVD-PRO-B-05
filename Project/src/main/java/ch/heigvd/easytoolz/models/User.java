@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.user;
+package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

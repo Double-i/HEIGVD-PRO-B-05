@@ -2,14 +2,12 @@ package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.controllers.exceptions.UserNotFoundException;
 import ch.heigvd.easytoolz.repositories.UserRepository;
-import ch.heigvd.easytoolz.user.User;
+import ch.heigvd.easytoolz.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 // TODO : One day remove this comment
 // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#reference

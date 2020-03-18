@@ -1,14 +1,10 @@
 package ch.heigvd.easytoolz;
 
 import ch.heigvd.easytoolz.controllers.UserController;
-import ch.heigvd.easytoolz.user.User;
-import javafx.application.Application;
+import ch.heigvd.easytoolz.models.User;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;

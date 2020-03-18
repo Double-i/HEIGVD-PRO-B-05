@@ -1,6 +1,5 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from './logo.svg';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -48,7 +47,7 @@ function App() {
 //test comment for push
 function Home() {
   return (<Card style={{ width: '18rem' }}>
-    <Card.Img variant="top" src="logo192.png" />
+    <Card.Img variant="top" src="TBD" />
     <Card.Body>
       <Card.Title>Home</Card.Title>
       <Card.Text>

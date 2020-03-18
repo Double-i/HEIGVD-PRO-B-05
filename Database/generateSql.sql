@@ -1,6 +1,6 @@
-DROP SCHEMA IF EXISTS EasyToolZ;
-CREATE DATABASE EasyToolz;
-USE EasyToolz;
+DROP SCHEMA IF EXISTS EasyToolz_Test;
+CREATE DATABASE EasyToolz_Test;
+USE EasyToolz_Test;
 
 CREATE TABLE `tag` (
   `id` int,
@@ -37,12 +37,11 @@ CREATE TABLE `emprunt` (
 );
 
 CREATE TABLE `user` (
-  `userName` varchar(255),
-  `firstName` varchar(45),
-  `lastName` varchar(45),
-  `password` varchar(45),
+  `username` varchar(255),
+  `firstname` varchar(255),
+  `lastname` varchar(255),
+  `password` varchar(255),
   `isadmin` tinyint,
-  `profilImg` varchar(45),
   PRIMARY KEY (`userName`)
 );
 

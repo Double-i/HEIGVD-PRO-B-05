@@ -1,6 +1,6 @@
 package ch.heigvd.easytoolz.repositories;
 
-import ch.heigvd.easytoolz.Material.Material;
+import ch.heigvd.easytoolz.models.Material;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

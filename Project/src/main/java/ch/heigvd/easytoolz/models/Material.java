@@ -1,6 +1,4 @@
-package ch.heigvd.easytoolz.Material;
-
-import com.sun.istack.NotNull;
+package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
 

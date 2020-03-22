@@ -17,3 +17,24 @@ FOR EACH ROW
 INSERT INTO notification(message,recipient) VALUES("An item you want to borrow is available now",loan.borrower);
 
 -- WHEN an object is available?
+
+
+DELIMITER $$
+CREATE PROCEDURE check_recipient( sender VARCHAR(45), recipient VARCHAR(45))
+BEGIN
+    DECLARE message VARCHAR(255);
+    IF sender = recipient  THEN
+        SET message = 'recipient cannot be the same as sender';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = message;
+    END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER before_notification_sent
+BEFORE INSERT
+ON notification FOR EACH ROW
+BEGIN
+    CALL check_recipient(NEW.sender,NEW.recipient);
+END$$
+DELIMITER ;

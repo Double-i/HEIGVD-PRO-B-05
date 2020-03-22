@@ -6,7 +6,7 @@ USE easytoolz;
 
 CREATE TABLE tag (
   ID int NOT NULL auto_increment,
-  name varchar(10)NOT NULL,
+  name varchar(20)NOT NULL,
   PRIMARY KEY(ID)
 );
 
@@ -26,7 +26,6 @@ CREATE TABLE EZObject (
   name varchar(45) NOT NULL,
   description varchar(45),
   owner varchar(45)NOT NULL,
-  tagID int NOT NULL,
   PRIMARY KEY (ID),
   FOREIGN KEY (owner) REFERENCES user(userName)
 );
@@ -45,19 +44,17 @@ CREATE TABLE EZObectTag (
 );
 
 CREATE TABLE loan (
-  ID int NOT NULL,
+  ID int NOT NULL AUTO_INCREMENT,
   dateStart date NOT NULL,
   dateEnd date NOT NULL,
-  dateReturn date NOT NULL,
+  dateReturn date ,
   state enum('pending','unavailable','available'),
   borrower varchar(45) NOT NULL,
-  loaner varchar(45) NOT NULL,
   EZObjectID int NOT NULL,
   PRIMARY KEY(ID),
   FOREIGN KEY (EZObjectID) REFERENCES EZOBject(ID),
-  FOREIGN KEY (borrower) REFERENCES user(userName),
-  FOREIGN KEY(loaner) REFERENCES user(userName)
-);
+  FOREIGN KEY (borrower) REFERENCES user(userName)
+  );
 
 
 
@@ -74,16 +71,17 @@ CREATE TABLE notification (
   message varchar(45) NOT NULL,
   recipient varchar(255) NOT NULL,
   sender varchar(255) NOT NULL,
+  notificationRead tinyint NOT NULL,
   PRIMARY KEY(ID),
   FOREIGN KEY (recipient) REFERENCES user(userName),
   FOREIGN KEY (sender) REFERENCES user(userName)
 );
 
 CREATE TABLE conversation (
-  borrower varchar(255) NOT NULL,
-  loaner varchar(255) NOT NULL,
+  sender varchar(255) NOT NULL,
+  recipient varchar(255) NOT NULL,
   message varchar(45) NOT NULL,
-  FOREIGN KEY(borrower) REFERENCES user(userName),
-  FOREIGN KEY(loaner) REFERENCES user(userName)
+  FOREIGN KEY(sender) REFERENCES user(userName),
+  FOREIGN KEY(recipient) REFERENCES user(userName)
 );
 

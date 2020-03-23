@@ -19,6 +19,9 @@ public class User {
     @Column(name="password")
     @NotNull
     private String password;
+    @Column(name="email")
+    @NotNull
+    private String email;
     @Column(name="isadmin")
     @NotNull
     private boolean isAdmin;
@@ -26,13 +29,14 @@ public class User {
     // Required for creating JSON parsing
     public User(){}
 
-    public User(String userName, String firstName, String lastName, String password, boolean isAdmin){
+    public User(String userName, String firstName, String lastName, String password, String email, boolean isAdmin){
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         // TODO : Hasher le mot de passe
         this.password = password;
         this.isAdmin = isAdmin;
+        this.email = email;
     }
 
     public String getUserName() {
@@ -67,18 +71,11 @@ public class User {
         isAdmin = admin;
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "User{" +
-                    "username=%s," +
-                    "firstName=%s," +
-                    "lastName=%s," +
-                    "isAdmin=%b" +
-                "}",
-                userName,
-                firstName,
-                lastName,
-                isAdmin);
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

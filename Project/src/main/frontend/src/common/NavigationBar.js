@@ -4,16 +4,38 @@ import {
     Switch,
     Route
 } from "react-router-dom";
-import { Button, Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import {Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 import DashBoard from "../userDashboard/DashBoard";
 import Home from "../Home/Home";
 import SignIn from "../signIn/SignIn";
 import SignUp from "../signUp/SignUp";
 
+import SessionHelper from "./SessionHelper";
 
 class NavigationBar extends React.Component {
     render() {
+
+        let sessionHelper = new SessionHelper();
+        let signIn = null;
+        let signUp = null;
+        let dashboard = null;
+        let userDropDown = null;
+
+
+        if(sessionHelper.isUserLogged()) {
+            dashboard = <Nav.Link href="/DashBoard">DashBoard</Nav.Link>;
+            userDropDown =
+                <NavDropdown title="UserName" id="basic-nav-dropdown">
+                <NavDropdown.Item href="/EditProfil">Edit profil</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="/Disconnect">Deconnexion</NavDropdown.Item>
+                </NavDropdown>;
+        }else{
+            signIn = <Nav.Link href="/SignIn">Sign in</Nav.Link>;
+            signUp = <Nav.Link href="/SignUp">Sign up</Nav.Link>;
+        }
+
         return (
             <Router>
                 <Navbar bg="light" expand="lg">
@@ -21,19 +43,19 @@ class NavigationBar extends React.Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
-                            <Nav.Link href="/DashBoard">DashBoard</Nav.Link>
+                            {dashboard}
                         </Nav>
                         <Nav className="ml-auto">
-                            <Nav.Link href="/SignIn">Sign in</Nav.Link>
-                            <Nav.Link href="/SignUp">Sign up</Nav.Link>
-                            <NavDropdown title="UserName" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="/Something">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="/Disconnect">Deconnexion</NavDropdown.Item>
-                            </NavDropdown>
+                            {signIn}
+                            {signUp}
+                            {userDropDown}
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
+
+
+
+
 
                 <Switch>
                     <Route path="/Home">

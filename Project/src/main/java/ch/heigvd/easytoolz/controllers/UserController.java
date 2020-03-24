@@ -3,6 +3,7 @@ package ch.heigvd.easytoolz.controllers;
 import ch.heigvd.easytoolz.controllers.exceptions.UserNotFoundException;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.models.User;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class UserController {
         lastName = transformLike(lastName);
         userName = transformLike(userName);
         email = transformLike(email);
+
         if(firstName != null){
             if(lastName != null){
                 return userRepository.findByFirstNameLikeAndLastNameLike(firstName, lastName);
@@ -69,7 +71,7 @@ public class UserController {
     @GetMapping("/{username}")
     public User show(@PathVariable String username){
         return userRepository
-                .findById(username + "a")
+                .findById(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 

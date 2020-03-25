@@ -1,76 +1,87 @@
-DROP SCHEMA IF EXISTS EasyToolZ;
-CREATE DATABASE EasyToolz;
-USE EasyToolz;
+DROP DATABASE IF EXISTS easytoolz;
 
-CREATE TABLE `tag` (
-  `id` int,
-  `name` enum('Bricolage'),
-  PRIMARY KEY (`id`)
+CREATE DATABASE easytoolz;
+
+USE easytoolz;
+
+CREATE TABLE tag (
+  ID int NOT NULL auto_increment,
+  name varchar(20)NOT NULL,
+  PRIMARY KEY(ID)
 );
 
-CREATE TABLE `material` (
-  `id` int,
-  `name` varchar(45),
-  `description` varchar(45),
-  `User_userName` varchar(255),
-  PRIMARY KEY (`id`),
-  KEY `FK` (`User_userName`)
+CREATE TABLE user (
+  userName varchar(255) NOT NULL,
+  firstName varchar(255) NOT NULL,
+  lastName varchar(255) NOT NULL,
+  password varchar(255) NOT NULL,
+  isAdmin tinyint NOT NULL,
+  email varchar(255) NOT NULL,
+  PRIMARY KEY (userName)
 );
 
-CREATE TABLE `materialimage` (
-  `pathToImg` varchar(255),
-  `Material_id` int,
-  PRIMARY KEY (`pathToImg`),
-  KEY `FK` (`Material_id`)
+
+CREATE TABLE EZObject (
+  ID int NOT NULL auto_increment,
+  name varchar(45) NOT NULL,
+  description varchar(45),
+  owner varchar(45)NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (owner) REFERENCES user(userName)
 );
 
-CREATE TABLE `emprunt` (
-  `id` int,
-  `dateStart` date,
-  `dateEnd` date,
-  `dateReturn` date,
-  `state` enum('Confirme','En attente','Refuse'),
-  `User_userName` varchar(255),
-  `Material_id` int,
-  PRIMARY KEY (`id`),
-  KEY `FK` (`User_userName`, `Material_id`)
+CREATE TABLE EZObjectImage (
+  pathToImg varchar(255),
+  EZObjectID int NOT NULL,
+  FOREIGN KEY (EZObjectID) REFERENCES EZObject(ID)
 );
 
-CREATE TABLE `user` (
-  `userName` varchar(255),
-  `firstName` varchar(45),
-  `lastName` varchar(45),
-  `password` varchar(45),
-  `isadmin` tinyint,
-  `profilImg` varchar(45),
-  PRIMARY KEY (`userName`)
+CREATE TABLE EZObectTag (
+  tagID int NOT NULL,
+  EZObjectID int NOT NULL,
+  FOREIGN KEY (tagID) REFERENCES tag(ID),
+  FOREIGN KEY (EZObjectID) REFERENCES EZObject(ID)
 );
 
-CREATE TABLE `material_tag` (
-  `Material_id` int,
-  `Tag_id` int,
-  KEY `PK,FK` (`Material_id`, `Tag_id`)
+CREATE TABLE loan (
+  ID int NOT NULL AUTO_INCREMENT,
+  dateStart date NOT NULL,
+  dateEnd date NOT NULL,
+  dateReturn date ,
+  state enum('pending','unavailable','available'),
+  borrower varchar(45) NOT NULL,
+  EZObjectID int NOT NULL,
+  PRIMARY KEY(ID),
+  FOREIGN KEY (EZObjectID) REFERENCES EZOBject(ID),
+  FOREIGN KEY (borrower) REFERENCES user(userName)
+  );
+
+
+
+CREATE TABLE report (
+  EZObjectID int NOT NULL,
+  reportWriter varchar(255) NOT NULL,
+  flag enum('Racisme','Nudite') NOT NULL,
+  FOREIGN KEY (EZObjectID) REFERENCES EZObject(ID),
+  FOREIGN KEY(reportWriter) REFERENCES user(userName)
 );
 
-CREATE TABLE `report` (
-  `User_userName` varchar(255),
-  `Material_id` int,
-  `flag` enum('Racisme','Nudité'),
-  KEY `FK` (`User_userName`, `Material_id`)
+CREATE TABLE notification (
+  ID int NOT NULL AUTO_INCREMENT,
+  message varchar(45) NOT NULL,
+  recipient varchar(255) NOT NULL,
+  sender varchar(255) NOT NULL,
+  notificationRead tinyint NOT NULL,
+  PRIMARY KEY(ID),
+  FOREIGN KEY (recipient) REFERENCES user(userName),
+  FOREIGN KEY (sender) REFERENCES user(userName)
 );
 
-CREATE TABLE `notification` (
-  `id` int,
-  `message` varchar(45),
-  `User_userName` varchar(255),
-  PRIMARY KEY (`id`),
-  KEY `FK` (`User_userName`)
-);
-
-CREATE TABLE `conversation` (
-  `userEmprunteur` varchar(255),
-  `userPreteur` varchar(255),
-  `message` varchar(45),
-  KEY `PK,FK` (`userEmprunteur`, `userPreteur`)
+CREATE TABLE conversation (
+  sender varchar(255) NOT NULL,
+  recipient varchar(255) NOT NULL,
+  message varchar(45) NOT NULL,
+  FOREIGN KEY(sender) REFERENCES user(userName),
+  FOREIGN KEY(recipient) REFERENCES user(userName)
 );
 

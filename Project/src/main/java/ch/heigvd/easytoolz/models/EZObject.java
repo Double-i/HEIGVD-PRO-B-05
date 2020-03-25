@@ -1,8 +1,10 @@
 package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name="EZObject")
 public class EZObject {
 
     public int getID() {
@@ -37,29 +39,39 @@ public class EZObject {
         this.owner = owner;
     }
 
-    public int getTagID() {
-        return tagID;
+    public Integer getLocalisation() {
+        return localisation;
     }
 
-    public void setTagID(int tagID) {
-        this.tagID = tagID;
+    public void setLocalisation(Integer localisation) {
+        this.localisation = localisation;
     }
+
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;
+
+    @NotNull
+    @Column(name="name")
     private String name;
+
+    @Column(name="description")
     private String description;
+
+    @NotNull
+    @Column(name="owner")
     private String owner;
-    private int tagID;
+
+    @Column(name="localisation")
+    private Integer localisation;
 
     public EZObject(){}
-    public EZObject(int ID, String name, String description, String owner, int tagID) {
-        this.ID = ID;
+    public EZObject( String name, String description, String owner, Integer localisation) {
         this.name = name;
         this.description = description;
         this.owner = owner;
-        this.tagID = tagID;
+        this.localisation = localisation;
     }
 
     @Override
@@ -69,7 +81,7 @@ public class EZObject {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", owner='" + owner + '\'' +
-                ", tagID=" + tagID +
+                ", localisation='" + localisation + '\'' +
                 "}\n";
     }
 }

@@ -18,12 +18,6 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      */
     List<EZObject>  findByName(String name);
 
-    /**
-     * Find an object by it's tag
-     * @param tag ID of the tag
-     * @return a list of object with the same tag ID
-     */
-    List<EZObject>  findByTagID(int tag);
 
     /**
      * Find an object by it's owner

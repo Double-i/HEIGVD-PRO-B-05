@@ -34,19 +34,12 @@ public class EZObjectController {
         return EZObjectRepository.findByOwner(username);
     }
 
-    
-    @GetMapping("{tag_id}")
-    @ResponseBody
-    public List<EZObject> getObjectByTag(@PathVariable int tag_id)
-    {
-        return EZObjectRepository.findByTagID(tag_id);
-    }
 
 
     @PostMapping("/addObject")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
-        EZObject obj = new EZObject(20,newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getTagID());
+        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getLocalisation());
         return EZObjectRepository.save(obj);
     }
 

@@ -26,14 +26,13 @@ CREATE TABLE Localisation(
     latitude FLOAT NOT NULL,
     PRIMARY KEY (pkLocalisation)
 );
-
 CREATE TABLE EZObject (
-  pkObject int NOT NULL auto_increment,
+  id int NOT NULL auto_increment,
   name varchar(45) NOT NULL,
   description varchar(45),
   owner varchar(45)NOT NULL,
   localisation INT NULL,
-  PRIMARY KEY (pkObject),
+  PRIMARY KEY (id),
   FOREIGN KEY (owner) REFERENCES user(userName),
   FOREIGN KEY(localisation)  REFERENCES Localisation(pkLocalisation)
 );
@@ -43,14 +42,14 @@ CREATE TABLE EZObject (
 CREATE TABLE EZObjectImage (
   pathToImg varchar(255),
   fkEZObject int NOT NULL,
-  FOREIGN KEY (fkEZObject) REFERENCES EZObject(pkObject)
+  FOREIGN KEY (fkEZObject) REFERENCES EZObject(id)
 );
 
 CREATE TABLE EZObjectTag (
   fkTag int NOT NULL,
   fkEZObject int NOT NULL,
   FOREIGN KEY (fkTag) REFERENCES tag(pkTag),
-  FOREIGN KEY (fkEZObject) REFERENCES EZObject(pkObject)
+  FOREIGN KEY (fkEZObject) REFERENCES EZObject(id)
 );
 
 CREATE TABLE loan (
@@ -62,7 +61,7 @@ CREATE TABLE loan (
   borrower varchar(45) NOT NULL,
   fkEZObject int NOT NULL,
   PRIMARY KEY(pkLoan),
-  FOREIGN KEY (fkEZObject) REFERENCES EZOBject(pkObject),
+  FOREIGN KEY (fkEZObject) REFERENCES EZOBject(id),
   FOREIGN KEY (borrower) REFERENCES user(userName)
   );
 
@@ -72,7 +71,7 @@ CREATE TABLE report (
   fkEZObject int NOT NULL,
   reportWriter varchar(255) NOT NULL,
   flag enum('Racisme','Nudite') NOT NULL,
-  FOREIGN KEY (fkEZObject) REFERENCES EZObject(pkObject),
+  FOREIGN KEY (fkEZObject) REFERENCES EZObject(id),
   FOREIGN KEY(reportWriter) REFERENCES user(userName)
 );
 

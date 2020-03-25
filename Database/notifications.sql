@@ -11,7 +11,7 @@ delimiter $$
 CREATE TRIGGER new_loan AFTER INSERT ON loan
 FOR EACH ROW 
 BEGIN
-SET @sender = (SELECT owner FROM EZObject WHERE pkObject = NEW.fkEZObject);
+SET @sender = (SELECT owner FROM EZObject WHERE id = NEW.fkEZObject);
 INSERT INTO notification(message,recipient,sender,notificationRead) VALUES("Someone Want's to borrow an object",NEW.borrower,@sender,0);
 END $$
 delimiter ;
@@ -21,7 +21,7 @@ delimiter $$
 CREATE TRIGGER loan_available AFTER UPDATE ON loan
 FOR EACH ROW
 BEGIN
-SET @sender = (SELECT owner FROM EZObject WHERE pkEZObject = NEW.fkEZObject);
+SET @sender = (SELECT owner FROM EZObject WHERE id = NEW.fkEZObject);
 INSERT INTO notification(message,recipient,sender,notificationRead) VALUES("An item you want to borrow is available now",NEW.borrower,@sender,0);
 END $$
 delimiter ;

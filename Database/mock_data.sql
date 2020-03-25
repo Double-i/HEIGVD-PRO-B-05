@@ -21,13 +21,23 @@ insert into ezobject (name,description,owner) values("drapeau suisse","montrez v
 insert into ezobject (name,description,owner) values("haut parleur","besoin de musique pour vos soirées?","heymanuel");
 insert into ezobject (name,description,owner) values("agrapheuse","puissant ","mauricel");
 
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-03-30","2020-04-10",null,"pending","vitorvaz",1);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-04-10","2020-05-1",null,"pending","heymanuel",11);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-04-20","2020-05-2",null,"pending","double-i",7);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-05-20","2020-06-1",null,"pending","robinr",9);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-03-27","2020-04-3",null,"pending","mauricel",10);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-08-10","2020-08-20",null,"pending","fukuchimiste",2);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-04-27","2020-05-7",null,"pending","heymanuel",3);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-10-2","2020-10-10",null,"pending","double-i",8);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-8-1","2020-8-13",null,"pending","vitorvaz",12);
-insert into loan(dateStart, dateEnd,dateReturn, state,borrower, EZObjectID) values("2020-9-5","2020-9-20",null,"pending","mauricel",5);
+insert into ezobjecttag(fkTag,fkEZObject) values(1,1);
+insert into ezobjecttag(fkTag,fkEZObject) values(2,1);
+insert into ezobjecttag(fkTag,fkEZObject) values(2,2);
+insert into ezobjecttag(fkTag,fkEZObject) values(2,9);
+insert into ezobjecttag(fkTag,fkEZObject) values(2,13);
+insert into ezobjecttag(fkTag,fkEZObject) values(3,4);
+insert into ezobjecttag(fkTag,fkEZObject) values(5,4);
+insert into ezobjecttag(fkTag,fkEZObject) values(9,1);
+insert into ezobjecttag(fkTag,fkEZObject) values(9,8);
+
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-03-30","2020-04-10",null,"pending","vitorvaz",1);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-04-10","2020-05-1",null,"pending","heymanuel",11);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-04-20","2020-05-2",null,"pending","double-i",7);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-05-20","2020-06-1",null,"pending","robinr",9);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-03-27","2020-04-3",null,"pending","mauricel",10);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-08-10","2020-08-20",null,"pending","fukuchimiste",2);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-04-27","2020-05-7",null,"pending","heymanuel",3);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-10-2","2020-10-10",null,"pending","double-i",8);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-8-1","2020-8-13",null,"pending","vitorvaz",12);
+insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-9-5","2020-9-20",null,"pending","mauricel",5);

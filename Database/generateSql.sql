@@ -5,9 +5,9 @@ CREATE DATABASE easytoolz;
 USE easytoolz;
 
 CREATE TABLE tag (
-  ID int NOT NULL auto_increment,
+  pkTag int NOT NULL auto_increment,
   name varchar(20)NOT NULL,
-  PRIMARY KEY(ID)
+  PRIMARY KEY(pkTag)
 );
 
 CREATE TABLE user (
@@ -20,59 +20,69 @@ CREATE TABLE user (
   PRIMARY KEY (userName)
 );
 
+CREATE TABLE Localisation(
+	pkLocalisation INT NOT NULL auto_increment,
+    longitude FLOAT NOT NULL,
+    latitude FLOAT NOT NULL,
+    PRIMARY KEY (pkLocalisation)
+);
 
 CREATE TABLE EZObject (
-  ID int NOT NULL auto_increment,
+  pkObject int NOT NULL auto_increment,
   name varchar(45) NOT NULL,
   description varchar(45),
   owner varchar(45)NOT NULL,
-  PRIMARY KEY (ID),
-  FOREIGN KEY (owner) REFERENCES user(userName)
+  localisation INT NULL,
+  PRIMARY KEY (pkObject),
+  FOREIGN KEY (owner) REFERENCES user(userName),
+  FOREIGN KEY(localisation)  REFERENCES Localisation(pkLocalisation)
 );
+
+
 
 CREATE TABLE EZObjectImage (
   pathToImg varchar(255),
-  EZObjectID int NOT NULL,
-  FOREIGN KEY (EZObjectID) REFERENCES EZObject(ID)
+  fkEZObject int NOT NULL,
+  FOREIGN KEY (fkEZObject) REFERENCES EZObject(pkObject)
 );
 
-CREATE TABLE EZObectTag (
-  tagID int NOT NULL,
-  EZObjectID int NOT NULL,
-  FOREIGN KEY (tagID) REFERENCES tag(ID),
-  FOREIGN KEY (EZObjectID) REFERENCES EZObject(ID)
+CREATE TABLE EZObjectTag (
+  fkTag int NOT NULL,
+  fkEZObject int NOT NULL,
+  FOREIGN KEY (fkTag) REFERENCES tag(pkTag),
+  FOREIGN KEY (fkEZObject) REFERENCES EZObject(pkObject)
 );
 
 CREATE TABLE loan (
-  ID int NOT NULL AUTO_INCREMENT,
+  pkLoan int NOT NULL AUTO_INCREMENT,
   dateStart date NOT NULL,
   dateEnd date NOT NULL,
   dateReturn date ,
   state enum('pending','unavailable','available'),
   borrower varchar(45) NOT NULL,
-  EZObjectID int NOT NULL,
-  PRIMARY KEY(ID),
-  FOREIGN KEY (EZObjectID) REFERENCES EZOBject(ID),
+  fkEZObject int NOT NULL,
+  PRIMARY KEY(pkLoan),
+  FOREIGN KEY (fkEZObject) REFERENCES EZOBject(pkObject),
   FOREIGN KEY (borrower) REFERENCES user(userName)
   );
 
 
 
 CREATE TABLE report (
-  EZObjectID int NOT NULL,
+  fkEZObject int NOT NULL,
   reportWriter varchar(255) NOT NULL,
   flag enum('Racisme','Nudite') NOT NULL,
-  FOREIGN KEY (EZObjectID) REFERENCES EZObject(ID),
+  FOREIGN KEY (fkEZObject) REFERENCES EZObject(pkObject),
   FOREIGN KEY(reportWriter) REFERENCES user(userName)
 );
 
 CREATE TABLE notification (
-  ID int NOT NULL AUTO_INCREMENT,
+  pkNotification int NOT NULL AUTO_INCREMENT,
   message varchar(45) NOT NULL,
   recipient varchar(255) NOT NULL,
   sender varchar(255) NOT NULL,
   notificationRead tinyint NOT NULL,
-  PRIMARY KEY(ID),
+  PRIMARY KEY(pkNotification),
   FOREIGN KEY (recipient) REFERENCES user(userName),
   FOREIGN KEY (sender) REFERENCES user(userName)
 );

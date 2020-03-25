@@ -1,7 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.models.Material;
-import ch.heigvd.easytoolz.repositories.MaterialRepository;
+import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,15 +11,14 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/materials")
-public class MaterialController {
+@RequestMapping("/objects")
+public class EZObjectController {
 
-    @Autowired
-    MaterialRepository materialRepository;
+    EZObjectRepository EZObjectRepository;
 
     @GetMapping
-    public List<Material> index()
+    public List<EZObject> index()
     {
-        return materialRepository.findAll();
+        return EZObjectRepository.findAll();
     }
 }

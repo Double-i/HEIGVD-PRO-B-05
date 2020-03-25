@@ -3,7 +3,7 @@ package ch.heigvd.easytoolz.models;
 import javax.persistence.*;
 
 @Entity
-public class Material {
+public class EZObject {
 
     public int getID() {
         return ID;
@@ -53,8 +53,8 @@ public class Material {
     private String owner;
     private int tagID;
 
-    public Material(){}
-    public Material(int ID, String name, String description, String owner, int tagID) {
+    public EZObject(){}
+    public EZObject(int ID, String name, String description, String owner, int tagID) {
         this.ID = ID;
         this.name = name;
         this.description = description;
@@ -64,7 +64,7 @@ public class Material {
 
     @Override
     public String toString() {
-        return "Material{" +
+        return "EZObject{" +
                 "ID=" + ID +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

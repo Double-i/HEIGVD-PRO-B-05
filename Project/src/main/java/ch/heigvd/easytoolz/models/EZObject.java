@@ -46,7 +46,7 @@ public class EZObject {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int ID;
     private String name;
     private String description;

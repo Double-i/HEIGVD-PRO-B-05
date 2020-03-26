@@ -7,13 +7,23 @@ insert into user (userName,firstName,lastName,password,isAdmin,email) values("ma
 
 insert into tag (name) values("jardin"),("bricolage"),("sport"),("dessin"),("skateboard"),("electricite"),("bois"),("neige"),("ete"),("hiver");
 
-insert into ezobject (name,description,owner) values("pelle","pelle de jardinage en bon etat","fukuchimiste");
-insert into ezobject (name,description,owner) values("perceuse","super perceuse","double-i");
-insert into ezobject (name,description,owner) values("arc","un arc de bonne qualité","vitorvaz");
-insert into ezobject (name,description,owner) values("skateboard","un skate board de bonne qualité peu utilise","heymanuel");
-insert into ezobject (name,description,owner) values("raquette de ping pong","peu utilisé","fukuchimiste");
-insert into ezobject (name,description,owner) values("guitare","guitare classique","mauricel");
-insert into ezobject (name,description,owner) values("jumelle","de bonnes jumelles","robinr");
+insert into localisation(longitude,latitude) values(10,10);
+insert into localisation(longitude,latitude) values(20,10);
+insert into localisation(longitude,latitude) values(10,20);
+insert into localisation(longitude,latitude) values(30,10);
+insert into localisation(longitude,latitude) values(10,30);
+insert into localisation(longitude,latitude) values(40,10);
+insert into localisation(longitude,latitude) values(10,40);
+insert into localisation(longitude,latitude) values(50,10);
+insert into localisation(longitude,latitude) values(10,50);
+
+insert into ezobject (name,description,owner,localisation) values("pelle","pelle de jardinage en bon etat","fukuchimiste",1);
+insert into ezobject (name,description,owner,localisation) values("perceuse","super perceuse","double-i",2);
+insert into ezobject (name,description,owner,localisation) values("arc","un arc de bonne qualité","vitorvaz",3);
+insert into ezobject (name,description,owner,localisation) values("skateboard","un skate board de bonne qualité peu utilise","heymanuel",4);
+insert into ezobject (name,description,owner,localisation) values("raquette de ping pong","peu utilisé","fukuchimiste",5);
+insert into ezobject (name,description,owner,localisation) values("guitare","guitare classique","mauricel",6);
+insert into ezobject (name,description,owner,localisation) values("jumelle","de bonnes jumelles","robinr",7);
 insert into ezobject (name,description,owner) values("sac a dos","sac a dos de randonnee","heymanuel");
 insert into ezobject (name,description,owner) values("scie","fournis avec des lames","double-i");
 insert into ezobject (name,description,owner) values("raclette ","pour vos diner en montagne","robinr");

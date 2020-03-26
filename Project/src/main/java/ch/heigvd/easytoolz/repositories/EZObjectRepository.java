@@ -2,6 +2,8 @@ package ch.heigvd.easytoolz.repositories;
 
 import ch.heigvd.easytoolz.models.EZObject;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      * @param name name of the object
      * @return find an object with similar names
      */
-    List<EZObject>  findByName(String name);
+    List<EZObject>  findByNameContaining(String name);
 
 
     /**
@@ -32,5 +34,10 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      * @return an object with the corresponding ID
      */
     EZObject findByID(int id);
+
+
+    List<EZObject> findByDescriptionContaining(String content);
+
+    EZObject findByLocalisation(int localisation);
 
 }

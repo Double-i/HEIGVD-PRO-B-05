@@ -1,7 +1,9 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.Localisation;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
+import ch.heigvd.easytoolz.repositories.LocalisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +15,19 @@ import java.util.List;
 public class EZObjectController {
 
     @Autowired
-    EZObjectRepository EZObjectRepository;
+    EZObjectRepository ezObjectRepository;
 
+    @Autowired
+    LocalisationRepository localisationRepository;
+
+    /**
+     * Get the list of all the objects
+     * @return
+     */
     @GetMapping
     public List<EZObject> index()
     {
-        return EZObjectRepository.findAll();
+        return ezObjectRepository.findAll();
     }
 
     /**
@@ -27,20 +36,49 @@ public class EZObjectController {
      * @param username
      * @return
      */
-    @GetMapping("/find")
+    @GetMapping("/find/byUser/{username}")
     @ResponseBody
-    public List<EZObject> getObjectByOwner(@RequestParam(name="username") String username)
+    public List<EZObject> getObjectByOwner(@PathVariable String username)
     {
-        return EZObjectRepository.findByOwner(username);
+        return ezObjectRepository.findByOwner(username);
     }
-
-
 
     @PostMapping("/addObject")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
         EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getLocalisation());
-        return EZObjectRepository.save(obj);
+        return ezObjectRepository.save(obj);
     }
+
+
+    @GetMapping("find/object/{objectname}")
+    @ResponseBody
+    public List<EZObject> getObejctByName(@PathVariable String objectname)
+    {
+        return ezObjectRepository.findByNameContaining(objectname);
+    }
+
+
+    @GetMapping("find/description/{content}")
+    @ResponseBody
+    public List<EZObject> getObjectbyDescription(@PathVariable String content)
+    {
+        return ezObjectRepository.findByDescriptionContaining(content);
+    }
+
+    Localisation getLocalisationID(float latitude, float longitude)
+    {
+        return localisationRepository.findByLatitudeAndLongitude(latitude,longitude);
+    }
+
+    @GetMapping("find/localisation/{latitude}/{longitude}")
+    @ResponseBody
+    EZObject findByLocalisation(@PathVariable float latitude,@PathVariable float longitude)
+    {
+        Localisation id = localisationRepository.findByLatitudeAndLongitude(latitude,longitude);
+
+        return ezObjectRepository.findByLocalisation(id.getId());
+    }
+
 
 }

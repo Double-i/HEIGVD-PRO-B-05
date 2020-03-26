@@ -43,6 +43,11 @@ public class EZObjectController {
         return ezObjectRepository.findByOwner(username);
     }
 
+    /**
+     * Add an object into the database
+     * @param newObject
+     * @return
+     */
     @PostMapping("/addObject")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
@@ -50,7 +55,11 @@ public class EZObjectController {
         return ezObjectRepository.save(obj);
     }
 
-
+    /**
+     * Find an object from the database
+     * @param objectname
+     * @return
+     */
     @GetMapping("find/object/{objectname}")
     @ResponseBody
     public List<EZObject> getObejctByName(@PathVariable String objectname)
@@ -58,7 +67,11 @@ public class EZObjectController {
         return ezObjectRepository.findByNameContaining(objectname);
     }
 
-
+    /**
+     * Find objects from description content
+     * @param content
+     * @return
+     */
     @GetMapping("find/description/{content}")
     @ResponseBody
     public List<EZObject> getObjectbyDescription(@PathVariable String content)
@@ -78,6 +91,14 @@ public class EZObjectController {
         Localisation id = localisationRepository.findByLatitudeAndLongitude(latitude,longitude);
 
         return ezObjectRepository.findByLocalisation(id.getId());
+    }
+
+    @GetMapping("find/{latitude}/{longitude}")
+    @ResponseBody
+    Localisation findlocation(@PathVariable float latitude,@PathVariable float longitude)
+    {
+        Localisation id = localisationRepository.findByLatitudeAndLongitude(latitude,longitude);
+        return id;
     }
 
 

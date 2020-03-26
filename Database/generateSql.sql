@@ -21,10 +21,10 @@ CREATE TABLE user (
 );
 
 CREATE TABLE Localisation(
-	pkLocalisation INT NOT NULL auto_increment,
+	id INT NOT NULL auto_increment,
     longitude FLOAT NOT NULL,
     latitude FLOAT NOT NULL,
-    PRIMARY KEY (pkLocalisation)
+    PRIMARY KEY (id)
 );
 CREATE TABLE EZObject (
   id int NOT NULL auto_increment,
@@ -34,7 +34,7 @@ CREATE TABLE EZObject (
   localisation INT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (owner) REFERENCES user(userName),
-  FOREIGN KEY(localisation)  REFERENCES Localisation(pkLocalisation)
+  FOREIGN KEY(localisation)  REFERENCES Localisation(id)
 );
 
 

@@ -31,6 +31,7 @@ public class Localisation {
     }
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     int id;
 
     @Column(name=("latitude"))

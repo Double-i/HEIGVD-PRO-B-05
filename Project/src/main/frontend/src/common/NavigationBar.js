@@ -54,9 +54,6 @@ class NavigationBar extends React.Component {
                 </Navbar>
 
 
-
-
-
                 <Switch>
                     <Route path="/Home">
                         <Home />

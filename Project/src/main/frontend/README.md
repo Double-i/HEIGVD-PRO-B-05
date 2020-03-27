@@ -1,4 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Frontend
+To make the frontend built and copied into target/, you should run `mvn clean package`
+it should be accessible from 127.0.0.1:8080.
 
 ## Available Scripts
 

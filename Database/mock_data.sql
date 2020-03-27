@@ -1,29 +1,37 @@
-insert into user (userName,firstName,lastName,password,isAdmin,email) values("heymanuel","emmanuel","janssens","password",0,"emmanuel.janssens@heig-vd.ch");
-insert into user (userName,firstName,lastName,password,isAdmin,email) values("fukuchimiste","bastien","potet","password",0,"bastien.potet@heig-vd.ch");
-insert into user (userName,firstName,lastName,password,isAdmin,email) values("double-i","Ilias","Goujgali","password",1,"Ilias.Goujgali@heig-vd.ch");
-insert into user (userName,firstName,lastName,password,isAdmin,email) values("robinr","Robin","Reuteler","password",0,"Robin.Reuteler@heig-vd.ch");
-insert into user (userName,firstName,lastName,password,isAdmin,email) values("vitorvaz","Vitor","Vaz Afomzo","password",0,"Vitor.vazafonzo@heig-vd.ch");
-insert into user (userName,firstName,lastName,password,isAdmin,email) values("mauricel","Maurice","Lehman","password",0,"Maurice.Lehman@heig-vd.ch");
+
 
 insert into tag (name) values("jardin"),("bricolage"),("sport"),("dessin"),("skateboard"),("electricite"),("bois"),("neige"),("ete"),("hiver");
 
-insert into localisation(longitude,latitude) values(10,10);
-insert into localisation(longitude,latitude) values(20,10);
-insert into localisation(longitude,latitude) values(10,20);
-insert into localisation(longitude,latitude) values(30,10);
-insert into localisation(longitude,latitude) values(10,30);
-insert into localisation(longitude,latitude) values(40,10);
-insert into localisation(longitude,latitude) values(10,40);
-insert into localisation(longitude,latitude) values(50,10);
-insert into localisation(longitude,latitude) values(10,50);
+insert into country(country) values("Suisse");
 
-insert into ezobject (name,description,owner,localisation) values("pelle","pelle de jardinage en bon etat","fukuchimiste",1);
-insert into ezobject (name,description,owner,localisation) values("perceuse","super perceuse","double-i",2);
-insert into ezobject (name,description,owner,localisation) values("arc","un arc de bonne qualité","vitorvaz",3);
-insert into ezobject (name,description,owner,localisation) values("skateboard","un skate board de bonne qualité peu utilise","heymanuel",4);
-insert into ezobject (name,description,owner,localisation) values("raquette de ping pong","peu utilisé","fukuchimiste",5);
-insert into ezobject (name,description,owner,localisation) values("guitare","guitare classique","mauricel",6);
-insert into ezobject (name,description,owner,localisation) values("jumelle","de bonnes jumelles","robinr",7);
+insert into city(city,fkCountry) values("Glion",1);
+insert into city(city,fkCountry) values("Lausanne",1);
+insert into city(city,fkCountry) values("Martigny",1);
+insert into city(city,fkCountry) values("Yverdon-Les-Bains",1);
+insert into city(city,fkCountry) values("Cossonay",1);
+insert into city(city,fkCountry) values("Nyon",1);
+
+insert into address(address,district,postalcode,lat,lng,fkCity) values ("Route de valmont","Vaud","1823",46.4308093,6.9241496,1);
+insert into address(address,district,postalcode,lat,lng,fkCity) values ("Rue des Laurelles 5","Vaud","1304",46.6129732,6.507043,5);
+insert into address(address,district,postalcode,lat,lng,fkCity) values ("Maison rouget","Vaud","1400",46.7792522,6.6431692,4);
+insert into address(address,district,postalcode,lat,lng,fkCity) values ("Place de la Cathédrale","Vaud","1005",46.5179283,6.6358628,2);
+insert into address(address,district,postalcode,lat,lng,fkCity) values ("Avanue de la Gare 5","Valais","1920",46.0972172,7.0747864,3);
+insert into address(address,district,postalcode,lat,lng,fkCity) values ("Allée de la Petite Prairie 14","Vaud","1260",46.3884263,6.221818,6);
+
+insert into user (userName,firstName,lastName,password,isAdmin,email,fkAddress) values("heymanuel","emmanuel","janssens","password",0,"emmanuel.janssens@heig-vd.ch",1);
+insert into user (userName,firstName,lastName,password,isAdmin,email,fkAddress) values("fukuchimiste","bastien","potet","password",0,"bastien.potet@heig-vd.ch",5);
+insert into user (userName,firstName,lastName,password,isAdmin,email,fkAddress) values("double-i","Ilias","Goujgali","password",1,"Ilias.Goujgali@heig-vd.ch",3);
+insert into user (userName,firstName,lastName,password,isAdmin,email,fkAddress) values("robinr","Robin","Reuteler","password",0,"Robin.Reuteler@heig-vd.ch",6);
+insert into user (userName,firstName,lastName,password,isAdmin,email,fkAddress) values("vitorvaz","Vitor","Vaz Afomzo","password",0,"Vitor.vazafonzo@heig-vd.ch",2);
+insert into user (userName,firstName,lastName,password,isAdmin,email,fkAddress) values("mauricel","Maurice","Lehman","password",0,"Maurice.Lehman@heig-vd.ch",4);
+
+insert into ezobject (name,description,owner) values("pelle","pelle de jardinage en bon etat","fukuchimiste");
+insert into ezobject (name,description,owner) values("perceuse","super perceuse","double-i");
+insert into ezobject (name,description,owner) values("arc","un arc de bonne qualité","vitorvaz");
+insert into ezobject (name,description,owner) values("skateboard","un skate board de bonne qualité peu utilise","heymanuel");
+insert into ezobject (name,description,owner) values("raquette de ping pong","peu utilisé","fukuchimiste");
+insert into ezobject (name,description,owner) values("guitare","guitare classique","mauricel");
+insert into ezobject (name,description,owner) values("jumelle","de bonnes jumelles","robinr");
 insert into ezobject (name,description,owner) values("sac a dos","sac a dos de randonnee","heymanuel");
 insert into ezobject (name,description,owner) values("scie","fournis avec des lames","double-i");
 insert into ezobject (name,description,owner) values("raclette ","pour vos diner en montagne","robinr");

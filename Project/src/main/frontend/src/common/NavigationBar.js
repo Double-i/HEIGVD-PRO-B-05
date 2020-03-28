@@ -1,9 +1,4 @@
 import * as React from "react";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route
-} from "react-router-dom";
 import {Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 import DashBoard from "../userDashboard/DashBoard";
@@ -37,45 +32,20 @@ class NavigationBar extends React.Component {
         }
 
         return (
-            <Router>
-                <Navbar bg="light" expand="lg">
-                    <Navbar.Brand href="/home">EasyToolz</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            {dashboard}
-                        </Nav>
-                        <Nav className="ml-auto">
-                            {signIn}
-                            {signUp}
-                            {userDropDown}
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
-
-
-                <Switch>
-                    <Route path="/Home">
-                        <Home />
-                    </Route>
-
-                    <Route path="/DashBoard">
-                        <DashBoard />
-                    </Route>
-
-                    <Route path="/Disconnect">
-
-                    </Route>
-
-                    <Route path="/SignUp">
-                        <SignUp />
-                    </Route>
-
-                    <Route path="/SignIn">
-                        <SignIn />
-                    </Route>
-                </Switch>
-            </Router>
+            <Navbar bg="light" expand="lg">
+                <Navbar.Brand href="/home">EasyToolz</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mr-auto">
+                        {dashboard}
+                    </Nav>
+                    <Nav className="ml-auto">
+                        {signIn}
+                        {signUp}
+                        {userDropDown}
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
         )
     }
 }

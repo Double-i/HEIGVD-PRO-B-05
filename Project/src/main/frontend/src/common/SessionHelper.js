@@ -1,7 +1,7 @@
 
 class SessionHelper {
     isUserLogged() {
-        return true; //TODO
+        return false; //TODO
     }
 }
 

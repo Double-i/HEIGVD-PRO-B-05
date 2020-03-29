@@ -8,6 +8,7 @@ import {
     Link
 } from "react-router-dom";
 import { Button, Card } from 'react-bootstrap';
+import SignIn from './signIn/SignIn'
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
                 <Link to="/about">About</Link>
               </li>
               <li>
-                <Link to="/users">Users</Link>
+                <Link to="/login">Login</Link>
               </li>
             </ul>
           </nav>
@@ -36,8 +37,11 @@ function App() {
             <Route path="/users">
               <Users />
             </Route>
-            <Route path="/">
-              <Home />
+            <Route path="/login">
+              <SignIn />
+            </Route>
+            <Route path="/login">
+              <SignIn />
             </Route>
           </Switch>
         </div>

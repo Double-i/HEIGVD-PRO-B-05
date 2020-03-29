@@ -12,19 +12,32 @@ function SignInForm(props) {
     const [hasBeenLoggedIn, setHasBeenLoggedIn] = useState(false) 
     const [hasWrongCredential, sethasWrongCredential] = useState(false) 
 
-    const attemptLogin = (email, password) => {
+    const attemptLogin = (username, password) => {
         console.log('attempt login...')
-        console.log('email: ', email)
+        console.log('email: ', username)
         console.log('password: ', password)
 
 
-        fetch('https://api.example.com/items')
+        fetch('http://127.0.0.1:8080/api/authenticate',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({username: username, password:password}) // body data type must match "Content-Type" header
+          })
             .then(res => res.json())
             .then(
                 result => {
-                    console.log('Connection ok')
+                    if(result.status === 403){
+                        console.log("Bad credential amigo")
+                        sethasWrongCredential(true)
+                    }else {
+                        console.log("So far so good")
+                        setHasBeenLoggedIn(true)
+                        
+                    }
                     setIsLogging(false)
-                    setHasBeenLoggedIn(true)
+                    
                     // TODO gestion session utilisateur
                 },
 
@@ -34,9 +47,9 @@ function SignInForm(props) {
                 error => {
                     // TODO check type d'erreur voir si errreur pour atteindre ou mauvais login
 
-                    console.log('Connection PAS ok')
+                    console.log('Connection PAS ok', error)
                     setHasConnectionProblem(true)
-                    sethasWrongCredential(true)
+                   
                     setIsLogging(false)
                 }
             )
@@ -44,10 +57,9 @@ function SignInForm(props) {
 
     // validation rules
     const schema = yup.object({
-        userEmail: yup
+        userName: yup
             .string()
-            .required('Requis')
-            .email(),
+            .required('Requis').min(3).max(10),
         userPassword: yup.string().required('Requis'),
     })
 
@@ -81,11 +93,11 @@ function SignInForm(props) {
                             onSubmit={(values, { setSubmitting }) => {
                                 setIsLogging(!isLogging)
                                 attemptLogin(
-                                    values.userEmail,
+                                    values.userName,
                                     values.userPassword
                                 )
                             }}
-                            initialValues={{ userEmail: '', userPassword: '' }}
+                            initialValues={{ userName: '', userPassword: '' }}
                         >
                             {({
                                 handleSubmit,
@@ -97,16 +109,16 @@ function SignInForm(props) {
                             }) => (
                                 <Form noValidate onSubmit={handleSubmit}>
                                     <Form.Group controlId="formBasicEmail">
-                                        <Form.Label>E-mail</Form.Label>
+                                        <Form.Label>Nom d'utilisateur</Form.Label>
                                         <Form.Control
-                                            name="userEmail"
-                                            type="email"
-                                            placeholder="E-mail"
-                                            value={values.userEmail}
+                                            name="userName"
+                                            type="text"
+                                            placeholder="Nom d'utilisateur"
+                                            value={values.userName}
                                             onChange={handleChange}
                                             isValid={
-                                                touched.userEmail &&
-                                                !errors.userEmail
+                                                touched.userName &&
+                                                !errors.userName
                                             }
                                         />
                                     </Form.Group>

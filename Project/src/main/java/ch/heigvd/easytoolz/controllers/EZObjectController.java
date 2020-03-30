@@ -50,6 +50,21 @@ public class EZObjectController {
         return ezObjectRepository.save(obj);
     }
 
+    @PostMapping("/updateObject")
+    public EZObject updateObject(@RequestBody EZObject updatedObject)
+    {
+        EZObject updated = ezObjectRepository.findByID(updatedObject.getID());
+        if(updated == null)
+            throw new RuntimeException("Object not found");
+        
+        updated.setDescription(updatedObject.getDescription());
+        updated.setName(updatedObject.getName());
+        updated.setImages(updatedObject.getImages());
+        updated.setObjecttags(updatedObject.getObjecttags());
+
+
+        return updated;
+    }
     /**
      * Find an object from the database
      * @param objectname

@@ -46,7 +46,7 @@ public class EZObjectController {
     @PostMapping("/addObject")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
-        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner());
+        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getObjecttags(),newObject.getImages());
         return ezObjectRepository.save(obj);
     }
 

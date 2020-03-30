@@ -10,3 +10,5 @@
   * Added mock data
   * Added read reciept in notification
   * further refinement of notification triggers
+* 27.03.2020
+  * Added user address

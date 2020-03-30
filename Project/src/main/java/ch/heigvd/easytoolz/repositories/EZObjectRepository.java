@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.repositories;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.EZObjectView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,7 +27,7 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      * @param owner owner of the object
      * @return a list of object from the same owner
      */
-    List<EZObject>  findByOwner(String owner);
+    List<EZObject>  findByOwner_UserName(String owner);
 
     /**
      * Find an object by it's ID
@@ -39,5 +40,8 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
     List<EZObject> findByDescriptionContaining(String content);
 
     EZObject findByLocalisation(int localisation);
+
+
+    //List<EZObjectView>  findByOwner(String owner);
 
 }

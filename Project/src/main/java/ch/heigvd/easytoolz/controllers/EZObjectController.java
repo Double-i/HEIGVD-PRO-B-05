@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.EZObjectView;
 import ch.heigvd.easytoolz.models.Localisation;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import ch.heigvd.easytoolz.repositories.LocalisationRepository;
@@ -40,7 +41,7 @@ public class EZObjectController {
     @ResponseBody
     public List<EZObject> getObjectByOwner(@PathVariable String username)
     {
-        return ezObjectRepository.findByOwner(username);
+        return ezObjectRepository.findByOwner_UserName(username);
     }
 
     /**

@@ -2,6 +2,7 @@ package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name="user")
@@ -22,6 +23,9 @@ public class User {
     @Column(name="isadmin")
     @NotNull
     private boolean isAdmin;
+
+    @OneToMany(mappedBy = "owner")
+    private List<EZObject> ezobject;
 
     // Required for creating JSON parsing
     public User(){}

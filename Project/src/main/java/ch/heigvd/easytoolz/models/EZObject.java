@@ -1,5 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -31,14 +33,6 @@ public class EZObject {
         this.description = description;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     public Integer getLocalisation() {
         return localisation;
     }
@@ -47,7 +41,9 @@ public class EZObject {
         this.localisation = localisation;
     }
 
+    public User getOwner(){return owner;}
 
+    public void setOwner(User owner){this.owner = owner;}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;
@@ -59,15 +55,16 @@ public class EZObject {
     @Column(name="description")
     private String description;
 
-    @NotNull
-    @Column(name="owner")
-    private String owner;
-
     @Column(name="localisation")
     private Integer localisation;
 
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "owner", referencedColumnName = "userName")
+    private User owner;
+
+
     public EZObject(){}
-    public EZObject( String name, String description, String owner, Integer localisation) {
+    public EZObject( String name, String description ,User owner, Integer localisation) {
         this.name = name;
         this.description = description;
         this.owner = owner;

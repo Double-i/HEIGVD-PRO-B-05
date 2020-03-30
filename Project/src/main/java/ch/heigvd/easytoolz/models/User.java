@@ -30,13 +30,18 @@ public class User {
     // Required for creating JSON parsing
     public User(){}
 
-    public User(String userName, String firstName, String lastName, String password, boolean isAdmin){
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="fkaddress", referencedColumnName = "id")
+    private Address address;
+
+    public User(String userName, String firstName, String lastName, String password, boolean isAdmin, Address address){
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         // TODO : Hasher le mot de passe
         this.password = password;
         this.isAdmin = isAdmin;
+        this.address  = address;
     }
 
     public String getUserName() {
@@ -70,6 +75,9 @@ public class User {
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
+
+    public Address getAddress(){return address;}
+    public void setAddress(Address address) { this.address = address;}
 
     @Override
     public String toString() {

@@ -1,10 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.EZObject;
-import ch.heigvd.easytoolz.models.EZObjectView;
-import ch.heigvd.easytoolz.models.Localisation;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
-import ch.heigvd.easytoolz.repositories.LocalisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +15,6 @@ public class EZObjectController {
     @Autowired
     EZObjectRepository ezObjectRepository;
 
-    @Autowired
-    LocalisationRepository localisationRepository;
-
     /**
      * Get the list of all the objects
      * @return
@@ -33,7 +27,7 @@ public class EZObjectController {
 
     /**
      * Find objects by owner
-     * url: api/objects/find/?username=value
+     * url: api/objects/find/{username}
      * @param username
      * @return
      */
@@ -52,7 +46,7 @@ public class EZObjectController {
     @PostMapping("/addObject")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
-        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getLocalisation());
+        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner());
         return ezObjectRepository.save(obj);
     }
 
@@ -80,27 +74,14 @@ public class EZObjectController {
         return ezObjectRepository.findByDescriptionContaining(content);
     }
 
-    Localisation getLocalisationID(float latitude, float longitude)
-    {
-        return localisationRepository.findByLatitudeAndLongitude(latitude,longitude);
-    }
 
-    @GetMapping("find/localisation/{latitude}/{longitude}")
+    /**@GetMapping("find/localisation/{latitude}/{longitude}")
     @ResponseBody
-    EZObject findByLocalisation(@PathVariable float latitude,@PathVariable float longitude)
-    {
-        Localisation id = localisationRepository.findByLatitudeAndLongitude(latitude,longitude);
 
-        return ezObjectRepository.findByLocalisation(id.getId());
-    }
 
     @GetMapping("find/{latitude}/{longitude}")
-    @ResponseBody
-    Localisation findlocation(@PathVariable float latitude,@PathVariable float longitude)
-    {
-        Localisation id = localisationRepository.findByLatitudeAndLongitude(latitude,longitude);
-        return id;
-    }
+    @ResponseBody*/
+
 
 
 }

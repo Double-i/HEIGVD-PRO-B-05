@@ -1,9 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Address {
@@ -32,11 +30,11 @@ public class Address {
     }
 
     public String getPostalCode() {
-        return postalCode;
+        return postalcode;
     }
 
     public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+        this.postalcode = postalCode;
     }
 
     public float getLat() {
@@ -56,11 +54,11 @@ public class Address {
     }
 
     public int getFkCity() {
-        return fkCity;
+        return fkcity;
     }
 
     public void setFkCity(int fkCity) {
-        this.fkCity = fkCity;
+        this.fkcity = fkCity;
     }
 
 
@@ -74,21 +72,24 @@ public class Address {
 
     String district;
 
-    String postalCode;
+    String postalcode;
 
     float lat;
 
     float lng;
 
-    int fkCity;
+    int fkcity;
+
+    @OneToMany(mappedBy = "address")
+    private List<User> user;
 
     public Address( String address, String district, String postalCode, float lat, float lng, int fkCity) {
         this.address = address;
         this.district = district;
-        this.postalCode = postalCode;
+        this.postalcode = postalCode;
         this.lat = lat;
         this.lng = lng;
-        this.fkCity = fkCity;
+        this.fkcity = fkCity;
     }
 
 

@@ -1,7 +1,6 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.controllers.exceptions.UserNotFoundException;
-import ch.heigvd.easytoolz.models.Localisation;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.models.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,12 @@
 package ch.heigvd.easytoolz.controllers;
 
+import ch.heigvd.easytoolz.controllers.exceptions.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 
@@ -50,41 +52,47 @@ public class EZObjectController {
         return ezObjectRepository.save(obj);
     }
 
-    @PostMapping("/updateObject")
-    public EZObject updateObject(@RequestBody EZObject updatedObject)
-    {
-        EZObject updated = ezObjectRepository.findByID(updatedObject.getID());
-        if(updated == null)
-            throw new RuntimeException("Object not found");
-        
-        updated.setDescription(updatedObject.getDescription());
-        updated.setName(updatedObject.getName());
-        updated.setImages(updatedObject.getImages());
-        updated.setObjecttags(updatedObject.getObjecttags());
-
-
-        return updated;
-    }
     /**
-     * Find an object from the database
-     * @param objectname
+     * Updates an object into the database
+     * @param o
      * @return
      */
-    @GetMapping("find/object/{objectname}")
-    @ResponseBody
-    public List<EZObject> getObejctByName(@PathVariable String objectname)
+    @PostMapping("/updateObject")
+    public EZObject updateObject(@RequestBody EZObject o)
     {
-        return ezObjectRepository.findByNameContaining(objectname);
+        EZObject updated = ezObjectRepository.findByID(o.getID());
+        if(updated == null)
+            throw new EntityNotFoundException("Object not found " + o.getID() + " ");
+        
+        updated.setDescription(o.getDescription());
+        updated.setName(o.getName());
+        updated.setImages(o.getImages());
+        updated.setObjecttags(o.getObjecttags());
+
+
+        return ezObjectRepository.save(updated);
     }
 
     /**
-     * Find objects from description content
+     * Find an object from the database
+     * @param objectName
+     * @return
+     */
+    @GetMapping("find/object/{objectName}")
+    @ResponseBody
+    public List<EZObject> getObjectByName(@PathVariable String objectName)
+    {
+        return ezObjectRepository.findByNameContaining(objectName);
+    }
+
+    /**
+     * Find objects via description content
      * @param content
      * @return
      */
     @GetMapping("find/description/{content}")
     @ResponseBody
-    public List<EZObject> getObjectbyDescription(@PathVariable String content)
+    public List<EZObject> getObjectByDescription(@PathVariable String content)
     {
         return ezObjectRepository.findByDescriptionContaining(content);
     }

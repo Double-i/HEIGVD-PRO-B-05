@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 import org.springframework.web.method.HandlerTypePredicate;
 import org.springframework.web.servlet.config.annotation.*;
 
@@ -23,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
     // TODO : voir si à supprimer, permet de pouvoir faire des requêtes cross origin pour utiliser le frontend avec  npm start
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
+        registry.addMapping("/**").allowedOrigins("http://127.0.0.1:3000").allowCredentials(true);
     }
     @Bean
     public WebMvcConfigurer forwardToIndex() {

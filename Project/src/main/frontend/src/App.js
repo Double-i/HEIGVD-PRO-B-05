@@ -1,69 +1,72 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import {
-  BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
-import { Button, Card } from 'react-bootstrap';
+import React from 'react'
+import { useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './App.css'
+import { Container } from 'react-bootstrap'
+import NavigationBar from './common/NavigationBar.js'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import Home from './Home/Home'
+import DashBoard from './userDashboard/DashBoard'
+import SignUp from './signUp/SignUp'
+import SignIn from './signIn/SignIn'
+
+import { SessionContext, SessionHelper } from './common/SessionHelper'
 
 function App() {
-  return (
-      <Router>
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/"><Button>Home</Button></Link>
-              </li>
-              <li>
-                <Link to="/about">About</Link>
-              </li>
-              <li>
-                <Link to="/users">Users</Link>
-              </li>
-            </ul>
-          </nav>
 
-          {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-          <Switch>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route path="/users">
-              <Users />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-        </div>
-      </Router>
-  );
-}
-//test comment for push
-function Home() {
-  return (<Card style={{ width: '18rem' }}>
-    <Card.Img variant="top" src="TBD" />
-    <Card.Body>
-      <Card.Title>Home</Card.Title>
-      <Card.Text>
-        Some quick example text to build on the card title and make up the bulk of
-        the card's content.
-      </Card.Text>
-      <Button variant="primary">Go somewhere</Button>
-    </Card.Body>
-  </Card>);
-}
+    const userStorage = sessionStorage.getItem('user')
+    const userObject = userStorage === null ? {} : JSON.parse(userStorage)
+    const [showSignInForm, setShowSignInForm] = useState(false)
+    const [userSession, setUserSession] = useState(userObject)
 
-function About() {
-  return <h2>About</h2>;
-}
+    const session = new SessionHelper(userSession, setUserSession)
 
-function Users() {
-  return <h2>Users</h2>;
+    const user = {
+        userInfo: userSession,
+        session: session
+    }
+
+    return (
+        <SessionContext.Provider value={user}>
+            <Router>
+                <NavigationBar showSignInForm={() => setShowSignInForm(true)} />
+                <SignIn
+                    showSignInForm={showSignInForm}
+                    setShowSignInForm={value => setShowSignInForm(value)}
+                    setLoggedUser={user.session.login}
+                />
+                <div className="row">
+                    <Container>
+                        <Switch>
+                            <Route exact path="/home">
+                                <Home />
+                            </Route>
+                            <Route exact path="/dashboard">
+                                {user.session.isUserLogin() ? (
+                                    <DashBoard />
+                                ) : (
+                                    <NotRigthToBeHere />
+                                )}
+                            </Route>
+                            <Route exact path="/disconnect"></Route>
+                            <Route exact path="/signup">
+                                {user.session.isUserLogin() ? (
+                                    <AlreadyConnect />
+                                ) : (
+                                    <SignUp />
+                                )}
+                            </Route>
+                        </Switch>
+                    </Container>
+                </div>
+            </Router>
+        </SessionContext.Provider>
+    )
 }
-export default App;
+function NotRigthToBeHere() {
+    return <p> Hey ho biquette ouste ! <img alt="biquette" src="https://images2.minutemediacdn.com/image/upload/c_crop,h_843,w_1500,x_0,y_10/f_auto,q_auto,w_1100/v1555172614/shape/mentalfloss/iStock-177369626_1.jpg" /> </p>
+}
+function AlreadyConnect() {
+    return <p>Vous êtes déjà connecté... <img alt="retarded" src="https://i.imgflip.com/2e1lxv.jpg" /></p>
+}
+export default App 

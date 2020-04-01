@@ -6,7 +6,7 @@ import { Formik } from 'formik'
 import * as yup from 'yup'
 
 function SignInForm(props) {
-    const [showSigInForm, setShowSigInForm] = useState(false)
+   
     const [isLogging, setIsLogging] = useState(false)
     const [hasConnectionProblem, setHasConnectionProblem] = useState(false)
     const [hasBeenLoggedIn, setHasBeenLoggedIn] = useState(false) 
@@ -16,14 +16,17 @@ function SignInForm(props) {
         console.log('attempt login...')
         console.log('email: ', username)
         console.log('password: ', password)
-
+        
+        setHasConnectionProblem(false)
+        sethasWrongCredential(false)
+        setHasBeenLoggedIn(false)
 
         fetch('http://127.0.0.1:8080/api/authenticate',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({username: username, password:password}) // body data type must match "Content-Type" header
+            body: JSON.stringify({username: username, password:password})
           })
             .then(res => res.json())
             .then(
@@ -34,22 +37,21 @@ function SignInForm(props) {
                     }else {
                         console.log("So far so good")
                         setHasBeenLoggedIn(true)
+
+                        // TODO : utiliser les vrais données renvoyer par /api/authenticate
+                        props.setLoggedUser( {
+                            username: "bE5tU5s3r3V3R",
+                            admin: false,
+                            lastname: "la Chouin",
+                            firstname: "Carlin"
+                        })
                         
                     }
-                    setIsLogging(false)
-                    
-                    // TODO gestion session utilisateur
+                    setIsLogging(false) 
                 },
-
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
                 error => {
-                    // TODO check type d'erreur voir si errreur pour atteindre ou mauvais login
-
                     console.log('Connection PAS ok', error)
                     setHasConnectionProblem(true)
-                   
                     setIsLogging(false)
                 }
             )
@@ -65,11 +67,15 @@ function SignInForm(props) {
 
     return (
         <>
-            <Button onClick={() => setShowSigInForm(true)}>Se Loguers</Button>
             <Modal
                 size="lg"
-                show={showSigInForm}
-                onHide={() => setShowSigInForm(false)}
+                show={props.showSignInForm}
+                onHide={() => {
+                    props.setShowSignInForm(false)
+                    setHasConnectionProblem(false)
+                    sethasWrongCredential(false)
+                    setHasBeenLoggedIn(false)
+                }}
                 aria-labelledby="example-modal-sizes-title-lg"
             >
                 <Modal.Header closeButton>

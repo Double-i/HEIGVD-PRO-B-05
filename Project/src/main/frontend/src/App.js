@@ -1,72 +1,104 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import {
-  BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
-import { Button, Card } from 'react-bootstrap';
+import React from 'react'
+import { useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './App.css'
+import { Container } from 'react-bootstrap'
+import NavigationBar from './common/NavigationBar.js'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import Home from './Home/Home'
+import DashBoard from './userDashboard/DashBoard'
+import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
 
-function App() {
-  return (
-      <Router>
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/"><Button>Home</Button></Link>
-              </li>
-              <li>
-                <Link to="/about">About</Link>
-              </li>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-            </ul>
-          </nav>
+import { SessionContext } from './common/SessionHelper'
 
-                {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-          <Switch>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route path="/users">
-              <Users />
-            </Route>
-            <Route path="/login">
-              <SignIn />
-            </Route>
-            <Route path="/login">
-              <SignIn />
-            </Route>
-          </Switch>
-        </div>
-      </Router>
-  );
-}
-//test comment for push
-function Home() {
+function App() {
+
+    const userStorage = sessionStorage.getItem('user')
+    const userObject = userStorage === null ? {} : JSON.parse(userStorage)
+    const [showSignInForm, setShowSignInForm] = useState(false)
+    const [userSession, setUserSession] = useState(userObject)
+
+    // TODO : voir si possible d'exporter les fonctions liés à la session ailleurs
+    const isUserLogin = () => {
+        return (
+            Object.keys(userSession).length > 0 &&
+            userSession.constructor === Object
+        )
+    }
+    const isUserAdmin = () => {
+        return isUserLogin() && userSession.admin
+    }
+    const getUserName = () => {
+        return userSession.username
+    }
+    const getUserFirstName = () => {
+        return userSession.firstname
+    }
+    const getUserLastName = () => {
+        return userSession.lastname
+    }
+    const logout = () => {
+        setUserSession({})
+        sessionStorage.removeItem('user')
+    }
+    const login = user => {
+        setUserSession(user)
+        sessionStorage.setItem('user', JSON.stringify(user))
+    }
+
+    const user = {
+        user: userSession,
+        isLogin: isUserLogin,
+        isAdmin: isUserAdmin,
+        getUserName: getUserName,
+        getFirstName: getUserFirstName,
+        getLastname: getUserLastName,
+        logout: logout,
+        login: login,
+    }
+
     return (
-        <Card style={{ width: "18rem" }}>
-            <Card.Img variant="top" src="TBD" />
-            <Card.Body>
-                <Card.Title>Home</Card.Title>
-                <Card.Text>
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
-                </Card.Text>
-                <Button variant="primary">Go somewhere</Button>
-            </Card.Body>
-        </Card>
+        <SessionContext.Provider value={user}>
+            <Router>
+                <NavigationBar showSignInForm={() => setShowSignInForm(true)} />
+                <SignIn
+                    showSignInForm={showSignInForm}
+                    setShowSignInForm={value => setShowSignInForm(value)}
+                    setLoggedUser={login}
+                />
+                <div className="row">
+                    <Container>
+                        <Switch>
+                            <Route exact path="/home">
+                                <Home />
+                            </Route>
+                            <Route exact path="/dashboard">
+                                {user.isLogin() ? (
+                                    <DashBoard />
+                                ) : (
+                                    <NotRigthToBeHere />
+                                )}
+                            </Route>
+                            <Route exact path="/disconnect"></Route>
+                            <Route exact path="/signup">
+                                {user.isLogin() ? (
+                                    <AlreadyConnect />
+                                ) : (
+                                    <SignUp />
+                                )}
+                            </Route>
+                        </Switch>
+                    </Container>
+                </div>
+            </Router>
+        </SessionContext.Provider>
     )
 }
-
-function About() {
-    return <h2>About</h2>
+function NotRigthToBeHere() {
+    return <p> Hey ho biquette ouste ! <img src="https://images2.minutemediacdn.com/image/upload/c_crop,h_843,w_1500,x_0,y_10/f_auto,q_auto,w_1100/v1555172614/shape/mentalfloss/iStock-177369626_1.jpg" /> </p>
 }
-
-export default App
+function AlreadyConnect() {
+    return <p>Vous êtes déjà connecté... <img src="https://i.imgflip.com/2e1lxv.jpg" /></p>
+}
+export default App 

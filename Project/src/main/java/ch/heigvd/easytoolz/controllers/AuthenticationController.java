@@ -61,7 +61,7 @@ class AuthenticationController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        return ResponseEntity.ok().headers(responseHeaders).body("{\"status\":200, \"message\":\"utilisateur connecté\"}");
+        return ResponseEntity.ok().headers(responseHeaders).body(userDetails);
 
     }
 

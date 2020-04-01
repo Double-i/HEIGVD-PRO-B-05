@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.controllers;
 
+import ch.heigvd.easytoolz.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.MyUserDetailsService;
 import ch.heigvd.easytoolz.models.AuthenticationRequest;
 import ch.heigvd.easytoolz.models.AuthenticationResponse;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AuthenticationController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private EasyAuthenticationProvider authenticationManager;
 
     @Autowired
     private JwtUtil jwtTokenUtil;

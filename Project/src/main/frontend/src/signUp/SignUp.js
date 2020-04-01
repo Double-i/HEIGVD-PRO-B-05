@@ -1,15 +1,15 @@
-import React, { useState } from "react"
-import "bootstrap/dist/css/bootstrap.min.css"
-import { Form, Button, Spinner, Alert } from "react-bootstrap"
-import { Formik } from "formik"
-import * as yup from "yup"
-import regex from "../common/regex"
-import { checkAddress } from "../common/GoogleApiHelper"
-import { sendRequest } from "../common/ApiHelper"
+import React, { useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Form, Button, Spinner, Alert } from 'react-bootstrap'
+import { Formik } from 'formik'
+import * as yup from 'yup'
+import regex from '../common/regex'
+import { checkAddress } from '../common/GoogleApiHelper'
+import { sendRequest } from '../common/ApiHelper'
 
 function SignUpForm(props) {
     // TODO delete comment - Pour Bastien, le /api est ajouté automatiquement, change signUpAPIEndpoint avec le bon endpoint
-    const signUpAPIEndpoint = "/users"
+    const signUpAPIEndpoint = '/users'
 
     const [isSigningUp, setIsSigningUp] = useState(false)
     const [hasConnectionProblem, setHasConnectionProblem] = useState(false)
@@ -39,9 +39,9 @@ function SignUpForm(props) {
             address: values.userAddress,
             npa: values.userNpa,
             city: values.userCity,
-            country: values.userCountry
+            country: values.userCountry,
         }).then(([isValid, address]) => {
-            if (isValid == 1) {
+            if (isValid === 1) {
                 setIsValidAddress(true)
                 console.log(address)
             } else {
@@ -50,11 +50,11 @@ function SignUpForm(props) {
         })
         if (isValidAddress) {
             sendRequest(signUpAPIEndpoint, {
-                lesDonnéesAjoutéIci: "fonction utile : JSON.stringify(data) "
+                lesDonnéesAjoutéIci: 'fonction utile : JSON.stringify(data) ',
             }).then(
                 result => {
                     // en principe seul les requete http 200 passe ici
-                    console.log("Connection ok et réponse du serveur")
+                    console.log('Connection ok et réponse du serveur')
 
                     setIsSigningUp(false)
                     setHasBeenSignedUp(true)
@@ -76,52 +76,52 @@ function SignUpForm(props) {
     const schema = yup.object({
         userEmail: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .email(),
         userFirstname: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .min(2)
             .max(20)
             .matches(regex.validName),
         userLastname: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .min(2)
             .max(20)
             .matches(regex.validName),
         userPassword: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .min(8)
             .max(32),
         userPasswordRepeat: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .oneOf(
-                [yup.ref("userPassword"), null],
-                "Les mots de passe doivent être identiques"
+                [yup.ref('userPassword'), null],
+                'Les mots de passe doivent être identiques'
             ),
         userAddress: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .min(2)
             .max(50),
         userNpa: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .min(2)
             .max(20),
         userCity: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .min(2)
             .max(50),
         userCountry: yup
             .string()
-            .required("Requis")
+            .required('Requis')
             .min(2)
-            .max(50)
+            .max(50),
     })
 
     return (
@@ -145,15 +145,15 @@ function SignUpForm(props) {
                     attemptSignUp(values)
                 }}
                 initialValues={{
-                    userEmail: "",
-                    userPassword: "",
-                    userPasswordRepeat: "",
-                    userFirstname: "",
-                    userLastname: "",
-                    userAddress: "",
-                    userNpa: "",
-                    userCity: "",
-                    userCountry: ""
+                    userEmail: '',
+                    userPassword: '',
+                    userPasswordRepeat: '',
+                    userFirstname: '',
+                    userLastname: '',
+                    userAddress: '',
+                    userNpa: '',
+                    userCity: '',
+                    userCountry: '',
                 }}
             >
                 {({
@@ -162,7 +162,7 @@ function SignUpForm(props) {
                     touched,
                     isValid,
                     values,
-                    errors
+                    errors,
                 }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group controlId="formEmail">

@@ -1,30 +1,42 @@
 import React from 'react'
-/*
-class SessionHelper {
-    SessionHelper() {
-        console.log('Create user session')
-        this.userLogged = false
-        this.admin = false
+
+/**
+ *  TODO : remove if not used... impossible d'updater un state d'un composant depuis un autre composant
+ */
+export class SessionHelper {
+    constructor(userSession, setUserSession) {
+        this.userSession = userSession
+        this.setUserSession = setUserSession
+        console.log(setUserSession)
     }
-    signIn(userInfo) {
-        console.log('Log user in')
-        Object.keys(userInfo).map(key => {
-            this[key] = userInfo[key]
-        })
+    isUserLogin = () => {
+        return (
+            Object.keys(this.userSession).length > 0 &&
+            this.userSession.constructor === Object
+        )
     }
-    signOut() {
-        console.log('Log user out')
-        delete this
+    isUserAdmin = () => {
+        return this.isUserLogin() && this.userSession.admin
     }
-    isUserLogged() {
-        return this.userLogged //TODO
+    getUserName = () => {
+        return this.userSession.username
     }
-    isUserAdmin() {
-        return this.admin
+    getUserFirstName = () => {
+        return this.userSession.firstname
     }
-    setUserLogged(value) {
-        this.userLogged = value
+    getUserLastName = () => {
+        return this.userSession.lastname
     }
+    logout = () => {
+        this.setUserSession({})
+        sessionStorage.removeItem('user')
+    }
+    login = user => {
+        this.setUserSession(user)
+        sessionStorage.setItem('user', JSON.stringify(user))
+    }
+
 }
-*/
+
+
 export const SessionContext = React.createContext({user:{}})

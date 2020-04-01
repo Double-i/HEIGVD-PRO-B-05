@@ -1,4 +1,4 @@
-const EZT_API = "localhost:8080/api"
+const EZT_API = 'http://127.0.0.1:8080/api'
 
 /**
  * Send a request to EzTools API
@@ -10,11 +10,11 @@ const EZT_API = "localhost:8080/api"
  */
 export function sendEzApiRequest(
     endpoint,
-    verb = "GET",
+    verb = 'GET',
     data = {},
     params = {}
 ) {
-    const url = prepareUrl(EZT_API.append(endpoint), verb, params)
+    const url = prepareUrl(EZT_API.concat(endpoint), verb, params)
     return sendRequest(url, verb, data, params)
 }
 /**
@@ -24,20 +24,18 @@ export function sendEzApiRequest(
  * @param {String} verb
  * @param {Object} data
  */
-export function sendRequest(url, verb = "GET", data = {}) {
+export function sendRequest(url, verb = 'GET', data = {}) {
     const requestInfo = {
         method: verb,
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
+        credentials: 'include',
         headers: {
-            "Content-Type": "application/json"
-        }
+            'Content-Type': 'application/json',
+        },
     }
-    if (verb !== "GET" && verb !== "HEAD") {
+    if (verb !== 'GET' && verb !== 'HEAD') {
         requestInfo.body = JSON.stringify(data) // body data type must match "Content-Type" header
     }
-    return fetch(url).then(res => res.json())
+    return fetch(url, requestInfo).then(res => res.json())
 }
 /**
  * Prepare URL with parameter if GET params given
@@ -46,9 +44,9 @@ export function sendRequest(url, verb = "GET", data = {}) {
  * @param {String} verb Http verb
  * @param {Object} params params needed for get request
  */
-export function prepareUrl(strURL, verb = "GET", params = {}) {
+export function prepareUrl(strURL, verb = 'GET', params = {}) {
     const url = new URL(strURL)
-    if (verb === "GET") {
+    if (verb === 'GET') {
         // Add GET params to url
         Object.keys(params).forEach(key =>
             url.searchParams.append(key, params[key])

@@ -1,14 +1,9 @@
-import * as React from "react";
+import * as React from 'react'
 
-class EditProfilForm extends React.Component{
-    
+class EditProfilForm extends React.Component {
     render() {
-        return (
-            <div>
-                Edit form...
-            </div>
-        );
+        return <div>Edit form...</div>
     }
 }
 
-export default EditProfilForm;
+export default EditProfilForm

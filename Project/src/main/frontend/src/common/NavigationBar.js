@@ -12,8 +12,8 @@ function NavigationBar(props) {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <SessionContext.Consumer>
-                    {({ isLogin }) => {
-                        if (isLogin()) {
+                    {({ sessionAction }) => {
+                        if (sessionAction.isLogin()) {
                             return (
                                 <Nav className="mr-auto">
                                     <Link to="/DashBoard" className="nav-link">
@@ -27,24 +27,24 @@ function NavigationBar(props) {
                 </SessionContext.Consumer>
                 <Nav className="ml-auto">
                     <SessionContext.Consumer>
-                        {({ isLogin, getUserName, logout }) => {
-                            if (isLogin()) {
+                        {({ sessionAction }) => {
+                            if (sessionAction.isLogin()) {
                                 return (
                                     <React.Fragment>
                                         <NavDropdown
-                                            title={getUserName()}
+                                            title={sessionAction.getUserName()}
                                             id="basic-nav-dropdown"
                                         >
-                                            <NavDropdown.Item>
-                                                <Link to="/EditProfil">
-                                                    Edit profil
-                                                </Link>
-                                            </NavDropdown.Item>
+                                            <Link
+                                                className="dropdown-item"
+                                                to="/EditProfil"
+                                            >
+                                                Edit profil
+                                            </Link>
+
                                             <NavDropdown.Divider />
-                                            <NavDropdown.Item>
-                                                <Link onClick={logout}>
-                                                    Deconnexion
-                                                </Link>
+                                            <NavDropdown.Item onClick={sessionAction.logout}>
+                                                Deconnexion
                                             </NavDropdown.Item>
                                         </NavDropdown>
                                     </React.Fragment>

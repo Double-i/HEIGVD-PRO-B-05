@@ -10,7 +10,7 @@ import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
 
-import { SessionContext } from './common/SessionHelper'
+import { SessionContext, SessionHelper } from './common/SessionHelper'
 
 function App() {
 
@@ -19,6 +19,7 @@ function App() {
     const [showSignInForm, setShowSignInForm] = useState(false)
     const [userSession, setUserSession] = useState(userObject)
 
+    const session = new SessionHelper(userSession, setUserSession)
     // TODO : voir si possible d'exporter les fonctions liés à la session ailleurs
     const isUserLogin = () => {
         return (
@@ -48,14 +49,17 @@ function App() {
     }
 
     const user = {
-        user: userSession,
-        isLogin: isUserLogin,
-        isAdmin: isUserAdmin,
-        getUserName: getUserName,
-        getFirstName: getUserFirstName,
-        getLastname: getUserLastName,
-        logout: logout,
-        login: login,
+        userInfo: userSession,
+        sessionAction : {
+            isLogin: isUserLogin,
+            isAdmin: isUserAdmin,
+            getUserName: getUserName,
+            getFirstName: getUserFirstName,
+            getLastname: getUserLastName,
+            logout: logout,
+            login: login,
+        },
+        session: session
     }
 
     return (
@@ -65,7 +69,7 @@ function App() {
                 <SignIn
                     showSignInForm={showSignInForm}
                     setShowSignInForm={value => setShowSignInForm(value)}
-                    setLoggedUser={login}
+                    setLoggedUser={user.sessionAction.login}
                 />
                 <div className="row">
                     <Container>
@@ -74,7 +78,7 @@ function App() {
                                 <Home />
                             </Route>
                             <Route exact path="/dashboard">
-                                {user.isLogin() ? (
+                                {user.sessionAction.isLogin() ? (
                                     <DashBoard />
                                 ) : (
                                     <NotRigthToBeHere />
@@ -82,7 +86,7 @@ function App() {
                             </Route>
                             <Route exact path="/disconnect"></Route>
                             <Route exact path="/signup">
-                                {user.isLogin() ? (
+                                {user.sessionAction.isLogin() ? (
                                     <AlreadyConnect />
                                 ) : (
                                     <SignUp />

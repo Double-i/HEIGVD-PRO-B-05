@@ -4,64 +4,60 @@ import { Container, Form, Button, Spinner, Modal, Alert } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { Formik } from 'formik'
 import * as yup from 'yup'
+import { sendEzApiRequest } from '../common/ApiHelper'
+
+const LOGIN_URI = '/authenticate'
 
 function SignInForm(props) {
-   
+    // state var and states functions
     const [isLogging, setIsLogging] = useState(false)
     const [hasConnectionProblem, setHasConnectionProblem] = useState(false)
-    const [hasBeenLoggedIn, setHasBeenLoggedIn] = useState(false) 
-    const [hasWrongCredential, sethasWrongCredential] = useState(false) 
+    const [hasBeenLoggedIn, setHasBeenLoggedIn] = useState(false)
+    const [hasWrongCredential, sethasWrongCredential] = useState(false)
 
     const attemptLogin = (username, password) => {
         console.log('attempt login...')
         console.log('email: ', username)
         console.log('password: ', password)
-        
-        setHasConnectionProblem(false)
-        sethasWrongCredential(false)
-        setHasBeenLoggedIn(false)
 
-        fetch('http://127.0.0.1:8080/api/authenticate',{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({username: username, password:password})
-          })
-            .then(res => res.json())
-            .then(
-                result => {
-                    if(result.status === 403){
-                        console.log("Bad credential amigo")
-                        sethasWrongCredential(true)
-                    }else {
-                        console.log("So far so good")
-                        setHasBeenLoggedIn(true)
+        sendEzApiRequest(LOGIN_URI, 'POST', {
+            username: username,
+            password: password,
+        }).then(
+            result => {
+                if (result.status === 403) {
+                    console.log('Bad credential amigo')
+                    sethasWrongCredential(true)
+                } else {
+                    console.log('So far so good')
+                    setHasBeenLoggedIn(true)
 
-                        // TODO : utiliser les vrais données renvoyer par /api/authenticate
-                        props.setLoggedUser( {
-                            username: "bE5tU5s3r3V3R",
-                            admin: false,
-                            lastname: "la Chouin",
-                            firstname: "Carlin"
-                        })
-                        
-                    }
-                    setIsLogging(false) 
-                },
-                error => {
-                    console.log('Connection PAS ok', error)
-                    setHasConnectionProblem(true)
-                    setIsLogging(false)
+                    // TODO : utiliser les vrais données renvoyer par /api/authenticate
+                    props.setLoggedUser({
+                        username: 'bE5tU5s3r3V3R',
+                        admin: false,
+                        lastname: 'la Chouin',
+                        firstname: 'Carlin',
+                    })
+                
                 }
-            )
+                setIsLogging(false)
+            },
+            error => {
+                console.log('Connection PAS ok', error)
+                setHasConnectionProblem(true)
+                setIsLogging(false)
+            }
+        )
     }
 
     // validation rules
     const schema = yup.object({
         userName: yup
             .string()
-            .required('Requis').min(3).max(10),
+            .required('Requis')
+            .min(3)
+            .max(10),
         userPassword: yup.string().required('Requis'),
     })
 
@@ -71,6 +67,7 @@ function SignInForm(props) {
                 size="lg"
                 show={props.showSignInForm}
                 onHide={() => {
+                    // hide modal and displayed messages
                     props.setShowSignInForm(false)
                     setHasConnectionProblem(false)
                     sethasWrongCredential(false)
@@ -88,7 +85,7 @@ function SignInForm(props) {
                         Vous êtes connecté !
                     </Alert>
                     <Alert variant="danger" hidden={!hasConnectionProblem}>
-                        hum humm.. problème de connexion au serveur 
+                        hum humm.. problème de connexion au serveur
                     </Alert>
                     <Alert variant="warning" hidden={!hasWrongCredential}>
                         Utilisateur inexistant
@@ -115,7 +112,9 @@ function SignInForm(props) {
                             }) => (
                                 <Form noValidate onSubmit={handleSubmit}>
                                     <Form.Group controlId="formBasicEmail">
-                                        <Form.Label>Nom d'utilisateur</Form.Label>
+                                        <Form.Label>
+                                            Nom d'utilisateur
+                                        </Form.Label>
                                         <Form.Control
                                             name="userName"
                                             type="text"

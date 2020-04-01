@@ -28,7 +28,7 @@ function App() {
             </ul>
           </nav>
 
-          {/* A <Switch> looks through its children <Route>s and
+                {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
           <Switch>
             <Route path="/about">
@@ -50,24 +50,23 @@ function App() {
 }
 //test comment for push
 function Home() {
-  return (<Card style={{ width: '18rem' }}>
-    <Card.Img variant="top" src="TBD" />
-    <Card.Body>
-      <Card.Title>Home</Card.Title>
-      <Card.Text>
-        Some quick example text to build on the card title and make up the bulk of
-        the card's content.
-      </Card.Text>
-      <Button variant="primary">Go somewhere</Button>
-    </Card.Body>
-  </Card>);
+    return (
+        <Card style={{ width: "18rem" }}>
+            <Card.Img variant="top" src="TBD" />
+            <Card.Body>
+                <Card.Title>Home</Card.Title>
+                <Card.Text>
+                    Some quick example text to build on the card title and make
+                    up the bulk of the card's content.
+                </Card.Text>
+                <Button variant="primary">Go somewhere</Button>
+            </Card.Body>
+        </Card>
+    )
 }
 
 function About() {
-  return <h2>About</h2>;
+    return <h2>About</h2>
 }
 
-function Users() {
-  return <h2>Users</h2>;
-}
-export default App;
+export default App

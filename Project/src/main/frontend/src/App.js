@@ -20,45 +20,9 @@ function App() {
     const [userSession, setUserSession] = useState(userObject)
 
     const session = new SessionHelper(userSession, setUserSession)
-    // TODO : voir si possible d'exporter les fonctions liés à la session ailleurs
-    const isUserLogin = () => {
-        return (
-            Object.keys(userSession).length > 0 &&
-            userSession.constructor === Object
-        )
-    }
-    const isUserAdmin = () => {
-        return isUserLogin() && userSession.admin
-    }
-    const getUserName = () => {
-        return userSession.username
-    }
-    const getUserFirstName = () => {
-        return userSession.firstname
-    }
-    const getUserLastName = () => {
-        return userSession.lastname
-    }
-    const logout = () => {
-        setUserSession({})
-        sessionStorage.removeItem('user')
-    }
-    const login = user => {
-        setUserSession(user)
-        sessionStorage.setItem('user', JSON.stringify(user))
-    }
 
     const user = {
         userInfo: userSession,
-        sessionAction : {
-            isLogin: isUserLogin,
-            isAdmin: isUserAdmin,
-            getUserName: getUserName,
-            getFirstName: getUserFirstName,
-            getLastname: getUserLastName,
-            logout: logout,
-            login: login,
-        },
         session: session
     }
 
@@ -69,7 +33,7 @@ function App() {
                 <SignIn
                     showSignInForm={showSignInForm}
                     setShowSignInForm={value => setShowSignInForm(value)}
-                    setLoggedUser={user.sessionAction.login}
+                    setLoggedUser={user.session.login}
                 />
                 <div className="row">
                     <Container>
@@ -78,7 +42,7 @@ function App() {
                                 <Home />
                             </Route>
                             <Route exact path="/dashboard">
-                                {user.sessionAction.isLogin() ? (
+                                {user.session.isUserLogin() ? (
                                     <DashBoard />
                                 ) : (
                                     <NotRigthToBeHere />
@@ -86,7 +50,7 @@ function App() {
                             </Route>
                             <Route exact path="/disconnect"></Route>
                             <Route exact path="/signup">
-                                {user.sessionAction.isLogin() ? (
+                                {user.session.isUserLogin() ? (
                                     <AlreadyConnect />
                                 ) : (
                                     <SignUp />
@@ -100,9 +64,9 @@ function App() {
     )
 }
 function NotRigthToBeHere() {
-    return <p> Hey ho biquette ouste ! <img src="https://images2.minutemediacdn.com/image/upload/c_crop,h_843,w_1500,x_0,y_10/f_auto,q_auto,w_1100/v1555172614/shape/mentalfloss/iStock-177369626_1.jpg" /> </p>
+    return <p> Hey ho biquette ouste ! <img alt="biquette" src="https://images2.minutemediacdn.com/image/upload/c_crop,h_843,w_1500,x_0,y_10/f_auto,q_auto,w_1100/v1555172614/shape/mentalfloss/iStock-177369626_1.jpg" /> </p>
 }
 function AlreadyConnect() {
-    return <p>Vous êtes déjà connecté... <img src="https://i.imgflip.com/2e1lxv.jpg" /></p>
+    return <p>Vous êtes déjà connecté... <img alt="retarded" src="https://i.imgflip.com/2e1lxv.jpg" /></p>
 }
 export default App 

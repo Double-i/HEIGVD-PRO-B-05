@@ -20,6 +20,11 @@ function SignInForm(props) {
         console.log('email: ', username)
         console.log('password: ', password)
 
+        // reset error message
+        setHasConnectionProblem(false)
+        sethasWrongCredential(false)
+        setHasBeenLoggedIn(false)
+
         sendEzApiRequest(LOGIN_URI, 'POST', {
             username: username,
             password: password,
@@ -145,7 +150,6 @@ function SignInForm(props) {
                                     <Form.Group controlId="formBasicCheckbox">
                                         <Link to="/login/forget">
                                             Oops j'ai oublié mon mot de passe
-                                            &#128584;
                                         </Link>
                                     </Form.Group>
                                     <Button

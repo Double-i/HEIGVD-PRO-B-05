@@ -12,8 +12,8 @@ function NavigationBar(props) {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <SessionContext.Consumer>
-                    {({ sessionAction }) => {
-                        if (sessionAction.isLogin()) {
+                    {({ session }) => {
+                        if (session.isUserLogin()) {
                             return (
                                 <Nav className="mr-auto">
                                     <Link to="/DashBoard" className="nav-link">
@@ -27,12 +27,12 @@ function NavigationBar(props) {
                 </SessionContext.Consumer>
                 <Nav className="ml-auto">
                     <SessionContext.Consumer>
-                        {({ sessionAction }) => {
-                            if (sessionAction.isLogin()) {
+                        {({ session }) => {
+                            if (session.isUserLogin()) {
                                 return (
                                     <React.Fragment>
                                         <NavDropdown
-                                            title={sessionAction.getUserName()}
+                                            title={session.getUserName()}
                                             id="basic-nav-dropdown"
                                         >
                                             <Link
@@ -43,7 +43,7 @@ function NavigationBar(props) {
                                             </Link>
 
                                             <NavDropdown.Divider />
-                                            <NavDropdown.Item onClick={sessionAction.logout}>
+                                            <NavDropdown.Item onClick={session.logout}>
                                                 Deconnexion
                                             </NavDropdown.Item>
                                         </NavDropdown>

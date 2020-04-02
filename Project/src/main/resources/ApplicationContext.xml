@@ -3,13 +3,4 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/data/jpa https://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
     <jpa:repositories base-package="ch.heigvd.easytoolz.repositories" />
-    <http use-expressions="true">
-        <intercept-url pattern="/**" access="isAuthenticated()"/>
-        <http-basic/>
-    </http>
-
-    <authentication-manager>
-        <authentication-provider
-                ref="customAuthenticationProvider" />
-    </authentication-manager>
 </beans>

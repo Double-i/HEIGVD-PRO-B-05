@@ -69,7 +69,7 @@ public class UserController {
     @GetMapping("/{username}")
     public User show(@PathVariable String username){
         return userRepository
-                .findById(username + "a")
+                .findById(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
 

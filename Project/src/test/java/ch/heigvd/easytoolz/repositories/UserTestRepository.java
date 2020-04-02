@@ -37,11 +37,18 @@ public class UserTestRepository {
         user1 = new User("patoche","Patrick","Paul","abcd", "patoche@gmail.com" , true);
         user2 = new User("praymond","Raymond","Paien","1234", "paienraymond@dayrep.com", false);
         user3 = new User("vcliche","Cliche","Vick","abcd1234", "vcliche@gmail.com" , true);
+
+        entityManager.persistAndFlush(user1);
+        entityManager.persistAndFlush(user2);
     }
 
     @Test
     public void itShouldSaveUser(){
         User tmp = entityManager.persistAndFlush(user);
         assertThat(userRepository.findById(tmp.getUserName()).get()).isEqualTo(tmp);
+    }
+
+    @Test
+    public void itShouldreturnTheUser(){
     }
 }

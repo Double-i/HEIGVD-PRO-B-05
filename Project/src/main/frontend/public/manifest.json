@@ -1,0 +1,10 @@
+{
+  "short_name": "React App",
+  "name": "EasyTools : an easy plateform to borrow in your city",
+  "icons": [
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

@@ -3,7 +3,6 @@ package ch.heigvd.easytoolz.repositories;
 import ch.heigvd.easytoolz.models.User;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -43,12 +42,45 @@ public class UserTestRepository {
     }
 
     @Test
+    public void itShouldreturnTheUser(){
+        entityManager.persistAndFlush(user);
+        assertThat(userRepository.findById(user.getUserName()).get()).isEqualTo(user);
+    }
+
+    @Test
     public void itShouldSaveUser(){
         User tmp = entityManager.persistAndFlush(user);
         assertThat(userRepository.findById(tmp.getUserName()).get()).isEqualTo(tmp);
     }
 
     @Test
-    public void itShouldreturnTheUser(){
+    public void itShouldUpdateUser(){
+        User newUser = user1;
+        newUser.setFirstName("Patrick");
+        User oldUser = userRepository.findById(user1.getUserName()).get();
+        oldUser.setFirstName("Patrick");
+        userRepository.save(oldUser);
+        assertThat(userRepository.findById(user1.getUserName()).get()).isEqualTo(user1);
+    }
+
+    @Test
+    public void itShouldDeleteUser(){
+        entityManager.remove(user1);
+        assertThat(userRepository.findById(user1.getUserName()).isEmpty());
+    }
+
+    @Test
+    public void itShouldFilterTheUsers(){
+        assertThat(userRepository.findByFirstNameLike("%as%").isEmpty());
+        entityManager.persistAndFlush(user);
+        assertThat(userRepository.findByFirstNameLike("%as%").size()).isEqualTo(1);
+        entityManager.persistAndFlush(user);
+        assertThat(userRepository.findByFirstNameLike("%as%").size()).isEqualTo(1);
+        assertThat(userRepository.findByLastNameLike("%a%").size()).isEqualTo(2);
+    }
+
+    @Test
+    public void itShouldFilterByAdress(){
+
     }
 }

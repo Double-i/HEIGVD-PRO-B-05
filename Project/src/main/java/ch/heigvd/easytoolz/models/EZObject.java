@@ -44,7 +44,6 @@ public class EZObject {
     }
 
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;

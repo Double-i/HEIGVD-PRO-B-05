@@ -33,7 +33,7 @@ public class EZObjectController {
      * @param username
      * @return
      */
-    @GetMapping("/find/byUser/{username}")
+    @GetMapping("/find/user/{username}")
     @ResponseBody
     public List<EZObject> getObjectByOwner(@PathVariable String username)
     {
@@ -45,7 +45,7 @@ public class EZObjectController {
      * @param newObject
      * @return
      */
-    @PostMapping("/addObject")
+    @PostMapping("/add")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
         EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getObjecttags(),newObject.getImages());
@@ -57,7 +57,7 @@ public class EZObjectController {
      * @param o
      * @return
      */
-    @PostMapping("/updateObject")
+    @PostMapping("/update")
     public EZObject updateObject(@RequestBody EZObject o)
     {
         EZObject updated = ezObjectRepository.findByID(o.getID());
@@ -78,7 +78,7 @@ public class EZObjectController {
      * @param objectName
      * @return
      */
-    @GetMapping("find/object/{objectName}")
+    @GetMapping("find/name/{objectName}")
     @ResponseBody
     public List<EZObject> getObjectByName(@PathVariable String objectName)
     {

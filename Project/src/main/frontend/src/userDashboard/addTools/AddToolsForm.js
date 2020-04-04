@@ -2,62 +2,67 @@ import * as React from 'react'
 import * as yup from 'yup'
 import regex from '../../common/regex'
 import {Formik} from 'formik'
-import {Button, Form} from "react-bootstrap"
+import {Alert, Button, Form} from "react-bootstrap"
+import {sendRequest} from "../../common/ApiHelper";
 
 function AddToolsForm(props) {
+
+
+    // TODO delete comment - Pour Bastien, le /api est ajouté automatiquement, change signUpAPIEndpoint avec le bon endpoint
+    const addToolAPIEndpoint = '/tools'
+
     //TODO : Move la validation d'une image ailleurs?
     const SUPPORTED_FORMATS = [
         'image/jpg',
         'image/jpeg',
         'image/gif',
         'image/png',
-    ]
-    const FILE_SIZE = 10000
-    const validateImageType = (value) => {
-        if (value) {
-            let type = value.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
-            return SUPPORTED_FORMATS.includes(type)
-        }
-    }
+    ];
+    const FILE_SIZE = 1000000;
+
 
     const attemptAddTool = (values) => {
-        //TODO
-        alert(values)
-    }
+        sendRequest(addToolAPIEndpoint,{
+          data : JSON.stringify(values) //TODO : problème avec le fetch encore , a regarder commrnt on fait
+        }).then(
+                result => {
+                    console.log("Ajout de l'outil ok!")
+                }
+            )
+    };
 
 
     // Ilias: la validation pour l'image ne semble pas correcte il doit avoir une petite erreur ...à voir
 
     // validation rules
     const schema = yup.object({
-        toolName: yup.string().required('Requis'),
+        toolName: yup.string().required('Requis').min(0).max(20),
         toolDescription: yup.string().min(0).max(200),
         toolImage: yup
-            .array()
-            .nullable()
-            .required('Validation requise')
-            .test(
+            .mixed()
+            //TODO : Les tests ne marche pas, peut être doit on faire un autre schema pour que les files ?
+/*            .test(
                 'fileSize',
                 'File is too large',
                 (value) =>
-                    typeof value !== 'undefined' && value.size <= FILE_SIZE
+                     typeof value !== 'undefined' && value.size <= FILE_SIZE
             )
-            .test(
+           .test(
                 'fileType',
                 'Your Error Message',
                 (value) =>
                     typeof value !== 'undefined' &&
                     SUPPORTED_FORMATS.includes(value.type)
-            ),
-    })
+            )*/
+    });
 
     return (
         <>
+            <h1>Ajouter un outil</h1>
             <Formik
                 validationSchema={schema}
                 onSubmit={(values, {setSubmitting}) => {
-                    attemptAddTool(values)
-                    alert('yooy')
+                    attemptAddTool(values);
                 }}
                 initialValues={{
                     toolName: '',

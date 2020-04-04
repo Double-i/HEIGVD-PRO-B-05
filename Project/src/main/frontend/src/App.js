@@ -11,6 +11,7 @@ import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
 
 import { SessionContext, SessionHelper } from './common/SessionHelper'
+import AddTools from "./userDashboard/addTools/AddToolsForm";
 
 function App() {
 
@@ -56,6 +57,15 @@ function App() {
                                     <SignUp />
                                 )}
                             </Route>
+                            <Route exact path="/AddTools">
+                                {user.session.isUserLogin() ? (
+                                    <AddTools />
+                                ) : (
+                                    <NotRigthToBeHere />
+                                )}
+                            </Route>
+
+
                         </Switch>
                     </Container>
                 </div>

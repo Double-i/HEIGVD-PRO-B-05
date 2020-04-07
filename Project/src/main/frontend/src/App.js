@@ -9,6 +9,7 @@ import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
+import LoanTable from './userDashboard/loanManagement/LoanTable'
 
 import { SessionContext, SessionHelper } from './common/SessionHelper'
 
@@ -40,6 +41,7 @@ function App() {
                         <Switch>
                             <Route exact path="/home">
                                 <Home />
+                                <LoanTable/>
                             </Route>
                             <Route exact path="/dashboard">
                                 {user.session.isUserLogin() ? (

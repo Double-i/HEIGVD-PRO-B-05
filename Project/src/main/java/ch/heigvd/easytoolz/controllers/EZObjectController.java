@@ -33,10 +33,13 @@ public class EZObjectController {
      * @param username
      * @return
      */
-    @GetMapping("/find/byUser/{username}")
+    @GetMapping("/find/user/{username}")
     @ResponseBody
     public List<EZObject> getObjectByOwner(@PathVariable String username)
     {
+
+        if(ezObjectRepository.findByOwner_UserName(username).size() == 0)
+            throw new EZObjectNotFoundException("No Objects where found for user "+username);
         return ezObjectRepository.findByOwner_UserName(username);
     }
 
@@ -45,7 +48,7 @@ public class EZObjectController {
      * @param newObject
      * @return
      */
-    @PostMapping("/addObject")
+    @PostMapping("/add")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
         EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getObjecttags(),newObject.getImages());
@@ -57,12 +60,12 @@ public class EZObjectController {
      * @param o
      * @return
      */
-    @PostMapping("/updateObject")
+    @PostMapping("/update")
     public EZObject updateObject(@RequestBody EZObject o)
     {
         EZObject updated = ezObjectRepository.findByID(o.getID());
         if(updated == null)
-            throw new EntityNotFoundException("Object not found " + o.getID() + " ");
+            throw new EZObjectNotFoundException("Object not found " + o.getID() + " ");
         
         updated.setDescription(o.getDescription());
         updated.setName(o.getName());
@@ -78,7 +81,7 @@ public class EZObjectController {
      * @param objectName
      * @return
      */
-    @GetMapping("find/object/{objectName}")
+    @GetMapping("find/name/{objectName}")
     @ResponseBody
     public List<EZObject> getObjectByName(@PathVariable String objectName)
     {

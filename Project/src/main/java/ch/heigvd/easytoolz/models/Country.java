@@ -1,30 +1,34 @@
 package ch.heigvd.easytoolz.models;
 
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "country")
+@Table(name="Country")
 public class Country {
+
+    public int getId() {   return id;  }
+    public String getCountry() { return country;}
+
+    public void setCountry(String country) { this.country = country; }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String country;
+    int id;
 
-    public Country(){ }
 
-    public Country(String country){
-        this.country = country;
-    }
+    @Column(name="country")
+    String country;
 
-    public int getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "country")
+    List<City> cities;
 
-    public String getCountry() {
-        return country;
-    }
 
-    public void setCountry(String country) {
-        this.country = country;
+
+    public Country() {}
+
+    public Country(String country) {
+        this.country= country;
     }
 }

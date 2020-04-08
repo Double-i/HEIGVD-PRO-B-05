@@ -33,11 +33,9 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      */
     EZObject findByID(int id);
 
-
     List<EZObject> findByDescriptionContaining(String content);
 
     //EZObject findByLocalisation(int localisation);
-
 
     //List<EZObjectView>  findByOwner(String owner);
 

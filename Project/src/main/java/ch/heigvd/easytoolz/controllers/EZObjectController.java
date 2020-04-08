@@ -1,12 +1,11 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 

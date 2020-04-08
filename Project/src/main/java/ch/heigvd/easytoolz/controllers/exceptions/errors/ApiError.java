@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions;
+package ch.heigvd.easytoolz.controllers.exceptions.errors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;

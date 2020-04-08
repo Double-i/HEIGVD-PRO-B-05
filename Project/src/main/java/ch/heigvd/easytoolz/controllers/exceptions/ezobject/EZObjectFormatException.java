@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions;
+package ch.heigvd.easytoolz.controllers.exceptions.ezobject;
 
 public class EZObjectFormatException extends RuntimeException {
     EZObjectFormatException(String message)

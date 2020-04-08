@@ -1,52 +1,33 @@
 package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "adress")
+@Table(name = "address")
 public class Address {
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getDistrict() {
         return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
     }
 
     public String getPostalCode() {
         return postalcode;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalcode = postalCode;
-    }
-
-    public float getLat() {
+    public BigDecimal getLat() {
         return lat;
     }
 
-    public void setLat(float lat) {
-        this.lat = lat;
-    }
-
-    public float getLng() {
+    public BigDecimal getLng() {
         return lng;
     }
     public City getCity() { return city; }
@@ -63,10 +44,10 @@ public class Address {
     public void setPostalCode(String postalCode) {
         this.postalcode = postalCode;
     }
-    public void setLat(float lat) {
+    public void setLat(BigDecimal lat) {
         this.lat = lat;
     }
-    public void setLng(float lng) {
+    public void setLng(BigDecimal lng) {
         this.lng = lng;
     }
 
@@ -82,8 +63,8 @@ public class Address {
     String address;
     String district;
     String postalcode;
-    float lat;
-    float lng;
+    BigDecimal lat;
+    BigDecimal lng;
 
     @OneToMany(mappedBy = "address")
     private List<User> user;
@@ -92,13 +73,13 @@ public class Address {
     @JoinColumn(name = "fkCity", referencedColumnName = "id")
     private City city;
 
-
-    public Address( String address, String district, String postalCode, float lat, float lng) {
+    public Address(String address, String district, String postalCode, BigDecimal lat, BigDecimal lng, City city) {
         this.address = address;
         this.district = district;
         this.postalcode = postalCode;
         this.lat = lat;
         this.lng = lng;
+        this.city = city;
     }
 
 

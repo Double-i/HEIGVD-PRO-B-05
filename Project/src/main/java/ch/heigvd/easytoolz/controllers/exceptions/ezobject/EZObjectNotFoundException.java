@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions;
+package ch.heigvd.easytoolz.controllers.exceptions.ezobject;
 
 public class EZObjectNotFoundException extends RuntimeException {
     public EZObjectNotFoundException(String message)

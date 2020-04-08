@@ -1,6 +1,9 @@
 package ch.heigvd.easytoolz.controller;
 
 import ch.heigvd.easytoolz.controllers.UserController;
+import ch.heigvd.easytoolz.models.Address;
+import ch.heigvd.easytoolz.models.City;
+import ch.heigvd.easytoolz.models.Country;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,14 +62,20 @@ class UserTestController {
     private User user2;
     private User user3;
 
+    private Address address;
+
     @BeforeEach
     public void setUp(){
         allUsers = new ArrayList<>();
 
-        user = new User("vanlong","Bastien","Potet","1234", "bastien.potet@gmail.com", false);
-        user1 = new User("patoche","Patrick","Paul","abcd", "patoche@gmail.com" , true);
-        user2 = new User("praymond","Raymond","Paien","1234", "paienraymond@dayrep.com", false);
-        user3 = new User("vcliche","Cliche","Vick","abcd1234", "vcliche@gmail.com" , true);
+        Country country = new Country("Suisse");
+        City city = new City("Orsières", country);
+        address = new Address("Somlaproz 48", "Entremont", "1937", 2,4, city);
+
+        user = new User("vanlong","Bastien","Potet","1234", "bastien.potet@gmail.com", address, false);
+        user1 = new User("patoche","Patrick","Paul","abcd", "patoche@gmail.com" , address, true);
+        user2 = new User("praymond","Raymond","Paien","1234", "paienraymond@dayrep.com", address, false);
+        user3 = new User("vcliche","Cliche","Vick","abcd1234", "vcliche@gmail.com" , address, true);
     }
 
     @AfterEach
@@ -127,7 +136,9 @@ class UserTestController {
         userJSonObject.put("email","bastien.potet@gmail.com");
         userJSonObject.put("isAdmin","true");
 
-        User user = new User("vanlong","Bastien","Potet","1234", "bastien.potet@gmail.com", true);
+
+
+        User user = new User("vanlong","Bastien","Potet","1234", "bastien.potet@gmail.com", address, true);
 
         when(userController.store(any(User.class))).thenReturn(user);
 
@@ -154,7 +165,7 @@ class UserTestController {
         userJSonObject.put("email","harry1.potter@gmail.com");
         userJSonObject.put("isAdmin","false");
 
-        User harry = new User("vanlong","Harry","Potter","1080","harry1.potter@gmail.com",false);
+        User harry = new User("vanlong","Harry","Potter","1080","harry1.potter@gmail.com",address, false);
 
         when(userController.show("vanlong")).thenReturn(user);
 

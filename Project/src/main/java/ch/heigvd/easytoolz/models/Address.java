@@ -1,9 +1,9 @@
 package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
+@Table(name = "adress")
 public class Address {
     public int getId() {
         return id;
@@ -53,43 +53,32 @@ public class Address {
         this.lng = lng;
     }
 
-    public int getFkCity() {
-        return fkcity;
-    }
-
-    public void setFkCity(int fkCity) {
-        this.fkcity = fkCity;
-    }
-
-
     public Address(){}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
-    String address;
+    private String address;
 
-    String district;
+    private String district;
 
-    String postalcode;
+    private String postalcode;
 
-    float lat;
+    private float lat;
 
-    float lng;
+    private float lng;
 
-    int fkcity;
+    @ManyToOne
+    @JoinColumn(name = "fkCity", referencedColumnName = "id")
+    private City city;
 
-    @OneToMany(mappedBy = "address")
-    private List<User> user;
-
-    public Address( String address, String district, String postalCode, float lat, float lng, int fkCity) {
+    public Address( String address, String district, String postalCode, float lat, float lng, City city) {
         this.address = address;
         this.district = district;
         this.postalcode = postalCode;
         this.lat = lat;
         this.lng = lng;
-        this.fkcity = fkCity;
     }
 
 

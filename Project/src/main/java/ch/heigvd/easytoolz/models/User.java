@@ -2,6 +2,7 @@ package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name="user")
@@ -32,12 +33,11 @@ public class User {
     // Required for creating JSON parsing
     public User(){}
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name="fkaddress", referencedColumnName = "id")
     private Address address;
 
-    public User(String userName, String firstName, String lastName, String password, boolean isAdmin, Address address){
-    public User(String userName, String firstName, String lastName, String password, String email, boolean isAdmin){
+    public User(String userName, String firstName, String lastName, String password, String email, Address address, boolean isAdmin){
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;

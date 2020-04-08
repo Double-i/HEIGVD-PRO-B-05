@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static ch.heigvd.easytoolz.utils.Utils.transformLike;
+
 // TODO : One day remove this comment
 // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#reference
 // https://spring.io/guides/tutorials/rest/
@@ -52,20 +54,6 @@ public class UserController {
                 return userRepository.findAll();
             }
         }
-    }
-
-    /**
-     * transform any string in LIKE string for the query
-     * for example :
-     * s => 'henri'
-     * return => '%henri%'
-     * @param s a string
-     * @return the string updated or null if s == null
-     */
-    private String transformLike(String s){
-        if(s == null)
-            return null;
-        return "%" + s + "%";
     }
 
     @GetMapping("/{username}")

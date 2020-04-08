@@ -1,5 +1,8 @@
 package ch.heigvd.easytoolz.repositories;
 
+import ch.heigvd.easytoolz.models.Address;
+import ch.heigvd.easytoolz.models.City;
+import ch.heigvd.easytoolz.models.Country;
 import ch.heigvd.easytoolz.models.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,10 +35,14 @@ public class UserTestRepository {
     public void setUp(){
         allUsers = new ArrayList<>();
 
-        user = new User("vanlong","Bastien","Potet","1234", "bastien.potet@gmail.com", false);
-        user1 = new User("patoche","Patrick","Paul","abcd", "patoche@gmail.com" , true);
-        user2 = new User("praymond","Raymond","Paien","1234", "paienraymond@dayrep.com", false);
-        user3 = new User("vcliche","Cliche","Vick","abcd1234", "vcliche@gmail.com" , true);
+        Country country = new Country("Suisse");
+        City city = new City("Orsières", country);
+        Address address = new Address("Somlaproz 48", "Entremont", "1937", 2,4, city);
+
+        user = new User("vanlong","Bastien","Potet","1234", "bastien.potet@gmail.com",address,  false);
+        user1 = new User("patoche","Patrick","Paul","abcd", "patoche@gmail.com" , address, true);
+        user2 = new User("praymond","Raymond","Paien","1234", "paienraymond@dayrep.com", address, false);
+        user3 = new User("vcliche","Cliche","Vick","abcd1234", "vcliche@gmail.com" , address, true);
 
         entityManager.persistAndFlush(user1);
         entityManager.persistAndFlush(user2);

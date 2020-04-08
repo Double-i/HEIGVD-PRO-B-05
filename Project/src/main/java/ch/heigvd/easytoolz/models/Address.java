@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -18,10 +19,10 @@ public class Address {
     public String getPostalCode() {
         return postalcode;
     }
-    public float getLat() {
+    public BigDecimal getLat() {
         return lat;
     }
-    public float getLng() {
+    public BigDecimal getLng() {
         return lng;
     }
     public City getCity() { return city; }
@@ -38,10 +39,10 @@ public class Address {
     public void setPostalCode(String postalCode) {
         this.postalcode = postalCode;
     }
-    public void setLat(float lat) {
+    public void setLat(BigDecimal lat) {
         this.lat = lat;
     }
-    public void setLng(float lng) {
+    public void setLng(BigDecimal lng) {
         this.lng = lng;
     }
 
@@ -57,8 +58,8 @@ public class Address {
     String address;
     String district;
     String postalcode;
-    float lat;
-    float lng;
+    BigDecimal lat;
+    BigDecimal lng;
 
     @OneToMany(mappedBy = "address")
     private List<User> user;
@@ -68,7 +69,7 @@ public class Address {
     private City city;
 
 
-    public Address( String address, String district, String postalCode, float lat, float lng) {
+    public Address( String address, String district, String postalCode, BigDecimal lat, BigDecimal lng) {
         this.address = address;
         this.district = district;
         this.postalcode = postalCode;

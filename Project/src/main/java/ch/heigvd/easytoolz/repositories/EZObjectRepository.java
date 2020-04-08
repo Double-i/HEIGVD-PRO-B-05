@@ -1,8 +1,10 @@
 package ch.heigvd.easytoolz.repositories;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -34,11 +36,22 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
     EZObject findByID(int id);
 
 
+    /**
+     * Find an object by the content of it's description
+     * @param content
+     * @return
+     */
     List<EZObject> findByDescriptionContaining(String content);
 
-    //EZObject findByLocalisation(int localisation);
+    /**
+     * Find an object by its coordinates
+     * @param lat
+     * @param lng
+     * @return
+     */
+    List<EZObject> findByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat, BigDecimal lng);
 
 
-    //List<EZObjectView>  findByOwner(String owner);
+    List<EZObject> findByobjecttagsIn(List<Tag> tags);
 
 }

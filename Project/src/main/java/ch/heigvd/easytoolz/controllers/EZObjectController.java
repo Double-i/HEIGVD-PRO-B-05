@@ -2,11 +2,13 @@ package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.controllers.exceptions.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.Tag;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -101,13 +103,18 @@ public class EZObjectController {
     }
 
 
-    /**@GetMapping("find/localisation/{latitude}/{longitude}")
+    @GetMapping("find/localisation")
     @ResponseBody
+    public List<EZObject> getObjectsByLocalisation(@RequestParam(name="Latitude") BigDecimal lat, @RequestParam(name="Longitude") BigDecimal lng)
+    {
+        return ezObjectRepository.findByOwner_Address_LatAndOwner_Address_Lng(lat,lng);
+    }
 
-
-    @GetMapping("find/{latitude}/{longitude}")
-    @ResponseBody*/
-
-
+    @GetMapping("find/tags")
+    @ResponseBody
+    public List<EZObject> getObjectsByTag(@RequestBody List<Tag> tags)
+    {
+        return ezObjectRepository.findByobjecttagsIn(tags);
+    }
 
 }

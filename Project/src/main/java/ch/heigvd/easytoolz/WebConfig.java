@@ -21,15 +21,18 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins("http://127.0.0.1:3000").allowCredentials(true);
     }
-    @Bean
-    public WebMvcConfigurer forwardToIndex() {
-        return new WebMvcConfigurer () {
-            @Override
-            public void addViewControllers(ViewControllerRegistry registry)  {
-                registry.addViewController("/").setViewName("forward:index.html");
-            }
-        };
+
+    // redirect all the url to index.html (frontend entry point)
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/{spring:\\w+}")
+                .setViewName("forward:/index.html");
+        registry.addViewController("/**/{spring:\\w+}")
+                .setViewName("forward:/index.html");
+        registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
+                .setViewName("forward:/index.html");
     }
+
 
 
 }

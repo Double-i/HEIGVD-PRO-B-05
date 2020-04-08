@@ -4,25 +4,33 @@ import regex from '../../common/regex'
 import {Formik} from 'formik'
 import {Alert, Button, Form} from "react-bootstrap"
 import {sendRequest} from "../../common/ApiHelper";
+import {schema} from "json-schema-traverse";
 
-function AddToolsForm(props) {
+class AddToolsForm extends React.Component{
 
+    //TODO : Get tag from Database!
+    tags = [
+        'jardin',
+        'bois',
+        'éléctronique'
+    ];
 
     // TODO delete comment - Pour Bastien, le /api est ajouté automatiquement, change signUpAPIEndpoint avec le bon endpoint
-    const addToolAPIEndpoint = '/tools'
+    addToolAPIEndpoint = '/tools';
 
     //TODO : Move la validation d'une image ailleurs?
-    const SUPPORTED_FORMATS = [
+    SUPPORTED_FORMATS = [
         'image/jpg',
         'image/jpeg',
         'image/gif',
         'image/png',
     ];
-    const FILE_SIZE = 1000000;
+    FILE_SIZE = 1000000;
 
 
-    const attemptAddTool = (values) => {
-        sendRequest(addToolAPIEndpoint,{
+    attemptAddTool = (values) => {
+
+        sendRequest(this.addToolAPIEndpoint,{
           data : JSON.stringify(values) //TODO : problème avec le fetch encore , a regarder commrnt on fait
         }).then(
                 result => {
@@ -35,9 +43,10 @@ function AddToolsForm(props) {
     // Ilias: la validation pour l'image ne semble pas correcte il doit avoir une petite erreur ...à voir
 
     // validation rules
-    const schema = yup.object({
+    schema = yup.object({
         toolName: yup.string().required('Requis').min(0).max(20),
         toolDescription: yup.string().min(0).max(200),
+        toolTags: yup.array().of(yup.string()).min(1),
         toolImage: yup
             .mixed()
             //TODO : Les tests ne marche pas, peut être doit on faire un autre schema pour que les files ?
@@ -55,6 +64,7 @@ function AddToolsForm(props) {
                     SUPPORTED_FORMATS.includes(value.type)
             )*/
     });
+    render() {
 
     return (
         <>
@@ -62,17 +72,21 @@ function AddToolsForm(props) {
             <Formik
                 validationSchema={schema}
                 onSubmit={(values, {setSubmitting}) => {
-                    attemptAddTool(values);
+                    this.attemptAddTool(values);
                 }}
                 initialValues={{
                     toolName: '',
                     toolDescription: '',
                     toolImage: '',
+                    toolTags: '',
                 }}
             >
-                {({values, handleSubmit, handleChange}) => (
+                {({values, handleSubmit, handleChange, tags}) => (
+
                     <Form noValidate onSubmit={handleSubmit}>
-                        <Form.Group controlId="fromToolName">
+                        <Form.Group controlId="formToolName">
+                            {JSON.stringify(values)}
+                            {JSON.stringify(tags)}
                             <Form.Control
                                 name="toolName"
                                 type="text"
@@ -81,7 +95,7 @@ function AddToolsForm(props) {
                                 onChange={handleChange}
                             />
                         </Form.Group>
-                        <Form.Group controlId="fromToolDescription">
+                        <Form.Group controlId="formToolDescription">
                             <Form.Control
                                 name="toolDescription"
                                 type="text"
@@ -90,7 +104,27 @@ function AddToolsForm(props) {
                                 value={values.toolDescription}
                             />
                         </Form.Group>
-                        <Form.Group controlId="fromToolFile">
+                        <Form.Group controlId={"formToolTags"}>
+                            Tags (ctrl + click pour choisir plusieurs tags)
+                            <select
+                                multiple="multiple"
+                                className="form-control"
+                                name="toolTags"
+                                value={values.toolTags}
+                                onChange={handleChange}
+                                style={{ display: 'block' }}
+                            >
+                                {(() => {
+                                    const options = [];
+                                    for (let i = 0; i < this.tags.length; i++) {
+                                        options.push(<option value={this.tags[i]}>{this.tags[i]}</option>);
+                                    }
+                                    return options;
+                                })()}
+
+                            </select>
+                        </Form.Group>
+                        <Form.Group controlId="formToolFile">
                             <Form.Control
                                 name="toolImage"
                                 type="file"
@@ -106,7 +140,7 @@ function AddToolsForm(props) {
                 )}
             </Formik>
         </>
-    )
+    )}
 }
 
 export default AddToolsForm

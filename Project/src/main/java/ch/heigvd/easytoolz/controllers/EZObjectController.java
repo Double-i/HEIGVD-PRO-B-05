@@ -1,6 +1,5 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.ApiExceptionHandler;
 import ch.heigvd.easytoolz.controllers.exceptions.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
@@ -40,7 +39,7 @@ public class EZObjectController {
     {
 
         if(ezObjectRepository.findByOwner_UserName(username).size() == 0)
-            throw new EZObjectNotFoundException();
+            throw new EZObjectNotFoundException("No Objects where found for user "+username);
         return ezObjectRepository.findByOwner_UserName(username);
     }
 
@@ -66,7 +65,7 @@ public class EZObjectController {
     {
         EZObject updated = ezObjectRepository.findByID(o.getID());
         if(updated == null)
-            throw new EntityNotFoundException("Object not found " + o.getID() + " ");
+            throw new EZObjectNotFoundException("Object not found " + o.getID() + " ");
         
         updated.setDescription(o.getDescription());
         updated.setName(o.getName());

@@ -1,10 +1,8 @@
 package ch.heigvd.easytoolz.controllers.exceptions;
 
-import javax.persistence.EntityNotFoundException;
-
-public class EZObjectNotFoundException extends EntityNotFoundException {
-    public EZObjectNotFoundException(int id)
+public class EZObjectNotFoundException extends RuntimeException {
+    public EZObjectNotFoundException()
     {
-        super("Object not found "+ id);
+        super("Object not found");
     }
 }

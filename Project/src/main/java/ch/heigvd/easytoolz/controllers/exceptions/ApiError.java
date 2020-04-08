@@ -1,29 +1,17 @@
 package ch.heigvd.easytoolz.controllers.exceptions;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.sql.Date;
 
-@JsonInclude(content = JsonInclude.Include.NON_NULL)
 public class ApiError {
 
-    public HttpStatus getStatus() {
-        return status;
+    public HttpStatus getCode() {
+        return code;
     }
 
-    public void setStatus(HttpStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setCode(HttpStatus code) {
+        this.code = code;
     }
 
     public String getMessage() {
@@ -34,64 +22,22 @@ public class ApiError {
         this.message = message;
     }
 
-    public String getDebugMessage() {
-        return debugMessage;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDebugMessage(String debugMessage) {
-        this.debugMessage = debugMessage;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    /**
-     * Error status
-     * 4xx Client error
-     * 5xx Server error
-     */
-    private HttpStatus status;
+    Date date;
+    HttpStatus code;
+    String message;
 
-    /**
-     * Date time of the error occurence
-     */
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private LocalDateTime timeStamp;
-
-    /**
-     * user friendly message about the error
-     */
-    private String message;
-
-    /**
-     * System message describing the error
-     */
-    private String debugMessage;
-
-
-    private ApiError()
+    ApiError(HttpStatus code, String message,Date date)
     {
-        timeStamp = LocalDateTime.now();
+        this.date = date;
+        this.code = code;
+        this.message  = message;
     }
-
-    ApiError(HttpStatus status)
-    {
-        this();
-        this.status = status;
-    }
-
-    ApiError(HttpStatus status, Throwable ex)
-    {
-        this();
-        this.status = status;
-        this.message = "Unexpected Error";
-        this.debugMessage = ex.getLocalizedMessage();
-    }
-
-    ApiError(HttpStatus status, String message, Throwable ex)
-    {
-        this();
-        this.status = status;
-        this.message = message;
-        this.debugMessage = ex.getLocalizedMessage();
-    }
-
 }
-

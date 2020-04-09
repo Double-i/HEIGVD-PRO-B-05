@@ -39,7 +39,6 @@ class AddToolsForm extends React.Component{
             )
     };
 
-
     // Ilias: la validation pour l'image ne semble pas correcte il doit avoir une petite erreur ...à voir
 
     // validation rules

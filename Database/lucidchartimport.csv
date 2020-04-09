@@ -1,0 +1,39 @@
+mysql, sys, sys_config, variable, 1, varchar, 128, PRIMARY KEY, , , 
+mysql, easytoolz, tag, ID, 1, int, , PRIMARY KEY, , , 
+mysql, easytoolz, user, userName, 1, varchar, 255, PRIMARY KEY, , , 
+mysql, easytoolz, ezobject, ID, 1, int, , PRIMARY KEY, , , 
+mysql, easytoolz, loan, ID, 1, int, , PRIMARY KEY, , , 
+mysql, easytoolz, notification, ID, 1, int, , PRIMARY KEY, , , 
+mysql, easytoolz, ezobject, owner, 4, varchar, 45, FOREIGN KEY, easytoolz, user, userName
+mysql, easytoolz, ezobjectimage, EZObjectID, 2, int, , FOREIGN KEY, easytoolz, ezobject, ID
+mysql, easytoolz, ezobecttag, tagID, 1, int, , FOREIGN KEY, easytoolz, tag, ID
+mysql, easytoolz, ezobecttag, EZObjectID, 2, int, , FOREIGN KEY, easytoolz, ezobject, ID
+mysql, easytoolz, loan, EZObjectID, 8, int, , FOREIGN KEY, easytoolz, ezobject, ID
+mysql, easytoolz, loan, borrower, 6, varchar, 45, FOREIGN KEY, easytoolz, user, userName
+mysql, easytoolz, loan, loaner, 7, varchar, 45, FOREIGN KEY, easytoolz, user, userName
+mysql, easytoolz, report, EZObjectID, 1, int, , FOREIGN KEY, easytoolz, ezobject, ID
+mysql, easytoolz, report, reportWriter, 2, varchar, 255, FOREIGN KEY, easytoolz, user, userName
+mysql, easytoolz, notification, recipient, 3, varchar, 255, FOREIGN KEY, easytoolz, user, userName
+mysql, easytoolz, notification, sender, 4, varchar, 255, FOREIGN KEY, easytoolz, user, userName
+mysql, easytoolz, conversation, borrower, 1, varchar, 255, FOREIGN KEY, easytoolz, user, userName
+mysql, easytoolz, conversation, loaner, 2, varchar, 255, FOREIGN KEY, easytoolz, user, userName
+mysql, sys, sys_config, set_by, 4, varchar, 128, , , , 
+mysql, sys, sys_config, set_time, 3, timestamp, , , , , 
+mysql, sys, sys_config, value, 2, varchar, 128, , , , 
+mysql, easytoolz, tag, name, 2, varchar, 10, , , , 
+mysql, easytoolz, user, email, 6, varchar, 255, , , , 
+mysql, easytoolz, user, firstName, 2, varchar, 255, , , , 
+mysql, easytoolz, user, isAdmin, 5, tinyint, , , , , 
+mysql, easytoolz, user, lastName, 3, varchar, 255, , , , 
+mysql, easytoolz, user, password, 4, varchar, 255, , , , 
+mysql, easytoolz, ezobject, description, 3, varchar, 45, , , , 
+mysql, easytoolz, ezobject, name, 2, varchar, 45, , , , 
+mysql, easytoolz, ezobject, tagID, 5, int, , , , , 
+mysql, easytoolz, ezobjectimage, pathToImg, 1, varchar, 255, , , , 
+mysql, easytoolz, loan, dateEnd, 3, date, , , , , 
+mysql, easytoolz, loan, dateReturn, 4, date, , , , , 
+mysql, easytoolz, loan, dateStart, 2, date, , , , , 
+mysql, easytoolz, loan, state, 5, enum, 11, , , , 
+mysql, easytoolz, report, flag, 3, enum, 7, , , , 
+mysql, easytoolz, notification, message, 2, varchar, 45, , , , 
+mysql, easytoolz, conversation, message, 3, varchar, 45, , , , 

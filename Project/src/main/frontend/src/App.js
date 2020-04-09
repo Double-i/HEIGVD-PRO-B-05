@@ -9,6 +9,7 @@ import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
+import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 
 import { SessionContext, SessionHelper } from './common/SessionHelper'
 

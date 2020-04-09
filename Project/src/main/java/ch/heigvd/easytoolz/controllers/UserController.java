@@ -1,14 +1,20 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.UserNotFoundException;
+import ch.heigvd.easytoolz.controllers.exceptions.user.UserAlreadyPresent;
+import ch.heigvd.easytoolz.controllers.exceptions.user.UserFailedDeleteException;
+import ch.heigvd.easytoolz.controllers.exceptions.user.UserFailedStoreException;
+import ch.heigvd.easytoolz.controllers.exceptions.user.UserNotFoundException;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.models.User;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+
+import static ch.heigvd.easytoolz.util.Utils.transformLike;
 
 // TODO : One day remove this comment
 // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#reference
@@ -54,20 +60,6 @@ public class UserController {
         }
     }
 
-    /**
-     * transform any string in LIKE string for the query
-     * for example :
-     * s => 'henri'
-     * return => '%henri%'
-     * @param s a string
-     * @return the string updated or null if s == null
-     */
-    private String transformLike(String s){
-        if(s == null)
-            return null;
-        return "%" + s + "%";
-    }
-
     @GetMapping("/{username}")
     public User show(@PathVariable String username){
         return userRepository
@@ -91,20 +83,35 @@ public class UserController {
     }
 
     @DeleteMapping("/{username}")
-    public void delete(@PathVariable String username){
-        userRepository.findById(username).ifPresentOrElse(user -> {
-            userRepository.delete(user);
-        }, () -> {
+    public ResponseEntity<String> delete(@PathVariable String username){
+        Optional<User> user = userRepository.findById(username);
+        if(user.isPresent()){
+            userRepository.delete(user.get());
+            if (userRepository.findById(username).isPresent()) {
+                throw new UserFailedDeleteException(username);
+            } else {
+                return new ResponseEntity<>("The user has been deleted", HttpStatus.OK);
+            }
+        }else{
             throw new UserNotFoundException(username);
-        });
+        }
     }
 
     @PostMapping
-    public User store(@RequestBody User user){
+    public ResponseEntity<String> store(@RequestBody User user){
         if(userRepository.findById(user.getUserName()).isPresent()){
-            return null;
+            throw new UserAlreadyPresent(user.getUserName());
         }else{
-            return userRepository.save(user);
+            if(userRepository.save(user).equals(user)){
+                return new ResponseEntity<>("The user has been stored", HttpStatus.OK);
+            }else{
+                throw new UserFailedStoreException(user.getUserName());
+            }
         }
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signUp(@RequestBody User user){
+        return store(user);
     }
 }

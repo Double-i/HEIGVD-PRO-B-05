@@ -5,7 +5,7 @@ import { Formik } from 'formik'
 import * as yup from 'yup'
 import regex from '../common/regex'
 import { checkAddress } from '../common/GoogleApiHelper'
-import { sendRequest } from '../common/ApiHelper'
+import {sendEzApiRequest, sendRequest} from '../common/ApiHelper'
 
 function SignUpForm(props) {
     // TODO delete comment - Pour Bastien, le /api est ajouté automatiquement, change signUpAPIEndpoint avec le bon endpoint
@@ -35,7 +35,7 @@ function SignUpForm(props) {
     // })
 
     const attemptSignUp = values => {
-        checkAddress({
+        /*checkAddress({
             address: values.userAddress,
             npa: values.userNpa,
             city: values.userCity,
@@ -47,14 +47,23 @@ function SignUpForm(props) {
             } else {
                 setIsValidAddress(false)
             }
-        })
+        })*/
+        values = {
+            "userName":"vanlong",
+            "firstName":"henri",
+            "lastName":"patoche",
+            "email":"vanlong@gmail.com",
+            "password":"1234",
+            "isAdmin":"false"
+        };
+        setIsValidAddress(true);
         if (isValidAddress) {
-            sendRequest(signUpAPIEndpoint, {
-                lesDonnéesAjoutéIci: 'fonction utile : JSON.stringify(data) ',
-            }).then(
+            sendEzApiRequest(signUpAPIEndpoint, "POST", /*JSON.stringify(values)*/
+                values
+                ).then(
                 result => {
                     // en principe seul les requete http 200 passe ici
-                    console.log('Connection ok et réponse du serveur')
+                    console.log('Connection ok et réponse du serveur, ' + values)
 
                     setIsSigningUp(false)
                     setHasBeenSignedUp(true)

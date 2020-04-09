@@ -70,7 +70,7 @@ public class Address {
     private List<User> user;
 
     @ManyToOne
-    @JoinColumn(name = "fkCity", referencedColumnName = "id")
+    @JoinColumn(name = "fkcity", referencedColumnName = "id")
     private City city;
 
     public Address(String address, String district, String postalCode, BigDecimal lat, BigDecimal lng, City city) {

@@ -12,7 +12,7 @@ public class EZObjectImage {
 
     String pathtoimg;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "fkezobject", referencedColumnName = "id")
     private EZObject objectimg;
 

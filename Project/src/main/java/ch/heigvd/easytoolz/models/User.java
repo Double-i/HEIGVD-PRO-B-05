@@ -7,10 +7,14 @@ import java.util.List;
 @Entity
 @Table(name="user")
 public class User {
+
+
     @Id
     @Column(name="username")
     @NotNull
+    @Access(AccessType.PROPERTY)
     private String userName;
+
     @Column(name="firstname")
     @NotNull
     private String firstName;
@@ -24,13 +28,13 @@ public class User {
     @NotNull
     private boolean isAdmin;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private List<EZObject> ezobject;
 
     // Required for creating JSON parsing
     public User(){}
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="fkaddress", referencedColumnName = "id")
     private Address address;
 
@@ -47,7 +51,9 @@ public class User {
     public String getUserName() {
         return userName;
     }
-
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
     public String getFirstName() {
         return firstName;
     }

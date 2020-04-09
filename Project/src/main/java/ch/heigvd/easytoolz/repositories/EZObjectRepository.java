@@ -3,6 +3,7 @@ package ch.heigvd.easytoolz.repositories;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,7 +27,7 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      * @param owner owner of the object
      * @return a list of object from the same owner
      */
-    List<EZObject>  findByOwner_UserName(String owner);
+    List<EZObject>  findByOwnerUserName(String owner);
 
     /**
      * Find an object by it's ID

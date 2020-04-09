@@ -7,7 +7,6 @@ import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -40,9 +39,9 @@ public class EZObjectController {
     public List<EZObject> getObjectByOwner(@PathVariable String username)
     {
 
-        if(ezObjectRepository.findByOwner_UserName(username).size() == 0)
+        if(ezObjectRepository.findByOwnerUserName(username).size() == 0)
             throw new EZObjectNotFoundException("No Objects where found for user "+username);
-        return ezObjectRepository.findByOwner_UserName(username);
+        return ezObjectRepository.findByOwnerUserName(username);
     }
 
     /**
@@ -53,7 +52,7 @@ public class EZObjectController {
     @PostMapping("/add")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
-        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getObjecttags(),newObject.getImages());
+        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwnerUserName(),newObject.getObjecttags(),newObject.getImages());
         return ezObjectRepository.save(obj);
     }
 

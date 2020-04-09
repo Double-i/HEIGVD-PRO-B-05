@@ -61,10 +61,10 @@ public class Address {
     BigDecimal lat;
     BigDecimal lng;
 
-    @OneToMany(mappedBy = "address")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "address")
     private List<User> user;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "fkcity", referencedColumnName = "id")
     private City city;
 

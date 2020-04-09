@@ -24,11 +24,11 @@ public class City {
     @Column(name="city")
     String city;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "fkcountry", referencedColumnName = "id")
     private Country country;
 
-    @OneToMany(mappedBy = "city")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "city")
     List<Address> adresses;
 
     public City() {}

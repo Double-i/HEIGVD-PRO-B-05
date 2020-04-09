@@ -1,5 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -18,7 +20,8 @@ public class EZObject {
     public String getDescription() {
         return description;
     }
-    public User getOwner(){return owner;}
+
+    public String getOwnerUserName(){return this.ownerUserName; }
     public List<EZObjectImage> getImages() {
         return images;
     }
@@ -35,7 +38,7 @@ public class EZObject {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setOwner(User owner){this.owner = owner;}
+    public void setOwnerUserName(String owner){this.ownerUserName = owner;}
     public void setImages(List<EZObjectImage> ezobject) {
         this.images = ezobject;
     }
@@ -43,6 +46,13 @@ public class EZObject {
         this.objecttags = objecttags;
     }
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,12 +66,20 @@ public class EZObject {
     private String description;
 
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "owner", referencedColumnName = "userName")
-    private User owner;
+//@JsonIgnore
+    //@ManyToOne(fetch=FetchType.LAZY)
+   // @JoinColumn(name = "owner", referencedColumnName = "userName")
 
-    @OneToMany(mappedBy = "objectimg")
+    @Column(name="owner", updatable = false, insertable = false)
+    private String ownerUserName;
+
+    @OneToMany(fetch=FetchType.LAZY,mappedBy = "objectimg")
     private List<EZObjectImage> images;
+
+     @JsonIgnore
+     @ManyToOne(fetch=FetchType.LAZY)
+     @JoinColumn(name = "owner", referencedColumnName = "userName")
+     private User owner;
 
     //association class
     @ManyToMany
@@ -73,10 +91,10 @@ public class EZObject {
     Set<Tag> objecttags;
 
     public EZObject(){}
-    public EZObject( String name, String description ,User owner,Set<Tag> tags,List<EZObjectImage> images) {
+    public EZObject(String name, String description , String ownerUserName, Set<Tag> tags, List<EZObjectImage> images) {
         this.name = name;
         this.description = description;
-        this.owner = owner;
+        this.ownerUserName = ownerUserName;
         this.objecttags = tags;
         this.images = images;
     }
@@ -87,7 +105,7 @@ public class EZObject {
                 "ID=" + ID +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", owner='" + owner + '\'' +
+                ", owner='" + ownerUserName + '\'' +
                 "}\n";
     }
 }

@@ -29,7 +29,7 @@ public class Tag {
 
     private String name;
 
-    @ManyToMany(mappedBy = "objecttags")
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "objecttags")
     Set<EZObject> tagobjects;
 
     public Tag(){}

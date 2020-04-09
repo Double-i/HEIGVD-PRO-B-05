@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.utils;
+package ch.heigvd.easytoolz.util;
 
 public class Utils {
     /**

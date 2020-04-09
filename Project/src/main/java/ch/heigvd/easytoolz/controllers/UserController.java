@@ -6,7 +6,6 @@ import ch.heigvd.easytoolz.controllers.exceptions.user.UserFailedStoreException;
 import ch.heigvd.easytoolz.controllers.exceptions.user.UserNotFoundException;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.models.User;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static ch.heigvd.easytoolz.utils.Utils.transformLike;
+import static ch.heigvd.easytoolz.util.Utils.transformLike;
 
 // TODO : One day remove this comment
 // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#reference
@@ -109,5 +108,10 @@ public class UserController {
                 throw new UserFailedStoreException(user.getUserName());
             }
         }
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signUp(@RequestBody User user){
+        return store(user);
     }
 }

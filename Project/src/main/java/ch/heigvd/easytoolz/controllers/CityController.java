@@ -1,9 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.City;
-import ch.heigvd.easytoolz.models.Country;
 import ch.heigvd.easytoolz.repositories.CityRepository;
-import ch.heigvd.easytoolz.repositories.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static ch.heigvd.easytoolz.utils.Utils.transformLike;
+import static ch.heigvd.easytoolz.util.Utils.transformLike;
 
 @RestController
 @RequestMapping("/cities")

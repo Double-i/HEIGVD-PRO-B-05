@@ -21,7 +21,7 @@ public class Country {
     @Column(name="country")
     String country;
 
-    @OneToMany(fetch=FetchType.LAZY,mappedBy = "country")
+    @OneToMany(fetch=FetchType.EAGER,mappedBy = "country")
     List<City> cities;
 
 

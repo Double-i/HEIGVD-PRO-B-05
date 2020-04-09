@@ -27,7 +27,7 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      * @param owner owner of the object
      * @return a list of object from the same owner
      */
-    List<EZObject>  findByOwnerUserName(String owner);
+    List<EZObject>  findByOwner(String owner);
 
     /**
      * Find an object by it's ID

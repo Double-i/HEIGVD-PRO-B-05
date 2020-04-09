@@ -1,5 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -61,10 +63,10 @@ public class Address {
     BigDecimal lat;
     BigDecimal lng;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "address")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "address")
     private List<User> user;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "fkcity", referencedColumnName = "id")
     private City city;
 
@@ -77,5 +79,17 @@ public class Address {
         this.lng = lng;
     }
 
-
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", district='" + district + '\'' +
+                ", postalcode='" + postalcode + '\'' +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", user=" + user +
+                ", city=" + city +
+                '}';
+    }
 }

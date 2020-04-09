@@ -1,5 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -24,11 +26,11 @@ public class City {
     @Column(name="city")
     String city;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "fkcountry", referencedColumnName = "id")
     private Country country;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "city")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "city")
     List<Address> adresses;
 
     public City() {}

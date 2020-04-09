@@ -1,5 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -12,7 +14,6 @@ public class User {
     @Id
     @Column(name="username")
     @NotNull
-    @Access(AccessType.PROPERTY)
     private String userName;
 
     @Column(name="firstname")
@@ -34,7 +35,7 @@ public class User {
     // Required for creating JSON parsing
     public User(){}
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="fkaddress", referencedColumnName = "id")
     private Address address;
 

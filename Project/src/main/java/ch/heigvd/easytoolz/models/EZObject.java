@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,7 +21,6 @@ public class EZObject {
     public String getDescription() {
         return description;
     }
-
     public String getOwnerUserName(){return this.ownerUserName; }
     public List<EZObjectImage> getImages() {
         return images;
@@ -38,7 +38,6 @@ public class EZObject {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setOwnerUserName(String owner){this.ownerUserName = owner;}
     public void setImages(List<EZObjectImage> ezobject) {
         this.images = ezobject;
     }
@@ -49,7 +48,6 @@ public class EZObject {
     public User getOwner() {
         return owner;
     }
-
     public void setOwner(User owner) {
         this.owner = owner;
     }
@@ -65,19 +63,14 @@ public class EZObject {
     @Column(name="description")
     private String description;
 
-
-//@JsonIgnore
-    //@ManyToOne(fetch=FetchType.LAZY)
-   // @JoinColumn(name = "owner", referencedColumnName = "userName")
-
-    @Column(name="owner", updatable = false, insertable = false)
-    private String ownerUserName;
-
     @OneToMany(fetch=FetchType.LAZY,mappedBy = "objectimg")
     private List<EZObjectImage> images;
 
+    @Transient
+    private String ownerUserName;
+
      @JsonIgnore
-     @ManyToOne(fetch=FetchType.LAZY)
+     @ManyToOne(fetch=FetchType.EAGER)
      @JoinColumn(name = "owner", referencedColumnName = "userName")
      private User owner;
 
@@ -91,10 +84,10 @@ public class EZObject {
     Set<Tag> objecttags;
 
     public EZObject(){}
-    public EZObject(String name, String description , String ownerUserName, Set<Tag> tags, List<EZObjectImage> images) {
+    public EZObject(String name, String description  , Set<Tag> tags, List<EZObjectImage> images)
+    {
         this.name = name;
         this.description = description;
-        this.ownerUserName = ownerUserName;
         this.objecttags = tags;
         this.images = images;
     }
@@ -105,7 +98,7 @@ public class EZObject {
                 "ID=" + ID +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", owner='" + ownerUserName + '\'' +
+                ", owner='" + owner + '\'' +
                 "}\n";
     }
 }

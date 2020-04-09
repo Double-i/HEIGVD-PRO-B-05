@@ -1,9 +1,14 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.controllers.exceptions.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.controllers.exceptions.UserNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.repositories.UserRepository;
+import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
+import ch.heigvd.easytoolz.repositories.EZObjectViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +23,12 @@ public class EZObjectController {
     @Autowired
     EZObjectRepository ezObjectRepository;
 
+    @Autowired
+    EZObjectViewRepository objectViewRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
     /**
      * Get the list of all the objects
      * @return
@@ -28,6 +39,7 @@ public class EZObjectController {
         return ezObjectRepository.findAll();
     }
 
+
     /**
      * Find objects by owner
      * url: api/objects/find/{username}
@@ -36,12 +48,12 @@ public class EZObjectController {
      */
     @GetMapping("/find/user/{username}")
     @ResponseBody
-    public List<EZObject> getObjectByOwner(@PathVariable String username)
+    public List<EZObjectView> getObjectByOwner(@PathVariable String username)
     {
 
-        if(ezObjectRepository.findByOwnerUserName(username).size() == 0)
+        if(objectViewRepository.findByObjectOwner(username).size() == 0)
             throw new EZObjectNotFoundException("No Objects where found for user "+username);
-        return ezObjectRepository.findByOwnerUserName(username);
+        return objectViewRepository.findByObjectOwner(username);
     }
 
     /**
@@ -52,8 +64,9 @@ public class EZObjectController {
     @PostMapping("/add")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
-        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwnerUserName(),newObject.getObjecttags(),newObject.getImages());
-        return ezObjectRepository.save(obj);
+        User owner = userRepository.findByUserName(newObject.getOwnerUserName());
+        newObject.setOwner(owner);
+        return ezObjectRepository.save(newObject);
     }
 
     /**

@@ -39,15 +39,15 @@ insert into ezobject (name,description,owner) values("drapeau suisse","montrez v
 insert into ezobject (name,description,owner) values("haut parleur","besoin de musique pour vos soirées?","heymanuel");
 insert into ezobject (name,description,owner) values("agrapheuse","puissant ","mauricel");
 
-insert into ezobjecttag(fkTag,fkEZObject) values(1,1);
-insert into ezobjecttag(fkTag,fkEZObject) values(2,1);
-insert into ezobjecttag(fkTag,fkEZObject) values(2,2);
-insert into ezobjecttag(fkTag,fkEZObject) values(2,9);
-insert into ezobjecttag(fkTag,fkEZObject) values(2,13);
-insert into ezobjecttag(fkTag,fkEZObject) values(3,4);
-insert into ezobjecttag(fkTag,fkEZObject) values(5,4);
-insert into ezobjecttag(fkTag,fkEZObject) values(9,1);
-insert into ezobjecttag(fkTag,fkEZObject) values(9,8);
+insert into ezobjecttag(fkTag,fkEZObject) values("jardin",1);
+insert into ezobjecttag(fkTag,fkEZObject) values("bricolage",1);
+insert into ezobjecttag(fkTag,fkEZObject) values("bricolage",2);
+insert into ezobjecttag(fkTag,fkEZObject) values("bricolage",9);
+insert into ezobjecttag(fkTag,fkEZObject) values("bricolage",13);
+insert into ezobjecttag(fkTag,fkEZObject) values("sport",4);
+insert into ezobjecttag(fkTag,fkEZObject) values("skateboard",4);
+insert into ezobjecttag(fkTag,fkEZObject) values("ete",1);
+insert into ezobjecttag(fkTag,fkEZObject) values("ete",8);
 
 insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-03-30","2020-04-10",null,"pending","vitorvaz",1);
 insert into loan(dateStart, dateEnd,dateReturn, state,borrower, fkEZObject) values("2020-04-10","2020-05-1",null,"pending","heymanuel",11);

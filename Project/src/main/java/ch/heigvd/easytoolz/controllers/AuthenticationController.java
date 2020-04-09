@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.controllers;
 
+import ch.heigvd.easytoolz.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.MyUserDetailsService;
 import ch.heigvd.easytoolz.models.AuthenticationRequest;
 import ch.heigvd.easytoolz.models.AuthenticationResponse;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,7 @@ class AuthenticationController {
     private String duration;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private EasyAuthenticationProvider authenticationManager;
 
     @Autowired
     private JwtUtil jwtTokenUtil;
@@ -43,7 +43,7 @@ class AuthenticationController {
             );
         }
         catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            throw new BadCredentialsException("Incorrect username or password", e);
         }
 
         final UserDetails userDetails = userDetailsService

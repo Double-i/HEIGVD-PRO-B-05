@@ -19,8 +19,8 @@ export class SessionHelper {
      */
     isUserLogin = () => {
         return (
-            Object.keys(this.userSession).length > 0 &&
-            this.userSession.constructor === Object
+            (Object.keys(this.userSession).length > 0 &&
+            this.userSession.constructor === Object)
         )
     }
     /**

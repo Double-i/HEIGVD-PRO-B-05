@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz;
 
 import ch.heigvd.easytoolz.filters.JwtRequestFilter;
+import ch.heigvd.easytoolz.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,15 +20,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    private EasyAuthenticationProvider authenticationProvider;
-    @Autowired
-    private UserDetailsService myUserDetailsService;
+    private EasyAuthenticationProvider easyAuthenticationProvider;
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetailsService);
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(easyAuthenticationProvider);
     }
 
     @Bean

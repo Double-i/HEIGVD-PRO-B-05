@@ -37,16 +37,26 @@ public class EZObjectView {
     @Column(name = "owner_longitude")
     BigDecimal ownerLng;
 
+
+
     @JsonIgnore
     @OneToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "object_id", referencedColumnName = "id")
     EZObject obj;
 
+    public EZObject getObj() {
+        return obj;
+    }
+
+    public void setObj(EZObject obj) {
+        this.obj = obj;
+    }
 
     public List<EZObjectImage> getObjectImage()
     {
         return obj.getImages();
     }
+    //association class
 
     public Set<Tag> getObjectTag() {
         return obj.getObjecttags();

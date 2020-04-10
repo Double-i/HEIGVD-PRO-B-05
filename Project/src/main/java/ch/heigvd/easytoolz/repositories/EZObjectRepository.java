@@ -46,6 +46,7 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      */
     List<EZObject> findByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat, BigDecimal lng);
 
-    //List<EZObjectView>  findByOwner(String owner);
+    List<EZObject> findByObjectTagsIn(List<Tag> tags);
+
 
 }

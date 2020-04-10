@@ -26,7 +26,7 @@ public class EZObject {
         return images;
     }
     public Set<Tag> getObjecttags() {
-        return objecttags;
+        return objectTags;
     }
 
     public void setID(int ID) {
@@ -42,7 +42,7 @@ public class EZObject {
         this.images = ezobject;
     }
     public void setObjecttags(Set<Tag> objecttags) {
-        this.objecttags = objecttags;
+        this.objectTags = objecttags;
     }
 
     public User getOwner() {
@@ -76,19 +76,19 @@ public class EZObject {
 
     //association class
     @ManyToMany
-            @JoinTable(
-                    name="ezobjecttag",
-                    joinColumns = @JoinColumn(name="fkezobject"),
-                    inverseJoinColumns = @JoinColumn(name="fktag")
-            )
-    Set<Tag> objecttags;
+    @JoinTable(
+            name="ezobjecttag",
+            joinColumns = @JoinColumn(name="fkezobject"),
+            inverseJoinColumns = @JoinColumn(name="fktag")
+    )
+    Set<Tag> objectTags;
 
     public EZObject(){}
     public EZObject(String name, String description  , Set<Tag> tags, List<EZObjectImage> images)
     {
         this.name = name;
         this.description = description;
-        this.objecttags = tags;
+        this.objectTags = tags;
         this.images = images;
     }
 

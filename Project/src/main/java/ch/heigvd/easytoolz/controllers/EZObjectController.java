@@ -1,9 +1,11 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.controllers.exceptions.user.UserNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
+import ch.heigvd.easytoolz.services.UserService;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
@@ -11,6 +13,7 @@ import ch.heigvd.easytoolz.repositories.EZObjectViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -25,16 +28,16 @@ public class EZObjectController {
     EZObjectViewRepository objectViewRepository;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     /**
      * Get the list of all the objects
      * @return
      */
     @GetMapping
-    public List<EZObject> index()
+    public List<EZObjectView> index()
     {
-        return ezObjectRepository.findAll();
+        return objectViewRepository.findAll();
     }
 
 
@@ -62,7 +65,7 @@ public class EZObjectController {
     @PostMapping("/add")
     public EZObject addObject(@RequestBody EZObject newObject)
     {
-        User owner = userRepository.findByUserName(newObject.getOwnerUserName());
+        User owner = userService.getUser(newObject.getOwnerUserName());
         newObject.setOwner(owner);
         return ezObjectRepository.save(newObject);
     }
@@ -73,7 +76,7 @@ public class EZObjectController {
      * @return
      */
     @PostMapping("/update")
-    public EZObject updateObject(@RequestBody EZObject o)
+    public  @ResponseBody EZObject updateObject(@RequestBody EZObject o)
     {
         EZObject updated = ezObjectRepository.findByID(o.getID());
         if(updated == null)
@@ -95,9 +98,9 @@ public class EZObjectController {
      */
     @GetMapping("find/name/{objectName}")
     @ResponseBody
-    public List<EZObject> getObjectByName(@PathVariable String objectName)
+    public List<EZObjectView> getObjectByName(@PathVariable String objectName)
     {
-        return ezObjectRepository.findByNameContaining(objectName);
+        return objectViewRepository.findByObjectNameContaining(objectName);
     }
 
     /**
@@ -107,24 +110,24 @@ public class EZObjectController {
      */
     @GetMapping("find/description/{content}")
     @ResponseBody
-    public List<EZObject> getObjectByDescription(@PathVariable String content)
+    public List<EZObjectView> getObjectByDescription(@PathVariable String content)
     {
-        return ezObjectRepository.findByDescriptionContaining(content);
+        return objectViewRepository.findByObjectDescriptionContaining(content);
     }
 
 
     @GetMapping("find/localisation")
     @ResponseBody
-    public List<EZObject> getObjectsByLocalisation(@RequestParam(name="Latitude") BigDecimal lat, @RequestParam(name="Longitude") BigDecimal lng)
+    public List<EZObjectView> getObjectsByLocalisation(@RequestParam(name="Latitude") BigDecimal lat, @RequestParam(name="Longitude") BigDecimal lng)
     {
-        return ezObjectRepository.findByOwner_Address_LatAndOwner_Address_Lng(lat,lng);
+        return objectViewRepository.findByOwnerLatAndOwnerLng(lat,lng);
     }
 
     @GetMapping("find/tags")
     @ResponseBody
     public List<EZObject> getObjectsByTag(@RequestBody List<Tag> tags)
     {
-        return ezObjectRepository.findByobjecttagsIn(tags);
+        return ezObjectRepository.findByObjectTagsIn(tags);
     }
 
 }

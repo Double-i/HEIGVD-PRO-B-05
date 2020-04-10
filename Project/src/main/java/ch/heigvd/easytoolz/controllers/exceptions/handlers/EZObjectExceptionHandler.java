@@ -1,40 +1,25 @@
 package ch.heigvd.easytoolz.controllers.exceptions.handlers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.EZObjectFormatException;
+import ch.heigvd.easytoolz.controllers.exceptions.user.UserNotFoundException;
 import ch.heigvd.easytoolz.controllers.exceptions.errors.ApiError;
-import ch.heigvd.easytoolz.controllers.exceptions.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectFormatException;
+import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.sql.Date;
-import java.util.Calendar;
 
 
 /**
- * Handles exceptions thrown by @EZObjectController
+ * Handles exceptions thrown by any exception of EZObjectController
  */
 @ControllerAdvice
-public class EZObjectExceptionHandler extends ResponseEntityExceptionHandler {
-
-
-    private Date Now()
-    {
-        return new Date(Calendar.getInstance().getTime().getTime());
-    }
-    private String getURI(WebRequest request)
-    {
-        return ((ServletWebRequest)request).getRequest().getRequestURI();
-    }
-
+public class EZObjectExceptionHandler extends DefaultExceptionHandler {
 
     @ExceptionHandler({EZObjectNotFoundException.class})
-    protected ResponseEntity<ApiError> handleEZObjectNotFoundException(EZObjectNotFoundException ex, WebRequest request)
+    public ResponseEntity<ApiError> handleEZObjectNotFoundException(EZObjectNotFoundException ex, WebRequest request)
     {
         ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), Now(),getURI(request) );
         return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.NOT_FOUND);
@@ -47,11 +32,11 @@ public class EZObjectExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<ApiError> defaultHandler(Exception ex,WebRequest request)
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex, WebRequest request)
     {
-        ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,ex.getMessage(),Now(),getURI(request));
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
+        ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), Now(), getURI(request));
+        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.NOT_FOUND);
     }
 
 

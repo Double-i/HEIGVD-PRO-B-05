@@ -1,7 +1,6 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.EZObjectNotFoundException;
-import ch.heigvd.easytoolz.controllers.exceptions.UserNotFoundException;
+import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
@@ -12,7 +11,6 @@ import ch.heigvd.easytoolz.repositories.EZObjectViewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 

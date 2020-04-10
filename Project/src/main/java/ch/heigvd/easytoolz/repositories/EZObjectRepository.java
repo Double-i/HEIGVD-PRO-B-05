@@ -36,12 +36,6 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      */
     EZObject findByID(int id);
 
-
-    /**
-     * Find an object by the content of it's description
-     * @param content
-     * @return
-     */
     List<EZObject> findByDescriptionContaining(String content);
 
     /**
@@ -52,7 +46,6 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      */
     List<EZObject> findByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat, BigDecimal lng);
 
-
-    List<EZObject> findByobjecttagsIn(List<Tag> tags);
+    //List<EZObjectView>  findByOwner(String owner);
 
 }

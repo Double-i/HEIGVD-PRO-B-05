@@ -3,41 +3,44 @@ package ch.heigvd.easytoolz.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name="City")
+@Table(name = "city")
 public class City {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String city;
 
-    public Country getCountry() { return country; }
-    public String getCity() { return city; }
+    @ManyToOne
+    @JoinColumn(name = "fkcountry", referencedColumnName = "id")
+    private Country country;
 
-    public void setCity(String city) {this.city = city;}
-    public void setCountry(Country country) { this.country = country;  }
+    public City(){
+    }
+
+    public City(String city, Country country){
+        this.city = city;
+        this.country = country;
+    }
 
     public int getId() {
         return id;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    public String getCity() {
+        return city;
+    }
 
-    @Column(name="city")
-    String city;
-
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "fkcountry", referencedColumnName = "id")
-    private Country country;
-
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "city")
-    List<Address> adresses;
-
-    public City() {}
-
-
-    public City(String city)
-    {
+    public void setCity(String city) {
         this.city = city;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 }

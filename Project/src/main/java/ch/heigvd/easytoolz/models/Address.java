@@ -7,23 +7,28 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
+@Table(name = "address")
 public class Address {
-
     public int getId() {
         return id;
     }
+
     public String getAddress() {
         return address;
     }
+
     public String getDistrict() {
         return district;
     }
+
     public String getPostalCode() {
         return postalcode;
     }
+
     public BigDecimal getLat() {
         return lat;
     }
+
     public BigDecimal getLng() {
         return lng;
     }
@@ -66,17 +71,17 @@ public class Address {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "address")
     private List<User> user;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "fkcity", referencedColumnName = "id")
     private City city;
 
-
-    public Address( String address, String district, String postalCode, BigDecimal lat, BigDecimal lng) {
+    public Address(String address, String district, String postalCode, BigDecimal lat, BigDecimal lng, City city) {
         this.address = address;
         this.district = district;
         this.postalcode = postalCode;
         this.lat = lat;
         this.lng = lng;
+        this.city = city;
     }
 
     @Override

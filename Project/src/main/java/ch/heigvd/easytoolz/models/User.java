@@ -25,6 +25,9 @@ public class User {
     @Column(name="password")
     @NotNull
     private String password;
+    @Column(name="email")
+    @NotNull
+    private String email;
     @Column(name="isadmin")
     @NotNull
     private boolean isAdmin;
@@ -35,11 +38,11 @@ public class User {
     // Required for creating JSON parsing
     public User(){}
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name="fkaddress", referencedColumnName = "id")
     private Address address;
 
-    public User(String userName, String firstName, String lastName, String password, boolean isAdmin, Address address){
+    public User(String userName, String firstName, String lastName, String password, String email, Address address, boolean isAdmin){
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,6 +50,7 @@ public class User {
         this.password = password;
         this.isAdmin = isAdmin;
         this.address  = address;
+        this.email = email;
     }
 
     public String getUserName() {
@@ -90,14 +94,22 @@ public class User {
     public String toString() {
         return String.format(
                 "User{" +
-                    "username=%s," +
-                    "firstName=%s," +
-                    "lastName=%s," +
-                    "isAdmin=%b" +
-                "}",
+                        "username=%s," +
+                        "firstName=%s," +
+                        "lastName=%s," +
+                        "isAdmin=%b" +
+                        "}",
                 userName,
                 firstName,
                 lastName,
                 isAdmin);
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

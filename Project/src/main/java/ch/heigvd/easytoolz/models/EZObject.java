@@ -21,7 +21,7 @@ public class EZObject {
     public String getDescription() {
         return description;
     }
-    public String getOwnerUserName(){return this.ownerUserName; }
+    public String getOwnerUserName(){ if(ownerUserName == null){ownerUserName = owner.getUserName();} return ownerUserName; }
     public List<EZObjectImage> getImages() {
         return images;
     }

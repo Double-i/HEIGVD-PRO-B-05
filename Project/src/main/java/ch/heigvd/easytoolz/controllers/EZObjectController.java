@@ -65,7 +65,7 @@ public class EZObjectController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id)
+    public ResponseEntity<String> delete(@PathVariable Integer id)
     {
         ezObjectService.deleteObject(id);
         return new ResponseEntity<>("Object has been deleted",HttpStatus.OK);

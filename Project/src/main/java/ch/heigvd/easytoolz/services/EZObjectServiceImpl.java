@@ -30,6 +30,17 @@ public class EZObjectServiceImpl implements EZObjectService {
     @Autowired
     UserService userService;
 
+    public boolean exists(EZObject obj)
+    {
+        return obj.isActive();
+    }
+    public EZObjectView getObject(int id)
+    {
+        EZObjectView obj = objectViewRepository.findByObjectId(id);
+        if(obj== null ||!exists(obj.getObj()))
+            throw new EZObjectNotFoundException("No Objects where found for user "+ id);
+        return obj;
+    }
 
     public List<EZObjectView> getAll()
     {
@@ -45,13 +56,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         return objectViewRepository.findByObjectOwner(username);
     }
 
-    public EZObjectView getObject(int id)
-    {
-        EZObjectView obj = objectViewRepository.findByObjectId(id);
-        if(obj== null)
-            throw new EZObjectNotFoundException("No Objects where found for user "+ id);
-        return obj;
-    }
+
 
     public void addObject( EZObject newObject)
     {
@@ -81,7 +86,10 @@ public class EZObjectServiceImpl implements EZObjectService {
         EZObject toDelete = ezObjectRepository.findByID(id);
         if(toDelete == null)
             throw new EZObjectNotFoundException(""+id);
-        ezObjectRepository.delete(toDelete);
+
+        toDelete.setActive(false);
+        updateObject(toDelete);
+
     }
 
 
@@ -104,6 +112,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     public List<EZObject> getObjectsByTag( List<Tag> tags)
     {
+
         return ezObjectRepository.findByObjectTagsIn(tags);
     }
 

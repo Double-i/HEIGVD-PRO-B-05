@@ -56,7 +56,6 @@ public class EZObjectView {
     {
         return obj.getImages();
     }
-    //association class
 
     public Set<Tag> getObjectTag() {
         return obj.getObjecttags();

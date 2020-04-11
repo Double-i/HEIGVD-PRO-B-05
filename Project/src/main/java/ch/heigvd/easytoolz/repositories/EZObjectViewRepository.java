@@ -12,7 +12,7 @@ public interface EZObjectViewRepository extends JpaRepository<EZObjectView,Strin
 
     List<EZObjectView> findByObjectOwner(String owner);
 
-    List<EZObjectView> findByObjectId(int id);
+    EZObjectView findByObjectId(int id);
 
     List<EZObjectView> findByOwnerLatAndOwnerLng(BigDecimal lat, BigDecimal lng);
 

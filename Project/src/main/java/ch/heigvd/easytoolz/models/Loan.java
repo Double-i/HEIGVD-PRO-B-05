@@ -9,7 +9,7 @@ import java.util.Set;
 @Table(name="loan")
 public class Loan {
 
-    public int getID() {
+    public int getPkLoan() {
         return pkLoan;
     }
     public String getDateStart() {
@@ -31,7 +31,7 @@ public class Loan {
         return fkEZObject;
     }
 
-    public void setID(int pkLoan) {
+    public void setPkLoan(int pkLoan) {
         this.pkLoan = pkLoan;
     }
     public void setdateStart(String dateStart) {

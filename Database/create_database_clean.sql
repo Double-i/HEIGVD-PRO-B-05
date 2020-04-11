@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS address(
 );
 
 CREATE TABLE IF NOT EXISTS user(
-    user_name VARCHAR(255),
+    user_name VARCHAR(255) PRIMARY KEY,
     first_name VARCHAR(40),
     last_name VARCHAR(40),
     password VARCHAR(255),
@@ -50,15 +50,15 @@ CREATE TABLE IF NOT EXISTS ezobject(
 
 CREATE TABLE IF NOT EXISTS ezobject_image(
     path_to_image VARCHAR(255),
-    fk_ez_object INT
+    fk_ezobject INT
 );
 
 CREATE TABLE IF NOT EXISTS tag(
-    name VARCHAR(45)
+    name VARCHAR(45) PRIMARY KEY
 );
 
 CREATE TABLE ezobject_tag(
-    fk_tag INT,
+    fk_tag VARCHAR(45),
     fk_ezobject INT
 );
 

@@ -1,29 +1,30 @@
 package ch.heigvd.easytoolz.models;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name="ezobjectimage")
+@Table(name="ezobject_image")
 public class EZObjectImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
-
-    String pathtoimg;
+    String pathToImage;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "fkezobject", referencedColumnName = "id")
-    private EZObject objectimg;
+    @JoinColumn(name = "fk_ezobject", referencedColumnName = "id")
+    private EZObject object_image;
 
     public EZObjectImage() {
     }
 
-    public String getPathtoimg() {
-        return pathtoimg;
+    public String getPathToImage() {
+        return pathToImage;
     }
 
-    public void setPathtoimg(String pathtoimg) {
-        this.pathtoimg = pathtoimg;
+    public void setPathToImage(String pathtoimg) {
+        this.pathToImage = pathtoimg;
     }
 }

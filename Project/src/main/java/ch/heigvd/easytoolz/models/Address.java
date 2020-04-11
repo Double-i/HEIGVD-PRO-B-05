@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -68,11 +69,19 @@ public class Address {
     BigDecimal lat;
     BigDecimal lng;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "address")
+    @OneToMany(mappedBy = "address")
     private List<User> user;
 
+    public List<User> getUser() {
+        return user;
+    }
+
+    public void setUser(List<User> user) {
+        this.user = user;
+    }
+
     @ManyToOne
-    @JoinColumn(name = "fkcity", referencedColumnName = "id")
+    @JoinColumn(name = "fk_city", referencedColumnName = "id")
     private City city;
 
     public Address(String address, String district, String postalCode, BigDecimal lat, BigDecimal lng, City city) {

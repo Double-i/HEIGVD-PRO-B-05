@@ -34,10 +34,11 @@ public class EZObjectServiceImpl implements EZObjectService {
     {
         return obj.isActive();
     }
+
     public EZObjectView getObject(int id)
     {
         EZObjectView obj = objectViewRepository.findByObjectId(id);
-        if(obj== null ||!exists(obj.getObj()))
+        if(obj== null ||!exists(obj.getEzObject()))
             throw new EZObjectNotFoundException("No Objects where found for user "+ id);
         return obj;
     }
@@ -50,10 +51,12 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     public List<EZObjectView> getObjectByOwner( String username)
     {
+        List<EZObjectView> res =  objectViewRepository.findByObjectOwner(username);
 
-        if(objectViewRepository.findByObjectOwner(username).size() == 0)
+        if(res.size() == 0)
             throw new EZObjectNotFoundException("No Objects where found for user "+username);
-        return objectViewRepository.findByObjectOwner(username);
+
+        return res;
     }
 
 
@@ -75,7 +78,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         updated.setDescription(o.getDescription());
         updated.setName(o.getName());
         updated.setImages(o.getImages());
-        updated.setObjecttags(o.getObjecttags());
+        updated.setObjectTags(o.getObjectTags());
 
 
         ezObjectRepository.save(updated);

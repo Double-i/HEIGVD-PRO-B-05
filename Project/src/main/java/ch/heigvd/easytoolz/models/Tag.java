@@ -22,8 +22,9 @@ public class Tag {
     @NotNull
     private String name;
 
+
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "objectTags")
-    Set<EZObject> tagobjects;
+    Set<EZObject> tagObjects;
 
     public Tag(){}
     public Tag(String name) {this.name = name;}

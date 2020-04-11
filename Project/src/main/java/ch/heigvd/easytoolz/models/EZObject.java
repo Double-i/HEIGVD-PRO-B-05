@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.models;
 
+import ch.heigvd.easytoolz.views.EZObjectView;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.ColumnDefault;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="EZObject")
 @Where(clause = "is_active=1")
 public class EZObject {
 
@@ -41,7 +41,7 @@ public class EZObject {
         return images;
     }
 
-    public Set<Tag> getObjecttags() { return objectTags; }
+    public Set<Tag> getObjectTags() { return objectTags; }
 
     public void setID(int ID) {
         this.ID = ID;
@@ -55,7 +55,7 @@ public class EZObject {
     public void setImages(List<EZObjectImage> ezobject) {
         this.images = ezobject;
     }
-    public void setObjecttags(Set<Tag> objecttags) {
+    public void setObjectTags(Set<Tag> objecttags) {
         this.objectTags = objecttags;
     }
 
@@ -79,33 +79,31 @@ public class EZObject {
     private int ID;
 
     @NotNull
-    @Column(name="name")
     private String name;
 
-    @Column(name="description")
     private String description;
 
-    @Column(name="is_active", columnDefinition = "tinyint(1) default 1")
     private boolean isActive;
 
 
-    @OneToMany(fetch=FetchType.LAZY,mappedBy = "objectimg")
+
+    @OneToMany(fetch=FetchType.LAZY,mappedBy = "object_image")
     private List<EZObjectImage> images;
 
     @Transient
     private String ownerUserName;
 
      @JsonIgnore
-     @ManyToOne(fetch=FetchType.LAZY)
+     @ManyToOne(fetch = FetchType.LAZY)
      @JoinColumn(name = "owner", referencedColumnName = "userName")
      private User owner;
 
     //association class
     @ManyToMany
     @JoinTable(
-            name="ezobjecttag",
-            joinColumns = @JoinColumn(name="fkezobject"),
-            inverseJoinColumns = @JoinColumn(name="fktag")
+            name="ezobject_tag",
+            joinColumns = @JoinColumn(name="fk_ezobject"),
+            inverseJoinColumns = @JoinColumn(name="fk_tag")
     )
     Set<Tag> objectTags;
 

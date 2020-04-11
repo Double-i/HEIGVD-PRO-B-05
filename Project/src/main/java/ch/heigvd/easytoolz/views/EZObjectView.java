@@ -40,25 +40,25 @@ public class EZObjectView {
 
 
     @JsonIgnore
-    @OneToOne (fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "object_id", referencedColumnName = "id")
-    EZObject obj;
+    EZObject ezObject;
 
-    public EZObject getObj() {
-        return obj;
+    public EZObject getEzObject() {
+        return ezObject;
     }
 
-    public void setObj(EZObject obj) {
-        this.obj = obj;
+    public void setEzObject(EZObject ezObject) {
+        this.ezObject = ezObject;
     }
 
-    public List<EZObjectImage> getObjectImage()
+    public List<EZObjectImage> getImages()
     {
-        return obj.getImages();
+        return ezObject.getImages();
     }
 
     public Set<Tag> getObjectTag() {
-        return obj.getObjecttags();
+        return ezObject.getObjectTags();
     }
 
     public int getObjectId() {

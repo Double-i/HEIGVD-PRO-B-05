@@ -72,14 +72,6 @@ public class Address {
     @OneToMany(mappedBy = "address")
     private List<User> user;
 
-    public List<User> getUser() {
-        return user;
-    }
-
-    public void setUser(List<User> user) {
-        this.user = user;
-    }
-
     @ManyToOne
     @JoinColumn(name = "fk_city", referencedColumnName = "id")
     private City city;

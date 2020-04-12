@@ -28,20 +28,13 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<EZObject> ezObject;
 
-    public List<EZObject> getEzObject() {
-        return ezObject;
-    }
-
-    public void setEzObject(List<EZObject> ezObject) {
-        this.ezObject = ezObject;
-    }
+    @ManyToOne(optional = false)
+    @JoinColumn(name="fk_address", referencedColumnName = "id")
+    private Address address;
 
     // Required for creating JSON parsing
     public User(){}
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name="fk_address", referencedColumnName = "id")
-    private Address address;
 
     public User(String userName, String firstName, String lastName, String password, String email, Address address, boolean isAdmin){
         this.userName = userName;

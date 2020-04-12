@@ -85,7 +85,7 @@ public class EZObject {
 
     @Column(columnDefinition = "tinyint(1) default 1")
     private boolean isActive=true;
-    
+
     @OneToMany(fetch=FetchType.LAZY,mappedBy = "object_image")
     private List<EZObjectImage> images;
 

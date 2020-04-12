@@ -1,5 +1,5 @@
 -- MySQL Workbench Forward Engineering
-
+DROP SCHEMA IF EXISTS easytoolz;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
@@ -131,7 +131,7 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- Table `easytoolz`.`ezobjectimage`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `easytoolz`.`ezobjectimage` (
-  `pathToImg` VARCHAR(255) NULL DEFAULT NULL,
+  `path_to_image` VARCHAR(255) NULL DEFAULT NULL,
   `fkEZObject` INT NOT NULL,
   INDEX `fkEZObject` (`fkEZObject` ASC),
   CONSTRAINT `ezobjectimage_ibfk_1`

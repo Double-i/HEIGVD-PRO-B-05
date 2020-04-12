@@ -3,6 +3,7 @@ package ch.heigvd.easytoolz.controllers;
 import ch.heigvd.easytoolz.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.models.AuthenticationRequest;
 import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.services.AuthenticationService;
 import ch.heigvd.easytoolz.services.UserService;
 import ch.heigvd.easytoolz.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,10 @@ class AuthenticationController {
     private String duration;
 
     @Autowired
-    private EasyAuthenticationProvider authenticationManager;
+    private JwtUtil jwtTokenUtil;
 
     @Autowired
-    private JwtUtil jwtTokenUtil;
+    private AuthenticationService authenticationService;
 
     @Autowired
     private UserService userService;
@@ -36,16 +37,10 @@ class AuthenticationController {
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword())
-            );
-        }
-        catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Incorrect username or password", e);
-        }
+        if(!authenticationService.authenticateUser(authenticationRequest.getUserName(), authenticationRequest.getPassword()))
+            throw new BadCredentialsException("Incorrect username or password");
 
-        final User userDetails = userService.getUser(authenticationRequest.getUserName());
+        final User userDetails = authenticationService.loadByUsername(authenticationRequest.getUserName());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 

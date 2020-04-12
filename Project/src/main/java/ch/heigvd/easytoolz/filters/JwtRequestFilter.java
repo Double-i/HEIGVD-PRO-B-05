@@ -2,6 +2,7 @@ package ch.heigvd.easytoolz.filters;
 
 
 import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.services.AuthenticationService;
 import ch.heigvd.easytoolz.services.UserService;
 import ch.heigvd.easytoolz.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
-    private UserService userService;
+    private AuthenticationService authenticationService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -54,7 +55,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            User userDetails = this.userService.getUser(username);
+            User userDetails = this.authenticationService.loadByUsername(username);
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
 

@@ -1,51 +1,72 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.MyUserDetailsService;
+import ch.heigvd.easytoolz.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.models.AuthenticationRequest;
-import ch.heigvd.easytoolz.models.AuthenticationResponse;
+import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.services.UserService;
 import ch.heigvd.easytoolz.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpCookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 class AuthenticationController {
+    @Value("${ch.heigvd.easytools.jwtToken.accessToken}")
+    private String accesTokenName;
+
+    @Value("${ch.heigvd.easytools.jwtToken.duration}")
+    private String duration;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private EasyAuthenticationProvider authenticationManager;
 
     @Autowired
     private JwtUtil jwtTokenUtil;
 
     @Autowired
-    private MyUserDetailsService userDetailsService;
+    private UserService userService;
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword())
             );
         }
         catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            throw new BadCredentialsException("Incorrect username or password", e);
         }
 
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+        final User userDetails = userService.getUser(authenticationRequest.getUserName());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        // store jwt into a http cookie to avoid cookie theft by XSS attack
+        HttpCookie cookie = ResponseCookie.from(accesTokenName, jwt)
+                .maxAge(Integer.valueOf(duration))
+                .httpOnly(true)
+                .path("/")
+                .build();
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.ok().headers(responseHeaders).body(userDetails);
+
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signUp(@RequestBody User user){
+        userService.storeUser(user);
+        return ResponseEntity.ok().body("The user has been stored");
     }
 
 }

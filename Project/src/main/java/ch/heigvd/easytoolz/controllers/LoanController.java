@@ -9,6 +9,7 @@ import ch.heigvd.easytoolz.repositories.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class LoanController {
     }
 
     /**
-     * Find loans by owner
+     * Find loans by borrower
      * url: api/loans/find/{username}
      * @param username
      * @return
@@ -41,10 +42,27 @@ public class LoanController {
     @ResponseBody
     public List<Loan> getLoanByBorrower(@PathVariable String username)
     {
+        if(loanRepository.findByBorrower_UserName(username).size() == 0)
+            throw new EZObjectNotFoundException("No loans where found for borrower "+username);
 
-        //if(loanRepository.findByOwner_UserName(username).size() == 0)
-            //throw new EZObjectNotFoundException("No loans where found for user "+username);
-        return loanRepository.findByBorrower(username);
+        return loanRepository.findByBorrower_UserName(username);
+    }
+
+    /**
+     * Find loans by owner
+     * url: api/loans/find/{username}
+     * @param username
+     * @return
+     */
+
+    @GetMapping("/find/user/owner/{username}")
+    @ResponseBody
+    public List<Loan> getLoanByOwner(@PathVariable String username)
+    {
+        if(loanRepository.findByObject_Owner_UserName(username).size() == 0)
+            throw new EZObjectNotFoundException("No loans where found for owner "+username);
+
+        return loanRepository.findByObject_Owner_UserName(username);
     }
 
     /**
@@ -57,12 +75,12 @@ public class LoanController {
     {
         // Vérérification
         //
-        EZObject obj = ezObjectRepository.findByID(newLoan.getfkEZObject());
+
+        EZObject obj = ezObjectRepository.findByID(newLoan.getObject().getID());
         if(obj == null)
-            throw new EZObjectNotFoundException("Object not found " + newLoan.getfkEZObject() + " ");
+            throw new EZObjectNotFoundException("Object not found " + newLoan.getObject().getID() + " ");
 
-
-        Loan loan = new Loan(newLoan.getDateStart(),newLoan.getDateEnd(),newLoan.getDateReturn(),newLoan.getState(),newLoan.getBorrower(),newLoan.getfkEZObject());
+        Loan loan = new Loan(newLoan.getDateStart(),newLoan.getDateEnd(),newLoan.getDateReturn(),newLoan.getState(),newLoan.getBorrower(),newLoan.getObject());
         return loanRepository.save(loan);
     }
 }

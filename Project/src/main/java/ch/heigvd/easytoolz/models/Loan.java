@@ -2,8 +2,6 @@ package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name="loan")
@@ -21,15 +19,13 @@ public class Loan {
     public String getDateReturn() {
         return dateReturn;
     }
-    public String getState() {
+    public State getState() {
         return state;
     }
-    public String getBorrower() {
+    public User getBorrower() {
         return borrower;
     }
-    public int getfkEZObject() {
-        return fkEZObject;
-    }
+    public EZObject getObject() { return object; }
 
     public void setPkLoan(int pkLoan) {
         this.pkLoan = pkLoan;
@@ -43,16 +39,15 @@ public class Loan {
     public void setDateReturn(String dateReturn) {
         this.dateReturn = dateReturn;
     }
-    public void setState(String state) {
+    public void setState(State state) {
         this.state = state;
     }
-    public void setBorrower(String borrower) {
+    public void setBorrower(User borrower) {
         this.borrower = borrower;
     }
-    public void setFkEZObject(int fkEZObject) {
-        this.fkEZObject = fkEZObject;
+    public void setObject(EZObject object) {
+        this.object = object;
     }
-
 
     @Id
     @Column(name="pkloan")
@@ -72,26 +67,26 @@ public class Loan {
 
     @Column(name="state")
     @NotNull
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private State state;
 
-    @Column(name="borrower")
-    @NotNull
-    private String borrower;
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "fkezobject", referencedColumnName = "id")
+    private EZObject object;
 
-    @Column(name="fkezobject")
-    @NotNull
-    private int fkEZObject;
-
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "borrower", referencedColumnName = "userName")
+    private User borrower;
 
     public Loan(){}
 
-    public Loan(String dateStart,String dateEnd, String dateReturn, String state, String borrower, int fkEZObject) {
+    public Loan(String dateStart,String dateEnd, String dateReturn, State state, User borrower, EZObject object) {
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.dateReturn = dateReturn;
         this.state = state;
         this.borrower = borrower;
-        this.fkEZObject = fkEZObject;
+        this.object = object;
     }
 
     @Override
@@ -103,7 +98,7 @@ public class Loan {
                 ", dateReturn='" + dateReturn + '\'' +
                 ", state='" + state + '\'' +
                 ", borrower='" + borrower + '\'' +
-                ", fkEZObject='" + fkEZObject + '\'' +
+                ", object='" + object + '\'' +
                 "}\n";
     }
 

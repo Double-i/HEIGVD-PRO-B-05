@@ -52,7 +52,7 @@ public class LoanController {
             return loanRepository.findByObject_Owner_UserName(username);
         }
     }
-    
+
     /**
      * Add a loan into the database
      * @param newLoan

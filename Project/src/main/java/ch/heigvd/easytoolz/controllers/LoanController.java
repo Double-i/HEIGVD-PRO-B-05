@@ -32,7 +32,7 @@ public class LoanController {
     }
 
     /**
-     * Find loans by borrower
+     * Find loans by borrower or user
      * url: api/loans/find/{username}
      * @param username
      * @return
@@ -40,31 +40,19 @@ public class LoanController {
 
     @GetMapping("/find/user/{username}")
     @ResponseBody
-    public List<Loan> getLoanByBorrower(@PathVariable String username)
+    public List<Loan> getLoanByUser(@PathVariable String username, @RequestParam boolean borrower)
     {
         if(loanRepository.findByBorrower_UserName(username).size() == 0)
-            throw new EZObjectNotFoundException("No loans where found for borrower "+username);
+            throw new EZObjectNotFoundException("No loans where found for user "+username);
 
-        return loanRepository.findByBorrower_UserName(username);
+        if(borrower) {
+            return loanRepository.findByBorrower_UserName(username);
+        }
+        else{
+            return loanRepository.findByObject_Owner_UserName(username);
+        }
     }
-
-    /**
-     * Find loans by owner
-     * url: api/loans/find/{username}
-     * @param username
-     * @return
-     */
-
-    @GetMapping("/find/user/owner/{username}")
-    @ResponseBody
-    public List<Loan> getLoanByOwner(@PathVariable String username)
-    {
-        if(loanRepository.findByObject_Owner_UserName(username).size() == 0)
-            throw new EZObjectNotFoundException("No loans where found for owner "+username);
-
-        return loanRepository.findByObject_Owner_UserName(username);
-    }
-
+    
     /**
      * Add a loan into the database
      * @param newLoan

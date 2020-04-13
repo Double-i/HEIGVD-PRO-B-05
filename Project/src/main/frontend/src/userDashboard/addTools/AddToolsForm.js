@@ -7,16 +7,16 @@ import { schema } from 'json-schema-traverse'
 
 class AddToolsForm extends React.Component {
     //TODO : Get tag from Database!
-    tags = ['jardin', 'bois', 'éléctronique']
+    tags = ['jardin', 'bois', 'éléctronique'];
 
-    addToolAPIEndpoint = '/tools'
+    addToolAPIEndpoint = '/tools';
 
     //TODO : Move la validation d'une image ailleurs?
-    SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png']
-    FILE_SIZE = 1000000
+    SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
+    FILE_SIZE = 1000000;
 
     attemptAddTool = (values) => {
-        console.log('attemptAddTool', values)
+        console.log('attemptAddTool', values);
         const data = {
             name: values.toolName,
         }
@@ -35,26 +35,29 @@ class AddToolsForm extends React.Component {
     //TODO  Ilias : < !!! > ATTENTION, en JS le ``this`` est OBLIGATOIRE. Ex:  validationSchema={schema} utilise une variable schema qui est probablement undefined meme si this.schema est défini
 
     // validation rules
-    schema = yup.object({
+    schema = yup.object().shape({
         toolName: yup
             .string()
             .required('Requis')
-            .min(3, 'UNE MESSAGE ICI AUTREMENT ANGLAIS')
+            .min(3, 'Minumum 3 caractères!')
             .max(20),
         toolDescription: yup.string().min(0).max(200),
-        toolTags: yup.array().of(yup.string()).min(1),
+        toolTags: yup.array().of(yup.string())
+            .min(1, 'Minimum 1 catégorie!'),
         toolImage: yup
             .mixed()
             //TODO : Les tests ne marche pas, peut être doit on faire un autre schema pour que les files ?
+            //Maurice : Les tests marchent, mais le message ne s'affiche pas
+            //Pb asynchrone de Formik ? https://github.com/testing-library/react-testing-library/issues/224
             .test(
                 'fileSize',
-                'File is too large',
+                'Fichier trop grand!',
                 (value) =>
                     typeof value !== 'undefined' && value.size <= this.FILE_SIZE
             )
             .test(
                 'fileType',
-                'Your Error Message',
+                'Extension invalide!',
                 (value) =>
                     typeof value !== 'undefined' &&
                     this.SUPPORTED_FORMATS.includes(value.type)
@@ -103,7 +106,6 @@ class AddToolsForm extends React.Component {
                                     value={values.toolName}
                                     onChange={handleChange}
 
-
                                     onBlur={handleBlur} // TODO OBLIGATOIRE POUR UTILISER TOUCHED https://stackoverflow.com/questions/57385931/why-isnt-the-formik-touched-property-being-populated
                                     isInvalid={ 
                                         touched.toolName && !!errors.toolName
@@ -131,6 +133,13 @@ class AddToolsForm extends React.Component {
                                     placeholder="Description de l'outil"
                                     onChange={handleChange}
                                     value={values.toolDescription}
+                                    onBlur={handleBlur}
+                                    isInvalid={
+                                        touched.toolDescription && !!errors.toolDescription
+                                    }
+                                    isValid={
+                                        touched.toolDescription && !errors.toolDescription
+                                    }
                                 />
                             </Form.Group>
                             <Form.Group controlId={'formToolTags'}>
@@ -141,6 +150,13 @@ class AddToolsForm extends React.Component {
                                     name="toolTags"
                                     value={values.toolTags}
                                     onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    isInvalid={
+                                        touched.toolTags && !!errors.toolTags
+                                    }
+                                    isValid={
+                                        touched.toolTags && !errors.toolTags
+                                    }
                                     style={{ display: 'block' }}
                                 >
                                     {this.tags.map((value, idx) => (

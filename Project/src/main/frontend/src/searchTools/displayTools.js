@@ -7,9 +7,6 @@ class DisplayTools extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            tools : props.data
-        }
     }
 
     render(){
@@ -34,7 +31,7 @@ class DisplayTools extends React.Component {
                         </div>
                     </div>
 
-                    {this.state.tools.map(item => (
+                    {this.props.data.map(item => (
 
                         <DisplayTool
                             id={item.id}

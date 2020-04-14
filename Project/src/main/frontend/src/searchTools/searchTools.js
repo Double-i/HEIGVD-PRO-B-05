@@ -73,9 +73,8 @@ class SearchTools extends React.Component{
         sendEzApiRequest("/objects")
             .then((response) =>{
                 //this.tools = response;
-                this.setState({tools:response});
-                console.log(this.state);
-            });
+                this.setState({tools:response})})
+                         
     }
 
     handleSubmit(event){

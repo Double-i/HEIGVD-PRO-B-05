@@ -10,6 +10,7 @@ import ch.heigvd.easytoolz.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,18 +88,18 @@ public class UserServiceImpl implements UserService {
                 throw new AccessDeniedNotAdminException();
         }
 
-        return userRepository.findById(username)
-        .map(oldUser -> {
+        if(userRepository.findById(username).isPresent()) {
+            User oldUser = userRepository.findById(username).get();
             if(newUser.getFirstName() != null) oldUser.setFirstName(newUser.getFirstName());
             if(newUser.getLastName() != null) oldUser.setLastName(newUser.getLastName());
             if(oldUser.isAdmin() != newUser.isAdmin()) oldUser.setAdmin(newUser.isAdmin());
             if(newUser.getEmail() != null) oldUser.setEmail(newUser.getEmail());
             if(newUser.getAddress() != null) addressService.updateAddress(newUser.getAddress(), newUser.getAddress().getId());
+            if(newUser.getPassword() != null) oldUser.setPassword(newUser.getPassword());
             return userRepository.save(oldUser);
-        })
-        .orElseThrow(
-                () -> new UserNotFoundException(username)
-        );
+        }else{
+            throw new UserNotFoundException(username);
+        }
     }
 
     @Override

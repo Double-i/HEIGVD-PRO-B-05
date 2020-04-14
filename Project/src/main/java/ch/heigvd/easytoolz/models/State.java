@@ -2,8 +2,8 @@ package ch.heigvd.easytoolz.models;
 
 public enum State {
     pending("pending"),
-    unvailable("unavailable"),
-    available("available");
+    refused("refused"),
+    accepted("accepted");
 
     private final String state;
 

@@ -10,6 +10,6 @@ public interface LoanRepository extends JpaRepository<Loan,String> {
 
     List<Loan> findByBorrower_UserName(String username);
 
-    List<Loan> findByObject_Owner_UserName(String username);
+    List<Loan> findByEZObject_Owner_UserName(String username);
 
 }

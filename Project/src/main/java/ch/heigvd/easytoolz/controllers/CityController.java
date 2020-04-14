@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static ch.heigvd.easytoolz.util.Utils.transformLike;
+import static ch.heigvd.easytoolz.util.ServiceUtils.transformLike;
 
 @RestController
 @RequestMapping("/cities")

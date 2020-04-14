@@ -1,6 +1,6 @@
 package ch.heigvd.easytoolz.util;
 
-public class Utils {
+public class ServiceUtils {
     /**
      * transform any string in LIKE string for the query
      * for example :

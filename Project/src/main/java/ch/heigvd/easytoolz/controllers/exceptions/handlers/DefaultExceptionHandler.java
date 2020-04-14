@@ -33,11 +33,4 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
     {
         return ((ServletWebRequest)request).getRequest().getRequestURI();
     }
-
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<ApiError> defaultHandler(Exception ex, WebRequest request)
-    {
-        ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,ex.getMessage(),Now(),getURI(request));
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }

@@ -43,25 +43,43 @@ let allTools = [
 
 class SearchTools extends React.Component{
 
-    SEARCH_URI = '/search'
+    SEARCH_URI = '/search';
+
+    //fetch tous les tools de la DB :
+    //TODO : Géré les éventuelles erreur et comprendre comment avoir la bonne array de ce "Promise"
+    //objects = sendEzApiRequest("/objects");
 
     constructor(props){
         super(props);
         this.state = {
             value : '',
-            tools : allTools
+            tools : []//TODO : fetch le json et le replacer ici
         };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        //console.log(this.objects)
+
+        /*sendEzApiRequest("/objects")
+            .then(function(response){
+                //this.tools = response;
+                console.log(response, allTools);
+                allTools = response;
+                //that.setState({tools:response});
+            });*/
+     /*  this.handleChange = this.handleChange.bind(this);
+       this.handleSubmit = this.handleSubmit.bind(this);*/
     }
 
-    handleChange(event) {
-        this.setState({value: event.target.value});
+    componentDidMount() {
+        sendEzApiRequest("/objects")
+            .then((response) =>{
+                //this.tools = response;
+                this.setState({tools:response});
+                console.log(this.state);
+            });
     }
 
     handleSubmit(event){
-
+        console.log(event);
         sendEzApiRequest(this.SEARCH_URI, 'POST', {
             searchString: this.state.value
         }).then(

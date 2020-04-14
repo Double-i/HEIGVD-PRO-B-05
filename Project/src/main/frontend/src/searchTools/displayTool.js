@@ -11,9 +11,8 @@ class DisplayTool extends React.Component {
     }
 
     render() {
-        console.log(this.state.isBorrowable);
         return (
-            <div className="row border-bottom" key={this.props.id}>
+            <div className="row border-bottom" key={"itemId" + this.props.id}>
                 <div className="col-2">
                     <div>{this.props.name}</div>
                 </div>

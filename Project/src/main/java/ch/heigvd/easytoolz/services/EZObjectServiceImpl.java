@@ -30,27 +30,26 @@ public class EZObjectServiceImpl implements EZObjectService {
     @Autowired
     UserService userService;
 
-    public boolean exists(EZObject obj)
-    {
+    public boolean exists(EZObject obj) {
         return obj.isActive();
     }
 
-    public EZObjectView getObject(int id)
-    {
+    public List<EZObject> get() {
+        return ezObjectRepository.findAll();
+    }
+
+    public EZObjectView getObject(int id) {
         EZObjectView obj = objectViewRepository.findByObjectId(id);
         if(obj== null ||!exists(obj.getEzObject()))
             throw new EZObjectNotFoundException("No Objects where found for user "+ id);
         return obj;
     }
 
-    public List<EZObjectView> getAll()
-    {
+    public List<EZObjectView> getAll() {
         return objectViewRepository.findAll();
     }
 
-
-    public List<EZObjectView> getObjectByOwner( String username)
-    {
+    public List<EZObjectView> getObjectByOwner( String username) {
         List<EZObjectView> res =  objectViewRepository.findByObjectOwner(username);
 
         if(res.size() == 0)
@@ -59,18 +58,15 @@ public class EZObjectServiceImpl implements EZObjectService {
         return res;
     }
 
-
-
-    public void addObject( EZObject newObject)
-    {
+    public void addObject( EZObject newObject) {
         User owner = userService.getUser(newObject.getOwnerUserName());
         newObject.setOwner(owner);
+
         ezObjectRepository.save(newObject);
     }
 
 
-    public void updateObject( EZObject o)
-    {
+    public void updateObject( EZObject o) {
         EZObject updated = ezObjectRepository.findByID(o.getID());
         if(updated == null)
             throw new EZObjectNotFoundException( ""+o.getID() );
@@ -84,8 +80,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         ezObjectRepository.save(updated);
     }
 
-    public void deleteObject(int id)
-    {
+    public void deleteObject(int id) {
         EZObject toDelete = ezObjectRepository.findByID(id);
         if(toDelete == null)
             throw new EZObjectNotFoundException(""+id);
@@ -96,26 +91,21 @@ public class EZObjectServiceImpl implements EZObjectService {
     }
 
 
-    public List<EZObjectView> getObjectByName( String objectName)
-    {
+    public List<EZObjectView> getObjectByName( String objectName) {
         return objectViewRepository.findByObjectNameContaining(objectName);
     }
 
 
-    public List<EZObjectView> getObjectByDescription( String content)
-    {
+    public List<EZObjectView> getObjectByDescription( String content) {
         return objectViewRepository.findByObjectDescriptionContaining(content);
     }
 
 
-    public List<EZObjectView> getObjectsByLocalisation(BigDecimal lat,  BigDecimal lng)
-    {
+    public List<EZObjectView> getObjectsByLocalisation(BigDecimal lat,  BigDecimal lng) {
         return objectViewRepository.findByOwnerLatAndOwnerLng(lat,lng);
     }
 
-    public List<EZObject> getObjectsByTag( List<Tag> tags)
-    {
-
+    public List<EZObject> getObjectsByTag( List<Tag> tags) {
         return ezObjectRepository.findByObjectTagsIn(tags);
     }
 

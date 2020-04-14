@@ -28,9 +28,9 @@ public class EZObjectController {
     EZObjectService ezObjectService;
 
     @GetMapping
-    public List<EZObjectView> index()
+    public List<EZObject> index()
     {
-        return ezObjectService.getAll();
+        return ezObjectService.get();
     }
 
     @GetMapping("find/{id}")

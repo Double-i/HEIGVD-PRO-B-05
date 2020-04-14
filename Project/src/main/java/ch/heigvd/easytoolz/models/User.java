@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 public class User {
 
-
     @Id
     @NotNull
     private String userName;

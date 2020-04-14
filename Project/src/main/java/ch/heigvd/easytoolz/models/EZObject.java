@@ -41,33 +41,41 @@ public class EZObject {
         return images;
     }
 
-    public Set<Tag> getObjectTags() { return objectTags; }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public void setImages(List<EZObjectImage> ezobject) {
-        this.images = ezobject;
-    }
-    public void setObjectTags(Set<Tag> objecttags) {
-        this.objectTags = objecttags;
+    public Set<Tag> getObjectTags()
+    {
+        return objectTags;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
 
     public User getOwner() {
         return owner;
     }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setImages(List<EZObjectImage> ezobject) {
+        this.images = ezobject;
+    }
+
+    public void setObjectTags(Set<Tag> objecttags) {
+        this.objectTags = objecttags;
+    }
+
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-    public boolean isActive() {
-        return isActive;
     }
 
     public void setActive(boolean active) {
@@ -106,8 +114,8 @@ public class EZObject {
     )
     Set<Tag> objectTags;
 
-
     public EZObject(){}
+
     public EZObject(String name, String description  , Set<Tag> tags, List<EZObjectImage> images)
     {
         this.name = name;

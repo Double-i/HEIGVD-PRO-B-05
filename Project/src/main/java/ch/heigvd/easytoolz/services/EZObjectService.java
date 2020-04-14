@@ -40,6 +40,8 @@ public interface EZObjectService {
      */
     List<EZObjectView> getAll();
 
+    /**debuging purpose**/
+    List<EZObject> get();
     /**
      * Find objects by owner
      * url: api/objects/find/{username}

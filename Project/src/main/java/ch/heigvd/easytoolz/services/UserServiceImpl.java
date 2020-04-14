@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.services;
 
+import ch.heigvd.easytoolz.controllers.exceptions.authentication.AccessDeniedNotAdminException;
 import ch.heigvd.easytoolz.controllers.exceptions.user.UserAlreadyPresent;
 import ch.heigvd.easytoolz.controllers.exceptions.user.UserFailedDeleteException;
 import ch.heigvd.easytoolz.controllers.exceptions.user.UserFailedStoreException;
@@ -20,10 +21,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     AddressService addressService;
     @Autowired
+    AuthenticationService authenticationService;
+    @Autowired
     UserRepository userRepository;
 
     @Override
     public User getUser(String username) throws UserNotFoundException {
+        if(!authenticationService.isTheCurrentUserAdmin()){
+            if(!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
+                throw new AccessDeniedNotAdminException();
+        }
         return userRepository
                 .findById(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
@@ -31,6 +38,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> filters(String firstName, String lastName, String userName, String email) {
+
+        if(!authenticationService.isTheCurrentUserAdmin())
+            throw new AccessDeniedNotAdminException();
+
         firstName = transformLike(firstName);
         lastName = transformLike(lastName);
         userName = transformLike(userName);
@@ -71,13 +82,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User newUser, String username) throws UserNotFoundException {
+        if(!authenticationService.isTheCurrentUserAdmin()){
+            if(!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
+                throw new AccessDeniedNotAdminException();
+        }
+
         return userRepository.findById(username)
         .map(oldUser -> {
             if(newUser.getFirstName() != null) oldUser.setFirstName(newUser.getFirstName());
             if(newUser.getLastName() != null) oldUser.setLastName(newUser.getLastName());
             if(oldUser.isAdmin() != newUser.isAdmin()) oldUser.setAdmin(newUser.isAdmin());
             if(newUser.getEmail() != null) oldUser.setEmail(newUser.getEmail());
-            if(newUser.getAddress() != null) oldUser.setAddress(newUser.getAddress());
+            if(newUser.getAddress() != null) addressService.updateAddress(newUser.getAddress(), newUser.getAddress().getId());
             return userRepository.save(oldUser);
         })
         .orElseThrow(
@@ -87,6 +103,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String username) throws UserFailedDeleteException {
+        if(!authenticationService.isTheCurrentUserAdmin()){
+            if(!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
+                throw new AccessDeniedNotAdminException();
+        }
+
         Optional<User> user = userRepository.findById(username);
         if(user.isPresent()){
             userRepository.delete(user.get());

@@ -14,7 +14,7 @@ public interface EZObjectViewRepository extends JpaRepository<EZObjectView,Strin
 
     EZObjectView findByObjectId(int id);
 
-    List<EZObjectView> findByOwnerLatAndOwnerLng(BigDecimal lat, BigDecimal lng);
+    List<EZObjectView> findByOwnerLatitudeAndOwnerLongitude(BigDecimal lat, BigDecimal lng);
 
     //List<EZObjectView> findByObjectTagIn(List<Tag> tags);
 

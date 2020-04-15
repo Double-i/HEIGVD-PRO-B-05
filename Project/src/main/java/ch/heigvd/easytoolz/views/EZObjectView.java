@@ -14,35 +14,8 @@ import java.util.Set;
 
 @Entity
 @Immutable
-@Table(name="ezobjectview")
+@Table(name = "ezobjectview")
 public class EZObjectView {
-
-    @Id
-    @Column(name = "object_id")
-    int objectId;
-    @Column(name = "object_name")
-    String objectName;
-    @Column(name = "object_description")
-    String objectDescription;
-    @Column(name = "object_owner")
-    String objectOwner;
-    @Column(name = "owner_address")
-    String ownerAddress;
-    @Column(name = "owner_district")
-    String ownerDistrict;
-    @Column(name = "owner_postal_code")
-    String ownerPostalCode;
-    @Column(name = "owner_latitude")
-    BigDecimal ownerLat;
-    @Column(name = "owner_longitude")
-    BigDecimal ownerLng;
-
-
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "object_id", referencedColumnName = "id")
-    EZObject ezObject;
 
     public EZObject getEzObject() {
         return ezObject;
@@ -52,8 +25,7 @@ public class EZObjectView {
         this.ezObject = ezObject;
     }
 
-    public List<EZObjectImage> getImages()
-    {
+    public List<EZObjectImage> getImages() {
         return ezObject.getImages();
     }
 
@@ -89,13 +61,33 @@ public class EZObjectView {
         return ownerPostalCode;
     }
 
-    public BigDecimal getOwnerLat() {
-        return ownerLat;
+    public BigDecimal getOwnerLatitude() {
+        return ownerLatitude;
     }
 
-    public BigDecimal getOwnerLng() {
-        return ownerLng;
+    public BigDecimal getOwnerLongitude() {
+        return ownerLongitude;
     }
 
-    public EZObjectView(){}
+    @Id
+    int objectId;
+    String objectName;
+    String objectDescription;
+    String objectOwner;
+    String ownerAddress;
+    String ownerDistrict;
+    String ownerPostalCode;
+    BigDecimal ownerLatitude;
+    BigDecimal ownerLongitude;
+
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "object_id", referencedColumnName = "id")
+    EZObject ezObject;
+
+
+
+    public EZObjectView() {
+    }
 }

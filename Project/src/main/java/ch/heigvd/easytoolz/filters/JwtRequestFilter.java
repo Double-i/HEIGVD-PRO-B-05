@@ -2,8 +2,7 @@ package ch.heigvd.easytoolz.filters;
 
 
 import ch.heigvd.easytoolz.models.User;
-import ch.heigvd.easytoolz.services.AuthenticationService;
-import ch.heigvd.easytoolz.services.UserService;
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

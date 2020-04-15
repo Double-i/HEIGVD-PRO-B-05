@@ -1,10 +1,8 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
-import ch.heigvd.easytoolz.models.User;
-import ch.heigvd.easytoolz.services.EZObjectService;
-import ch.heigvd.easytoolz.services.UserService;
+import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
+import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

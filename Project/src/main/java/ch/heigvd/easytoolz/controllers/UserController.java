@@ -1,19 +1,17 @@
 package ch.heigvd.easytoolz.controllers;
 
+import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.models.User;
-import ch.heigvd.easytoolz.services.UserService;
+import net.minidev.json.JSONObject;
+import ch.heigvd.easytoolz.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
-
-// TODO : One day remove this comment
-// https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#reference
-// https://spring.io/guides/tutorials/rest/
-// !! Pour la recherche
-// https://blog.tratif.com/2017/11/23/effective-restful-search-api-in-spring/
 
 @RestController
 @RequestMapping ("/users")
@@ -42,14 +40,15 @@ public class UserController {
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<String> delete(@PathVariable String username){
+    public ResponseEntity<JSONObject> delete(@PathVariable String username){
         userService.deleteUser(username);
-        return new ResponseEntity<>("The user has been deleted", HttpStatus.OK);
+        return ResponseEntity.ok(new SuccessResponse("The user has been deleted"));
     }
 
     @PostMapping
-    public ResponseEntity<String> store(@RequestBody User user){
+    public ResponseEntity<JSONObject> store(@RequestBody User user){
         userService.storeUser(user);
-        return new ResponseEntity<>("The user has been stored", HttpStatus.OK);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getUserName()).toUri();
+        return ResponseEntity.created(uri).body(new SuccessResponse("The user has been stored"));
     }
 }

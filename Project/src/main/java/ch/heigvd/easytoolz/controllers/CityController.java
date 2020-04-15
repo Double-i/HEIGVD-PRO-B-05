@@ -27,9 +27,9 @@ public class CityController {
         country = transformLike(country);
 
         if (name != null) {
-            if(country != null) {
+            if (country != null) {
                 return cityRepository.findByCountry_CountryLikeAndCityLike(country, name);
-            }else{
+            } else {
                 return cityRepository.findByCityLike(name);
             }
         } else {

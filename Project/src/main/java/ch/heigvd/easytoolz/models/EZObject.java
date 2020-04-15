@@ -28,10 +28,8 @@ public class EZObject {
     }
 
     @Access(AccessType.FIELD)
-    public String getOwnerUserName()
-    {
-        if(ownerUserName == null)
-        {
+    public String getOwnerUserName() {
+        if (ownerUserName == null) {
             ownerUserName = owner.getUserName();
         }
         return ownerUserName;
@@ -41,8 +39,7 @@ public class EZObject {
         return images;
     }
 
-    public Set<Tag> getObjectTags()
-    {
+    public Set<Tag> getObjectTags() {
         return objectTags;
     }
 
@@ -92,32 +89,32 @@ public class EZObject {
     private String description;
 
     @Column(columnDefinition = "tinyint(1) default 1")
-    private boolean isActive=true;
+    private boolean isActive = true;
 
-    @OneToMany(fetch=FetchType.LAZY,mappedBy = "object_image")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "object_image")
     private List<EZObjectImage> images;
 
     @Transient
     private String ownerUserName;
 
-     @JsonIgnore
-     @ManyToOne(fetch = FetchType.LAZY)
-     @JoinColumn(name = "owner", referencedColumnName = "userName")
-     private User owner;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner", referencedColumnName = "userName")
+    private User owner;
 
     //association class
     @ManyToMany
     @JoinTable(
-            name="ezobject_tag",
-            joinColumns = @JoinColumn(name="fk_ezobject"),
-            inverseJoinColumns = @JoinColumn(name="fk_tag")
+            name = "ezobject_tag",
+            joinColumns = @JoinColumn(name = "fk_ezobject"),
+            inverseJoinColumns = @JoinColumn(name = "fk_tag")
     )
     Set<Tag> objectTags;
 
-    public EZObject(){}
+    public EZObject() {
+    }
 
-    public EZObject(String name, String description  , Set<Tag> tags, List<EZObjectImage> images)
-    {
+    public EZObject(String name, String description, Set<Tag> tags, List<EZObjectImage> images) {
         this.name = name;
         this.description = description;
         this.objectTags = tags;

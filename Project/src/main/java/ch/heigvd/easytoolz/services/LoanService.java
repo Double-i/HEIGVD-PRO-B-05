@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.services;
 
 import ch.heigvd.easytoolz.models.Loan;
+import ch.heigvd.easytoolz.models.State;
 import org.springframework.http.ResponseEntity;
 
 public interface LoanService {
@@ -11,4 +12,5 @@ public interface LoanService {
      */
     ResponseEntity<String> store(Loan newLoan);
 
+    ResponseEntity<String> updateState(int loanId, State state);
 }

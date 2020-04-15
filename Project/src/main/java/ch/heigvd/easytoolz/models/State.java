@@ -3,7 +3,8 @@ package ch.heigvd.easytoolz.models;
 public enum State {
     pending("pending"),
     refused("refused"),
-    accepted("accepted");
+    accepted("accepted"),
+    cancel("cancel");
 
     private final String state;
 

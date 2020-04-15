@@ -3,7 +3,7 @@ package ch.heigvd.easytoolz.services;
 import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectAlreadyUsed;
 import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.controllers.exceptions.loan.BadParameterException;
-import ch.heigvd.easytoolz.controllers.exceptions.user.UserNotFoundException;
+import ch.heigvd.easytoolz.controllers.exceptions.loan.LoanStateCantBeUpdatedException;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.Loan;
 import ch.heigvd.easytoolz.models.State;
@@ -16,13 +16,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class LoanServiceImpl implements LoanService {
     @Autowired
-    LoanRepository loanRepository ;
+    LoanRepository loanRepository;
 
     @Autowired
     EZObjectRepository ezObjectRepository;
+
+    @Autowired
+    AuthenticationService authService;
 
     @Autowired
     UserRepository user;
@@ -30,15 +35,12 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public ResponseEntity<String> store(Loan newLoan) {
 
+        // TODO check the logged in user instead of the given user.
         // Check tool exists
         EZObject obj = ezObjectRepository.findByID(newLoan.getEZObject().getID());
         if (obj == null)
             throw new EZObjectNotFoundException("Object not found " + newLoan.getEZObject() + " ");
 
-        // Check user exists
-        User borrower = user.userNameIs(newLoan.getBorrower().getUserName());
-        if (borrower == null)
-            throw new UserNotFoundException("User not found" + newLoan.getBorrower());
 
         // Check loan start date is strictly before end date
         if (newLoan.getDateStart().after(newLoan.getDateEnd()) || newLoan.getDateStart().equals(newLoan.getDateEnd()))
@@ -50,10 +52,112 @@ public class LoanServiceImpl implements LoanService {
 
         // Create loan with pending state
         Loan loan = new Loan(newLoan.getDateStart(), newLoan.getDateEnd(), null, State.pending
-                ,newLoan.getBorrower(), newLoan.getEZObject());
+                , newLoan.getBorrower(), newLoan.getEZObject());
 
         // Save loan
         loanRepository.save(loan);
         return new ResponseEntity<>("The loans has been stored :", HttpStatus.OK);
     }
+
+    /**
+     * Update the state of a state which we gave the id with the given new state.
+     *
+     * @param loanId the id of the loan we want to update the state
+     * @param newState the new state
+     * @return
+     */
+    @Override
+    public ResponseEntity<String> updateState(int loanId, State newState) {
+
+        // Get loan by id and check if exists
+        Loan loan = loanRepository.getOne(loanId); // it return
+
+        // Check the state. It has to be pending state to be : cancel - accepted or refused
+        System.out.println(newState);
+        State state = State.accepted;
+
+
+        if(!loan.getState().equals( State.pending))
+            throw new LoanStateCantBeUpdatedException("Loan has already been accepted/refused/canceled");
+
+        // Check the loan hasn't started yet
+        if(!loan.getDateStart().after( new Date()))
+            throw new LoanStateCantBeUpdatedException("Loan start date has already been passed");
+
+        boolean done = false;
+
+        System.out.println(newState);
+
+        switch(newState){
+            case accepted:
+            case refused:
+                done = updateLoanStateByOwner(loan, newState);
+                break;
+            case cancel:
+                System.out.println("testteststest");
+                done = cancelLoan(loan);
+                break;
+        }
+        if(!done)
+            throw new RuntimeException("LoanService - Something went wrong while trying to update loan state");
+
+        return new ResponseEntity<>("The loans has been ", HttpStatus.OK);
+    }
+
+    /**
+     * Update the status to accept or refused of the given loan
+     * @param loan the loan to update the state
+     * @param state the new state
+     * @return return true if the update has been done
+     */
+    private boolean updateLoanStateByOwner(Loan loan, State state){
+        boolean updated = false;
+        if(isOwner(loan)){
+            loan.setState(state);
+            loanRepository.save(loan);
+            updated = true;
+        }
+        return updated;
+    }
+
+    /**
+     * Cancel the given loan.
+     *
+     * It checks that the current logged in user is the borrower of the loan
+     * @param loan the loan to
+     * @return return true if the loan has been cancel
+     */
+    private boolean cancelLoan(Loan loan){
+        boolean updated = false;
+        if(isBorrower(loan)){
+            loan.setState(State.cancel);
+            loanRepository.save(loan);
+            updated = true;
+        }
+        return updated;
+    }
+
+    /**
+     * Return true if the logged in user is the borrower of the given loan
+     * @param loan the loan to check
+     * @return
+     */
+    private boolean isBorrower(Loan loan){
+        User currentUser = authService.getTheDetailsOfCurrentUser();
+        return currentUser != null && currentUser.getUserName().equals(loan.getBorrower().getUserName());
+
+    }
+
+    /**
+     * Return true if the logged in user is the owner of the tool of the given loan
+     * @param loan the loan to check
+     * @return
+     */
+    private boolean isOwner(Loan loan){
+        User currentUser = authService.getTheDetailsOfCurrentUser();
+        return currentUser != null && currentUser.getUserName().equals(loan.getEZObject().getOwner().getUserName());
+    }
+
 }
+
+

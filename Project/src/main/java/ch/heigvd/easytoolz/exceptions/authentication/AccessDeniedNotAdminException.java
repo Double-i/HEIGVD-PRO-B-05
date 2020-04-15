@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions.authentication;
+package ch.heigvd.easytoolz.exceptions.authentication;
 
 import org.springframework.security.access.AccessDeniedException;
 

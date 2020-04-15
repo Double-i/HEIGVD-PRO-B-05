@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "address")
 public class Address {
+
     public int getId() {
         return id;
     }
@@ -33,23 +33,31 @@ public class Address {
     public BigDecimal getLng() {
         return lng;
     }
-    public City getCity() { return city; }
+
+    public City getCity() {
+        return city;
+    }
 
     public void setId(int id) {
         this.id = id;
     }
+
     public void setAddress(String address) {
         this.address = address;
     }
+
     public void setDistrict(String district) {
         this.district = district;
     }
+
     public void setPostalCode(String postalCode) {
         this.postalcode = postalCode;
     }
+
     public void setLat(BigDecimal lat) {
         this.lat = lat;
     }
+
     public void setLng(BigDecimal lng) {
         this.lng = lng;
     }
@@ -58,7 +66,6 @@ public class Address {
         this.city = city;
     }
 
-    public Address(){}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,6 +82,9 @@ public class Address {
     @ManyToOne
     @JoinColumn(name = "fk_city", referencedColumnName = "id")
     private City city;
+
+    public Address() {
+    }
 
     public Address(String address, String district, String postalCode, BigDecimal lat, BigDecimal lng, City city) {
         this.address = address;

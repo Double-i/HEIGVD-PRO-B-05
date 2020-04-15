@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions.user;
+package ch.heigvd.easytoolz.exceptions.user;
 
 public class UserFailedDeleteException extends RuntimeException{
     public UserFailedDeleteException(String name){

@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.services;
+package ch.heigvd.easytoolz.services.interfaces;
 
 import ch.heigvd.easytoolz.models.User;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -6,6 +6,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 public interface AuthenticationService {
     /**
      * Try to verify if the username and the password are correct
+     *
      * @param username Username of the user
      * @param password password of the user
      * @return true if the user and the password are correct else false

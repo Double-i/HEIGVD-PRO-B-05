@@ -1,8 +1,9 @@
-package ch.heigvd.easytoolz.services;
+package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,8 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             return true;
-        }
-        catch (BadCredentialsException e) {
+        } catch (BadCredentialsException e) {
             return false;
         }
     }
@@ -38,7 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User getTheDetailsOfCurrentUser() {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if(currentAuthentication != null)
+        if (currentAuthentication != null)
             return (User) currentAuthentication.getPrincipal();
         else
             return null;

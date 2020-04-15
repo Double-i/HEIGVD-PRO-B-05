@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="tag")
 public class Tag {
-
 
     public String getName() {
         return name;
@@ -22,12 +20,15 @@ public class Tag {
     @NotNull
     private String name;
 
-
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "objectTags")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "objectTags")
     Set<EZObject> tagObjects;
 
-    public Tag(){}
-    public Tag(String name) {this.name = name;}
+    public Tag() {
+    }
+
+    public Tag(String name) {
+        this.name = name;
+    }
 
 
 }

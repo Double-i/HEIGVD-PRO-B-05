@@ -7,27 +7,34 @@ import java.util.List;
 @Entity
 public class Country {
 
-    public int getId() {   return id;  }
-    public String getCountry() { return country;}
+    public int getId() {
+        return id;
+    }
 
-    public void setCountry(String country) { this.country = country; }
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
 
-    @Column(name="country")
+    @Column(name = "country")
     String country;
 
-    @OneToMany(fetch=FetchType.EAGER,mappedBy = "country")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "country")
     List<City> cities;
 
 
-
-    public Country() {}
+    public Country() {
+    }
 
     public Country(String country) {
-        this.country= country;
+        this.country = country;
     }
 }

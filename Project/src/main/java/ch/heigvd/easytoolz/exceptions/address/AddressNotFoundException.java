@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions.address;
+package ch.heigvd.easytoolz.exceptions.address;
 
 public class AddressNotFoundException extends RuntimeException {
     public AddressNotFoundException(int id){

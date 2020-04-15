@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions.user;
+package ch.heigvd.easytoolz.exceptions.user;
 
 public class UserFailedStoreException extends RuntimeException {
     public UserFailedStoreException(String name){

@@ -1,6 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions.address;
-
-import ch.heigvd.easytoolz.models.Address;
+package ch.heigvd.easytoolz.exceptions.address;
 
 public class AddressFailedStoreException extends RuntimeException {
     public AddressFailedStoreException(){

@@ -1,9 +1,9 @@
-package ch.heigvd.easytoolz.controllers.exceptions.handlers;
+package ch.heigvd.easytoolz.exceptions.handlers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.user.UserNotFoundException;
-import ch.heigvd.easytoolz.controllers.exceptions.errors.ApiError;
-import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectFormatException;
-import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
+import ch.heigvd.easytoolz.exceptions.errors.ApiError;
+import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectFormatException;
+import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

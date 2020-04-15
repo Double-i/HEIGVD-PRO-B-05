@@ -1,10 +1,5 @@
-package ch.heigvd.easytoolz.controllers.exceptions.handlers;
+package ch.heigvd.easytoolz.exceptions.handlers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.errors.ApiError;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;

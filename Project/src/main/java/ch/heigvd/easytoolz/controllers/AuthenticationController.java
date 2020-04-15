@@ -1,10 +1,9 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.models.AuthenticationRequest;
 import ch.heigvd.easytoolz.models.User;
-import ch.heigvd.easytoolz.services.AuthenticationService;
-import ch.heigvd.easytoolz.services.UserService;
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
+import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 

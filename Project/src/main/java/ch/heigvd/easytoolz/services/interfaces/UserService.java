@@ -1,9 +1,9 @@
-package ch.heigvd.easytoolz.services;
+package ch.heigvd.easytoolz.services.interfaces;
 
-import ch.heigvd.easytoolz.controllers.exceptions.user.UserAlreadyPresent;
-import ch.heigvd.easytoolz.controllers.exceptions.user.UserFailedDeleteException;
-import ch.heigvd.easytoolz.controllers.exceptions.user.UserFailedStoreException;
-import ch.heigvd.easytoolz.controllers.exceptions.user.UserNotFoundException;
+import ch.heigvd.easytoolz.exceptions.user.UserAlreadyPresent;
+import ch.heigvd.easytoolz.exceptions.user.UserFailedDeleteException;
+import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
+import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
 import ch.heigvd.easytoolz.models.User;
 
 import java.util.List;
@@ -11,6 +11,7 @@ import java.util.List;
 public interface UserService {
     /**
      * get the details of the user
+     *
      * @param username
      * @return the user which has the username passed in parameter
      * @throws UserNotFoundException
@@ -19,14 +20,16 @@ public interface UserService {
 
     /**
      * stores the user passed in parameter
+     *
      * @param user the new user
-     * @throws UserAlreadyPresent if the username is already present
+     * @throws UserAlreadyPresent       if the username is already present
      * @throws UserFailedStoreException if the insertion of the user fails
      */
     void storeUser(User user) throws UserAlreadyPresent, UserFailedStoreException;
 
     /**
      * deletes the user which has the username passed in parameter
+     *
      * @param username
      * @throws UserFailedDeleteException if the removal of the user fails
      */
@@ -34,7 +37,8 @@ public interface UserService {
 
     /**
      * updates the user with the newUser
-     * @param newUser the updated user
+     *
+     * @param newUser  the updated user
      * @param userName the current username of the user
      * @return the new user updated
      * @throws UserNotFoundException if the user isn't found
@@ -43,6 +47,7 @@ public interface UserService {
 
     /**
      * filters the list of the users
+     *
      * @param firstName
      * @param lastName
      * @param userName

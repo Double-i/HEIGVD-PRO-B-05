@@ -1,7 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.User;
-import ch.heigvd.easytoolz.services.UserService;
+import ch.heigvd.easytoolz.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

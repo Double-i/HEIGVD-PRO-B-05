@@ -30,7 +30,6 @@ class DisplayTools extends React.Component {
                             <div>Tags</div>
                         </div>
                     </div>
-
                     {this.props.data.map(item => (
 
                         <DisplayTool

@@ -24,14 +24,17 @@ class DisplayTool extends React.Component {
                 </div>
                 <div className="col-2">
                     <div>
-                        {this.props.objecttag.map(tag =>(
-                            <li>{tag.name}</li>
-                        ))}
+                        {
+                            this.props.objecttag.map(tag =>(
+                            <li key={tag.id}>{tag.name}</li>
+                        ))
+                        }
                     </div>
                 </div>
-                <div className="col-2">
+                <div className="col-2" key={"DivButtonId" + this.props.id}>
                     <Button
                         disabled = {this.state.isBorrowable}
+                        key={"buttonId" + this.props.id}
                     >
                         Emprunter
                     </Button>

@@ -61,12 +61,12 @@ public class EZObjectView {
         return ownerPostalCode;
     }
 
-    public BigDecimal getOwnerLat() {
-        return ownerLat;
+    public BigDecimal getOwnerLatitude() {
+        return ownerLatitude;
     }
 
-    public BigDecimal getOwnerLng() {
-        return ownerLng;
+    public BigDecimal getOwnerLongitude() {
+        return ownerLongitude;
     }
 
     @Id
@@ -77,8 +77,8 @@ public class EZObjectView {
     String ownerAddress;
     String ownerDistrict;
     String ownerPostalCode;
-    BigDecimal ownerLat;
-    BigDecimal ownerLng;
+    BigDecimal ownerLatitude;
+    BigDecimal ownerLongitude;
 
 
     @JsonIgnore

@@ -99,7 +99,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
 
     public List<EZObjectView> getObjectsByLocalisation(BigDecimal lat, BigDecimal lng) {
-        return objectViewRepository.findByOwnerLatAndOwnerLng(lat, lng);
+        return objectViewRepository.findByOwnerLatitudeAndOwnerLongitude(lat, lng);
     }
 
     public List<EZObject> getObjectsByTag(List<Tag> tags) {

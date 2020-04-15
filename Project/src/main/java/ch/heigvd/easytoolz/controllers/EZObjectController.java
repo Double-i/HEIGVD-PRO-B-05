@@ -6,6 +6,7 @@ import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,7 @@ public class EZObjectController {
 
     @GetMapping("/owner/{username}")
     @ResponseBody
-    public List<EZObjectView> getByOwner(@RequestParam String username)
+    public List<EZObjectView> getByOwner(@PathVariable String username)
     {
         return ezObjectService.getObjectByOwner(username);
     }

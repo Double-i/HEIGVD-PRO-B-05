@@ -1,64 +1,56 @@
 package ch.heigvd.easytoolz.controller;
 
-import ch.heigvd.easytoolz.EasyAuthenticationProvider;
-import ch.heigvd.easytoolz.controllers.EZObjectController;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
+import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.repositories.EZObjectRepository;
+import ch.heigvd.easytoolz.services.implementation.EZObjectServiceImpl;
+import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
+import ch.heigvd.easytoolz.views.EZObjectView;
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.WebApplicationContext;
-
-import javax.servlet.http.Cookie;
-
-import java.util.ArrayList;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.List;
+import org.junit.Assert;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-public class EZObjectTestController{
+public class EZObjectTestController {
 
-
-
-    @Autowired
-    private MockMvc mockMvc;
+    @MockBean
+    EZObjectRepository repository;
 
     @Autowired
-    private EZObjectController controller;
-
-    @Autowired
-    WebApplicationContext context;
-
-    MockHttpSession session;
-
-    UsernamePasswordAuthenticationToken authentication;
+    private EZObjectService service;
 
 
     @Test
-    void returnsObjectView() throws Exception
+    public void findCorrectNumberOfObject()
     {
-        this.mockMvc.perform(get("http://localhost:8080/api/objects/"))
-                .andExpect(status().isOk());
+        List<EZObject> found = service.get();
+        Assert.assertEquals(13,found.size());
+    }
+
+    @Test
+    public void shouldFindObjectPelle()
+    {
+        List<EZObjectView> found = service.getObjectByName("pelle");
+
+        for(int i = 0; i < found.size(); i++)
+            Assert.assertThat(found.get(i).getObjectName(), CoreMatchers.containsString("pelle"));
+    }
+
+    @Test
+    public void shouldOnlyReturnObjectFromOwner()
+    {
+        List<EZObjectView> found = service.getObjectByOwner("fukuchimiste");
+
+        for(int i = 0; i < found.size(); i++)
+            Assert.assertEquals("fukuchimiste",found.get(i).getObjectOwner());
     }
 }
+

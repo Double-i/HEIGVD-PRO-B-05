@@ -1,5 +1,3 @@
-
-
 insert into tag (name) values("jardin"),("bricolage"),("sport"),("dessin"),("skateboard"),("electricite"),("bois"),("neige"),("ete"),("hiver");
 
 insert into country(country) values("Suisse");
@@ -59,3 +57,4 @@ insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) 
 insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-10-2","2020-10-10",null,"pending","double-i",8);
 insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-8-1","2020-8-13",null,"pending","vitorvaz",12);
 insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-9-5","2020-9-20",null,"pending","mauricel",5);
+© 2020 GitHub, Inc.

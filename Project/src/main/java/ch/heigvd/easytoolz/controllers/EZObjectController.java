@@ -6,12 +6,16 @@ import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -26,21 +30,29 @@ public class EZObjectController {
     EZObjectService ezObjectService;
 
     @GetMapping
-    public List<EZObject> index()
+    public CollectionModel<EntityModel<EZObjectView>> index()
     {
-        return ezObjectService.get();
+        List<EntityModel<EZObjectView>> obj = ezObjectService.getAll().stream().map(
+                object -> new EntityModel<>(
+                        object,
+
+                        linkTo(methodOn(EZObjectController.class).get(object.getID())).withSelfRel()
+        )).collect(Collectors.toList());
+
+        return new CollectionModel<EntityModel<EZObjectView>>(obj,
+                linkTo(methodOn(EZObjectController.class).index()).withSelfRel());
     }
 
-    @GetMapping("find/{id}")
+    @GetMapping("/{id}")
     public EZObjectView get(@PathVariable int id)
     {
         return ezObjectService.getObject(id);
     }
 
 
-    @GetMapping("/find/user/{username}")
+    @GetMapping("/owner/{username}")
     @ResponseBody
-    public List<EZObjectView> getByOwner(@PathVariable String username)
+    public List<EZObjectView> getByOwner(@RequestParam String username)
     {
         return ezObjectService.getObjectByOwner(username);
     }
@@ -51,7 +63,7 @@ public class EZObjectController {
     {
         ezObjectService.addObject(newObject);
 
-        return new ResponseEntity<>("Object has been savec", HttpStatus.OK);
+        return new ResponseEntity<>("Object has been saved", HttpStatus.OK);
     }
 
 

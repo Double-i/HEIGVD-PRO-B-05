@@ -17,6 +17,8 @@ import java.util.Set;
 @Table(name = "ezobjectview")
 public class EZObjectView {
 
+    public int getID(){return objectId;}
+
     public EZObject getEzObject() {
         return ezObject;
     }

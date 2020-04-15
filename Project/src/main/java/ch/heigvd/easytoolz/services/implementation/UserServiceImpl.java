@@ -11,6 +11,7 @@ import ch.heigvd.easytoolz.services.interfaces.AddressService;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     AddressService addressService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Autowired
     AuthenticationService authenticationService;
     @Autowired
@@ -75,6 +78,7 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyPresent(user.getUserName());
         } else {
             addressService.storeAddress(user.getAddress());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             if (userRepository.findById(user.getUserName()).isEmpty()) {
                 throw new UserFailedStoreException(user.getUserName());

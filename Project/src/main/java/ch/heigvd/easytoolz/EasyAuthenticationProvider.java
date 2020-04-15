@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz;
 
+import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -7,13 +8,17 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Component
 public class EasyAuthenticationProvider implements AuthenticationProvider {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
 
@@ -22,11 +27,15 @@ public class EasyAuthenticationProvider implements AuthenticationProvider {
         String userName = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        if(!userRepository.findByUserNameAndPassword(userName, password).isEmpty()) {
-            return new UsernamePasswordAuthenticationToken(userName, password, new ArrayList<>());
-        }else{
-            throw new BadCredentialsException("The password or the username is incorrect");
+        Optional<User> userOptional = userRepository.findById(userName);
+
+        if(userOptional.isPresent()) {
+            User concreteUser = userOptional.get();
+            if(passwordEncoder.matches(password, concreteUser.getPassword()))
+                return new UsernamePasswordAuthenticationToken(userName, password, new ArrayList<>());
         }
+
+        throw new BadCredentialsException("The password or the username is incorrect");
     }
 
     @Override

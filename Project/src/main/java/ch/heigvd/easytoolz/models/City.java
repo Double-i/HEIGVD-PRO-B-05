@@ -1,9 +1,10 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "city")
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,7 +12,7 @@ public class City {
     private String city;
 
     @ManyToOne
-    @JoinColumn(name = "fkcountry", referencedColumnName = "id")
+    @JoinColumn(name = "fk_country", referencedColumnName = "id")
     private Country country;
 
     public City(){

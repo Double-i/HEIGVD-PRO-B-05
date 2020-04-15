@@ -5,7 +5,6 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="Country")
 public class Country {
 
     public int getId() {   return id;  }
@@ -21,7 +20,7 @@ public class Country {
     @Column(name="country")
     String country;
 
-    @OneToMany(mappedBy = "country")
+    @OneToMany(fetch=FetchType.EAGER,mappedBy = "country")
     List<City> cities;
 
 

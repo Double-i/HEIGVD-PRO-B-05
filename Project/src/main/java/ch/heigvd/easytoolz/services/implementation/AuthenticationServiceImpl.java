@@ -1,6 +1,6 @@
 package ch.heigvd.easytoolz.services.implementation;
 
-import ch.heigvd.easytoolz.EasyAuthenticationProvider;
+import ch.heigvd.easytoolz.components.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;

@@ -43,7 +43,7 @@ public class EZObjectController {
     }*/
 
     @GetMapping
-    public List<EZObject> index()
+    public List<EZObjectView> index()
     {
         return ezObjectService.getAll();
     }

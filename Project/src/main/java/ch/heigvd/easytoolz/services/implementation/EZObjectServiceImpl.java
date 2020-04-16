@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public class EZObjectServiceImpl implements EZObjectService {
     public List<EZObject> getFiltered( List<String> namesList,
                                            List<String> ownersList,
                                            List<String> descriptionList,
-                                       List<Tag>   tagSet)
+                                       List<Tag>   tagList)
     {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         List<EZObject> objects;
@@ -53,6 +54,7 @@ public class EZObjectServiceImpl implements EZObjectService {
                 tags = criteriaBuilder.disjunction(),
                 finalQuery = criteriaBuilder.disjunction();
 
+
         if(namesList != null)
             name = criteriaBuilder.like(root.get("name"),"%"+namesList.get(0)+"%");
         if(ownersList !=null)
@@ -60,13 +62,14 @@ public class EZObjectServiceImpl implements EZObjectService {
         if(descriptionList != null)
             description = criteriaBuilder.like(root.get("description"),"%"+descriptionList.get(0)+"%");
 
+        Join<Tag,EZObject> objectJoin = root.join("objectTags",JoinType.INNER);
 
-        if(tagSet !=null)
-            tags = root.get("objectTags").in(tagSet);
+        if(tags !=null && tagList.size() > 0)
+            tags = criteriaBuilder.equal(objectJoin.get("name").as(String.class),tagList.get(0).getName());
+
 
         finalQuery = criteriaBuilder.or(name,owners,description,tags);
-
-        query.where(finalQuery);
+        query.where(finalQuery).distinct(true);
 
         objects = entityManager.createQuery(query).getResultList();
 
@@ -84,8 +87,8 @@ public class EZObjectServiceImpl implements EZObjectService {
         return obj;
     }
 
-    public List<EZObject> getAll() {
-        return ezObjectRepository.findAll();
+    public List<EZObjectView> getAll() {
+        return ezObjectRepository.getAllByIsActive(true);
     }
 
     public List<EZObjectView> getObjectByOwner(String username) {

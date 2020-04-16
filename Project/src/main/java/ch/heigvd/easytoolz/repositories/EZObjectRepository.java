@@ -53,6 +53,7 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
 
     EZObjectView getEZObjectByID(int id);
 
+    List<EZObjectView> getAllByIsActive(boolean active);
     List<EZObjectView> getByOwner_UserName(String username);
 
     List<EZObjectView> getAllByNameContaining(String name);

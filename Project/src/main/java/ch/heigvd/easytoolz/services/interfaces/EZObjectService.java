@@ -32,7 +32,7 @@ public interface EZObjectService {
      *
      * @return
      */
-    List<EZObject> getAll();
+    List<EZObjectView> getAll();
 
 
     /**

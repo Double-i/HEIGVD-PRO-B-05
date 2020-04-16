@@ -1,11 +1,16 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
-import ch.heigvd.easytoolz.repositories.EZObjectRepository;
+import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
+import ch.heigvd.easytoolz.services.interfaces.UserService;
+import ch.heigvd.easytoolz.views.EZObjectView;
+import ch.heigvd.easytoolz.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -13,100 +18,86 @@ import java.util.List;
 @RequestMapping("/objects")
 public class EZObjectController {
 
-    @Autowired
-    EZObjectRepository ezObjectRepository;
 
-    /**
-     * Get the list of all the objects
-     * @return
-     */
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    EZObjectService ezObjectService;
+
     @GetMapping
     public List<EZObject> index()
     {
-        return ezObjectRepository.findAll();
+        return ezObjectService.get();
     }
 
-    /**
-     * Find objects by owner
-     * url: api/objects/find/{username}
-     * @param username
-     * @return
-     */
+    @GetMapping("find/{id}")
+    public EZObjectView get(@PathVariable int id)
+    {
+        return ezObjectService.getObject(id);
+    }
+
+
     @GetMapping("/find/user/{username}")
     @ResponseBody
-    public List<EZObject> getObjectByOwner(@PathVariable String username)
+    public List<EZObjectView> getByOwner(@PathVariable String username)
     {
-
-        if(ezObjectRepository.findByOwner_UserName(username).size() == 0)
-            throw new EZObjectNotFoundException("No Objects where found for user "+username);
-        return ezObjectRepository.findByOwner_UserName(username);
+        return ezObjectService.getObjectByOwner(username);
     }
 
-    /**
-     * Add an object into the database
-     * @param newObject
-     * @return
-     */
+
     @PostMapping("/add")
-    public EZObject addObject(@RequestBody EZObject newObject)
+    public ResponseEntity<String> add(@RequestBody EZObject newObject)
     {
-        EZObject obj = new EZObject(newObject.getName(),newObject.getDescription(),newObject.getOwner(),newObject.getObjecttags(),newObject.getImages());
-        return ezObjectRepository.save(obj);
+        ezObjectService.addObject(newObject);
+
+        return new ResponseEntity<>("Object has been savec", HttpStatus.OK);
     }
 
-    /**
-     * Updates an object into the database
-     * @param o
-     * @return
-     */
+
     @PostMapping("/update")
-    public EZObject updateObject(@RequestBody EZObject o)
+    public ResponseEntity<String> update(@RequestBody EZObject o)
     {
-        EZObject updated = ezObjectRepository.findByID(o.getID());
-        if(updated == null)
-            throw new EZObjectNotFoundException("Object not found " + o.getID() + " ");
-        
-        updated.setDescription(o.getDescription());
-        updated.setName(o.getName());
-        updated.setImages(o.getImages());
-        updated.setObjecttags(o.getObjecttags());
-
-
-        return ezObjectRepository.save(updated);
+        ezObjectService.updateObject(o);
+        return new ResponseEntity<>("Object has been updated",HttpStatus.OK);
     }
 
-    /**
-     * Find an object from the database
-     * @param objectName
-     * @return
-     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable Integer id)
+    {
+        ezObjectService.deleteObject(id);
+        return new ResponseEntity<>("Object has been deleted",HttpStatus.OK);
+    }
+
+
     @GetMapping("find/name/{objectName}")
     @ResponseBody
-    public List<EZObject> getObjectByName(@PathVariable String objectName)
+    public List<EZObjectView> getByName(@PathVariable String objectName)
     {
-        return ezObjectRepository.findByNameContaining(objectName);
+        return ezObjectService.getObjectByName(objectName);
     }
 
-    /**
-     * Find objects via description content
-     * @param content
-     * @return
-     */
+
     @GetMapping("find/description/{content}")
     @ResponseBody
-    public List<EZObject> getObjectByDescription(@PathVariable String content)
+    public List<EZObjectView> getByDescription(@PathVariable String content)
     {
-        return ezObjectRepository.findByDescriptionContaining(content);
+        return ezObjectService.getObjectByDescription(content);
     }
 
 
-    /**@GetMapping("find/localisation/{latitude}/{longitude}")
+    @GetMapping("find/localisation")
     @ResponseBody
+    public List<EZObjectView> getByLocalisation(@RequestParam(name="Latitude") BigDecimal lat, @RequestParam(name="Longitude") BigDecimal lng)
+    {
+        return ezObjectService.getObjectsByLocalisation(lat,lng);
+    }
 
-
-    @GetMapping("find/{latitude}/{longitude}")
-    @ResponseBody*/
-
-
+    @GetMapping("find/tags")
+    @ResponseBody
+    public List<EZObject> getByTags(@RequestBody List<Tag> tags)
+    {
+        return ezObjectService.getObjectsByTag(tags);
+    }
 
 }

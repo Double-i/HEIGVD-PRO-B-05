@@ -1,26 +1,11 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "city")
 public class City {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String city;
-
-    @ManyToOne
-    @JoinColumn(name = "fkcountry", referencedColumnName = "id")
-    private Country country;
-
-    public City(){
-    }
-
-    public City(String city, Country country){
-        this.city = city;
-        this.country = country;
-    }
 
     public int getId() {
         return id;
@@ -41,4 +26,23 @@ public class City {
     public void setCountry(Country country) {
         this.country = country;
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String city;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_country", referencedColumnName = "id")
+    private Country country;
+
+    public City() {
+    }
+
+    public City(String city, Country country) {
+        this.city = city;
+        this.country = country;
+    }
+
+
 }

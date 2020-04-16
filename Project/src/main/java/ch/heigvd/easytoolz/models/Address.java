@@ -1,12 +1,15 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "address")
 public class Address {
+
     public int getId() {
         return id;
     }
@@ -30,23 +33,31 @@ public class Address {
     public BigDecimal getLng() {
         return lng;
     }
-    public City getCity() { return city; }
+
+    public City getCity() {
+        return city;
+    }
 
     public void setId(int id) {
         this.id = id;
     }
+
     public void setAddress(String address) {
         this.address = address;
     }
+
     public void setDistrict(String district) {
         this.district = district;
     }
+
     public void setPostalCode(String postalCode) {
         this.postalcode = postalCode;
     }
+
     public void setLat(BigDecimal lat) {
         this.lat = lat;
     }
+
     public void setLng(BigDecimal lng) {
         this.lng = lng;
     }
@@ -55,7 +66,6 @@ public class Address {
         this.city = city;
     }
 
-    public Address(){}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,8 +80,11 @@ public class Address {
     private List<User> user;
 
     @ManyToOne
-    @JoinColumn(name = "fkCity", referencedColumnName = "id")
+    @JoinColumn(name = "fk_city", referencedColumnName = "id")
     private City city;
+
+    public Address() {
+    }
 
     public Address(String address, String district, String postalCode, BigDecimal lat, BigDecimal lng, City city) {
         this.address = address;
@@ -82,5 +95,17 @@ public class Address {
         this.city = city;
     }
 
-
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", district='" + district + '\'' +
+                ", postalcode='" + postalcode + '\'' +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", user=" + user +
+                ", city=" + city +
+                '}';
+    }
 }

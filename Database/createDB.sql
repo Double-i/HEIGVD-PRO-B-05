@@ -1,5 +1,5 @@
 -- MySQL Workbench Forward Engineering
-
+DROP SCHEMA IF EXISTS easytoolz;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS `easytoolz`.`address` (
   `address` VARCHAR(255) NOT NULL,
   `district` VARCHAR(10) NOT NULL,
   `postalCode` VARCHAR(10) NOT NULL,
-  `lat` FLOAT NOT NULL,
-  `lng` FLOAT NOT NULL,
+  `lat` DECIMAL(10,7) NOT NULL,
+  `lng` DECIMAL(10,7) NOT NULL,
   `fkCity` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_address_City1_idx` (`fkCity` ASC),
@@ -131,7 +131,7 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- Table `easytoolz`.`ezobjectimage`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `easytoolz`.`ezobjectimage` (
-  `pathToImg` VARCHAR(255) NULL DEFAULT NULL,
+  `path_to_image` VARCHAR(255) NULL DEFAULT NULL,
   `fkEZObject` INT NOT NULL,
   INDEX `fkEZObject` (`fkEZObject` ASC),
   CONSTRAINT `ezobjectimage_ibfk_1`
@@ -145,9 +145,7 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- Table `easytoolz`.`tag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `easytoolz`.`tag` (
-  `pkTag` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`pkTag`))
+  `name` VARCHAR(20) NOT NULL PRIMARY KEY)
 ENGINE = InnoDB
 AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb4;
@@ -157,13 +155,13 @@ DEFAULT CHARACTER SET = utf8mb4;
 -- Table `easytoolz`.`ezobjecttag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `easytoolz`.`ezobjecttag` (
-  `fkTag` INT NOT NULL,
+  `fkTag` VARCHAR(20) NOT NULL,
   `fkEZObject` INT NOT NULL,
   INDEX `fkTag` (`fkTag` ASC),
   INDEX `fkEZObject` (`fkEZObject` ASC),
   CONSTRAINT `ezobjecttag_ibfk_1`
     FOREIGN KEY (`fkTag`)
-    REFERENCES `easytoolz`.`tag` (`pkTag`),
+    REFERENCES `easytoolz`.`tag` (`name`),
   CONSTRAINT `ezobjecttag_ibfk_2`
     FOREIGN KEY (`fkEZObject`)
     REFERENCES `easytoolz`.`ezobject` (`id`))

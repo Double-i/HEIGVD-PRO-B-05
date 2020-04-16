@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static ch.heigvd.easytoolz.util.Utils.transformLike;
+import static ch.heigvd.easytoolz.util.ServiceUtils.transformLike;
 
 @RestController
 @RequestMapping("/cities")
@@ -27,9 +27,9 @@ public class CityController {
         country = transformLike(country);
 
         if (name != null) {
-            if(country != null) {
+            if (country != null) {
                 return cityRepository.findByCountry_CountryLikeAndCityLike(country, name);
-            }else{
+            } else {
                 return cityRepository.findByCityLike(name);
             }
         } else {

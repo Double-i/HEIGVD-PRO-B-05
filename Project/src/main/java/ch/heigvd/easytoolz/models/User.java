@@ -1,55 +1,21 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name="user")
 public class User {
-    @Id
-    @Column(name="username")
-    @NotNull
-    private String userName;
-    @Column(name="firstname")
-    @NotNull
-    private String firstName;
-    @Column(name="lastname")
-    @NotNull
-    private String lastName;
-    @Column(name="password")
-    @NotNull
-    private String password;
-    @Column(name="email")
-    @NotNull
-    private String email;
-    @Column(name="isadmin")
-    @NotNull
-    private boolean isAdmin;
-
-    @OneToMany(mappedBy = "owner")
-    private List<EZObject> ezobject;
-
-    // Required for creating JSON parsing
-    public User(){}
-
-    @ManyToOne
-    @JoinColumn(name="fkaddress", referencedColumnName = "id")
-    private Address address;
-
-    public User(String userName, String firstName, String lastName, String password, String email, Address address, boolean isAdmin){
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        // TODO : Hasher le mot de passe
-        this.password = password;
-        this.isAdmin = isAdmin;
-        this.address  = address;
-        this.email = email;
-    }
 
     public String getUserName() {
         return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getFirstName() {
@@ -72,6 +38,10 @@ public class User {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -80,8 +50,56 @@ public class User {
         isAdmin = admin;
     }
 
-    public Address getAddress(){return address;}
-    public void setAddress(Address address) { this.address = address;}
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Id
+    @NotNull
+    private String userName;
+    @NotNull
+    private String firstName;
+    @NotNull
+    private String lastName;
+    @NotNull
+    private String password;
+    @NotNull
+    private String email;
+    @NotNull
+    private boolean isAdmin;
+
+    @OneToMany(mappedBy = "owner")
+    private List<EZObject> ezObject;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "fk_address", referencedColumnName = "id")
+    private Address address;
+
+    // Required for creating JSON parsing
+    public User() {
+    }
+
+    public User(String userName, String firstName, String lastName, String password, String email, Address address, boolean isAdmin) {
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.isAdmin = isAdmin;
+        this.address = address;
+        this.email = email;
+    }
 
     @Override
     public String toString() {
@@ -98,11 +116,5 @@ public class User {
                 isAdmin);
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

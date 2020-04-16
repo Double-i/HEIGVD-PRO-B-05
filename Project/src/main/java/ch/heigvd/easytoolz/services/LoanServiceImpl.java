@@ -108,18 +108,15 @@ public class LoanServiceImpl implements LoanService {
     }
 
     /**
-     * Get loans of a borrower or owner, it's possible to apply filters in the search (for the moment, only with "state" attributes)
+     * Get loans of a borrower or owner, it's possible to apply filters in the search (for the moment, only with "state")
      *
      * @param username
      * @param borrower
-     * @param pending
-     * @param refused
-     * @param accepted
-     * @param cancel
+     * @param state
      * @return
      */
     @Override
-    public List<Loan> getLoan(String username, boolean borrower, boolean pending, boolean refused, boolean accepted, boolean cancel) {
+    public List<Loan> getLoan(String username, boolean borrower, String state) {
         if(loanRepository.findByBorrower_UserName(username).size() == 0)
             throw new EZObjectNotFoundException("No loans where found for user "+username);
 
@@ -132,17 +129,22 @@ public class LoanServiceImpl implements LoanService {
             specs = Specification.where(LoanSpecs.getLoanByOwner(username));
         }
 
-        if(pending)
+
+        // Filtre par un état de l'emprunt
+        if(state.equals(State.pending.getState())) {
             specs = specs.and(LoanSpecs.getPendingLoan());
-
-        if(refused)
-            specs = specs.and(LoanSpecs.getRefusedLoan());
-
-        if(accepted)
+        }
+        else if (state.equals(State.refused.getState())){
+                specs = specs.and(LoanSpecs.getRefusedLoan());
+        }
+        else if(state.equals(State.accepted.getState())) {
             specs = specs.and(LoanSpecs.getAcceptedLoan());
-
-        if(cancel)
+        }
+        else if(state.equals(State.cancel.getState())) {
             specs = specs.and(LoanSpecs.getCancelLoan());
+        }
+
+        //Ajouter les filtres city, dateStart et dateEnd
 
         return loanRepository.findAll(specs);
     }

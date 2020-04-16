@@ -47,13 +47,10 @@ public class LoanController {
     @GetMapping("/find/user/{username}")
     @ResponseBody
     public List<Loan> getLoanByUser(@PathVariable String username, @RequestParam boolean borrower,
-                                    @RequestParam(required = false) boolean pending,
-                                    @RequestParam(required = false) boolean refused,
-                                    @RequestParam(required = false) boolean accepted,
-                                    @RequestParam(required = false) boolean cancel)
+                                    @RequestParam(required = false) String state)
     {
 
-    return loanService.getLoan(username, borrower, pending, refused, accepted, cancel);
+    return loanService.getLoan(username, borrower, state);
 
     }
 

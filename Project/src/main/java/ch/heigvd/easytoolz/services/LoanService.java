@@ -18,6 +18,6 @@ public interface LoanService {
 
     ResponseEntity<String> updateState(int loanId, State state);
 
-    List<Loan> getLoan(String username, boolean borrower, boolean pending, boolean refused, boolean accepted, boolean cancel);
+    List<Loan> getLoan(String username, boolean borrower, String state);
 
 }

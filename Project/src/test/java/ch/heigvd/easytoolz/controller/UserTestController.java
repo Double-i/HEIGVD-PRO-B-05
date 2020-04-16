@@ -23,6 +23,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -40,24 +42,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// https://developer.okta.com/blog/2019/03/28/test-java-spring-boot-junit5
-
-// CURL Request for creating a new user
-// curl -X POST localhost:8080/api/users/ -H "Content-type:application/json;Accept:application/json" -d "{\"firstName\":\"Bastien\", \"lastName\":\"Potet\",\"password\":\"1234\",\"isAdmin\":\"true\",\"userName\":\"vanlong\",\"email\":\"bastien.potet@gmail.com\"}"
-// CURL Request for updating the user 'vanlong'
-// curl -X PUT localhost:8080/api/users/vanlong -H "Content-type:application/json;Accept:application/json" -d "{\"userName\":\"Babouste\"}"
-// CURL Request for deleting the user 'vanlong'
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-class UserTestController {
+@ContextConfiguration(classes = {
+        WebSecurityConfigurerAdapter.class
+})
+public class UserTestController {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
     private UserController userController;
-
-
 
 }

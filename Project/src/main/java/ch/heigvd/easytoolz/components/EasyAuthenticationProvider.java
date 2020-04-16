@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz;
+package ch.heigvd.easytoolz.components;
 
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;

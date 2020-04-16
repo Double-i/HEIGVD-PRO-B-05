@@ -95,7 +95,7 @@ public class EZObject {
     private List<EZObjectImage> images;
 
     @Transient
-    private String ownerUserName;
+    public String ownerUserName;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -103,7 +103,7 @@ public class EZObject {
     private User owner;
 
     //association class
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "ezobject_tag",
             joinColumns = @JoinColumn(name = "fk_ezobject"),

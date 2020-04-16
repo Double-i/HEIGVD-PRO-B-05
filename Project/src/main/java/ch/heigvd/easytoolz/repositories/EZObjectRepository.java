@@ -2,11 +2,13 @@ package ch.heigvd.easytoolz.repositories;
 
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.Tag;
+import ch.heigvd.easytoolz.views.EZObjectView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -27,7 +29,7 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
      * @param owner owner of the object
      * @return a list of object from the same owner
      */
-    List<EZObject>  findByOwner(String owner);
+    //List<EZObject>  findByOwner(String owner);
 
     /**
      * Find an object by it's ID
@@ -48,5 +50,14 @@ public interface EZObjectRepository extends JpaRepository<EZObject,String> {
 
     List<EZObject> findByObjectTagsIn(List<Tag> tags);
 
+
+    EZObjectView getEZObjectByID(int id);
+
+    List<EZObjectView> getByOwner_UserName(String username);
+
+    List<EZObjectView> getAllByNameContaining(String name);
+    List<EZObjectView> getAllByDescriptionContaining(String name);
+    List<EZObjectView> getAllByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat,BigDecimal lng);
+    List<EZObjectView> getAllByObjectTagsIn(List<Tag> tags);
 
 }

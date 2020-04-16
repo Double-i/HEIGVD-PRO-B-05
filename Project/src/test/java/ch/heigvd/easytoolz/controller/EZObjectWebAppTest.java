@@ -36,7 +36,7 @@ public class EZObjectWebAppTest {
     EZObjectService service;
 
     List<EZObjectView> objects;
-    @Before
+    /*@Before
     public void Init()
     {
         objects = service.getAll();
@@ -105,6 +105,6 @@ public class EZObjectWebAppTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]..objectOwner",hasItem("fukuchimiste")));
-    }
+    }*/
 
 }

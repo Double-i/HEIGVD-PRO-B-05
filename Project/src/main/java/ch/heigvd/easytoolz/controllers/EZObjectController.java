@@ -5,19 +5,17 @@ import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
+
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/objects")
@@ -45,7 +43,7 @@ public class EZObjectController {
     }*/
 
     @GetMapping
-    public List<EZObjectView> index()
+    public List<EZObject> index()
     {
         return ezObjectService.getAll();
     }
@@ -114,9 +112,21 @@ public class EZObjectController {
 
     @GetMapping("find/tags")
     @ResponseBody
-    public List<EZObject> getByTags(@RequestBody List<Tag> tags)
+    public List<EZObjectView> getByTags(@RequestBody List<Tag> tags)
     {
         return ezObjectService.getObjectsByTag(tags);
+    }
+
+    @GetMapping("filter")
+    public List<EZObject> findFiltered(
+            @RequestParam(name="names",required = false) List<String> names,
+            @RequestParam(name="owners",required = false) List<String> owners,
+            @RequestParam(name="description",required = false) List<String> description,
+            @RequestBody List<Tag> tags)
+
+    {
+
+        return ezObjectService.getFiltered(names,owners,description,tags);
     }
 
 }

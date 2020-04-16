@@ -35,9 +35,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and().csrf().disable()
-                .authorizeRequests().antMatchers("/api/").permitAll();
+                .authorizeRequests().antMatchers("/api/authenticate","/api/signup").permitAll() // accept login endpoint
+                .antMatchers("/api/**").authenticated() // block every other backend endpoint for now
+                .antMatchers("/**").permitAll().and()   // allow every other URI since all will be redirect to index.html
+                .exceptionHandling().and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
     }
 
 }

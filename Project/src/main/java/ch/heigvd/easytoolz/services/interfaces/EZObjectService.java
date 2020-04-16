@@ -6,6 +6,7 @@ import ch.heigvd.easytoolz.models.Tag;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 public interface EZObjectService {
     /**
@@ -31,12 +32,8 @@ public interface EZObjectService {
      *
      * @return
      */
-    List<EZObjectView> getAll();
+    List<EZObject> getAll();
 
-    /**
-     * debuging purpose
-     **/
-    List<EZObject> get();
 
     /**
      * Find objects by owner
@@ -77,6 +74,12 @@ public interface EZObjectService {
     List<EZObjectView> getObjectsByLocalisation(BigDecimal lat, BigDecimal lng);
 
 
-    List<EZObject> getObjectsByTag(List<Tag> tags);
+    List<EZObjectView> getObjectsByTag(List<Tag> tags);
+
+     List<EZObject> getFiltered( List<String> namesList,
+                                           List<String> ownersList,
+                                           List<String> descriptionList,
+                                 List<Tag> tags);
+
 
 }

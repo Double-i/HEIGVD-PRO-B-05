@@ -11,12 +11,15 @@ import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import ch.heigvd.easytoolz.repositories.LoanRepository;
 import ch.heigvd.easytoolz.repositories.UserRepository;
+import ch.heigvd.easytoolz.specifications.LoanSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class LoanServiceImpl implements LoanService {
@@ -102,6 +105,46 @@ public class LoanServiceImpl implements LoanService {
             throw new RuntimeException("LoanService - Something went wrong while trying to update loan state");
 
         return new ResponseEntity<>("The loans has been ", HttpStatus.OK);
+    }
+
+    /**
+     * Get loans of a borrower or owner, it's possible to apply filters in the search (for the moment, only with "state" attributes)
+     *
+     * @param username
+     * @param borrower
+     * @param pending
+     * @param refused
+     * @param accepted
+     * @param cancel
+     * @return
+     */
+    @Override
+    public List<Loan> getLoan(String username, boolean borrower, boolean pending, boolean refused, boolean accepted, boolean cancel) {
+        if(loanRepository.findByBorrower_UserName(username).size() == 0)
+            throw new EZObjectNotFoundException("No loans where found for user "+username);
+
+        Specification<Loan> specs;
+
+        if(borrower) {
+            specs = Specification.where(LoanSpecs.getLoanByBorrower(username));
+        }
+        else{
+            specs = Specification.where(LoanSpecs.getLoanByOwner(username));
+        }
+
+        if(pending)
+            specs = specs.and(LoanSpecs.getPendingLoan());
+
+        if(refused)
+            specs = specs.and(LoanSpecs.getRefusedLoan());
+
+        if(accepted)
+            specs = specs.and(LoanSpecs.getAcceptedLoan());
+
+        if(cancel)
+            specs = specs.and(LoanSpecs.getCancelLoan());
+
+        return loanRepository.findAll(specs);
     }
 
     /**

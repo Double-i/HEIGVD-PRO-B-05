@@ -53,31 +53,8 @@ public class LoanController {
                                     @RequestParam(required = false) boolean cancel)
     {
 
-       if(loanRepository.findByBorrower_UserName(username).size() == 0)
-           throw new EZObjectNotFoundException("No loans where found for user "+username);
+    return loanService.getLoan(username, borrower, pending, refused, accepted, cancel);
 
-        Specification<Loan> specs;
-
-        if(borrower) {
-            specs = Specification.where(LoanSpecs.getLoanByBorrower(username));
-        }
-        else{
-            specs = Specification.where(LoanSpecs.getLoanByOwner(username));
-        }
-
-        if(pending)
-            specs = specs.and(LoanSpecs.getPendingLoan());
-
-        if(refused)
-            specs = specs.and(LoanSpecs.getRefusedLoan());
-
-        if(accepted)
-            specs = specs.and(LoanSpecs.getAcceptedLoan());
-
-        if(cancel)
-            specs = specs.and(LoanSpecs.getCancelLoan());
-
-        return loanRepository.findAll(specs);
     }
 
     /**

@@ -3,6 +3,10 @@ package ch.heigvd.easytoolz.services;
 import ch.heigvd.easytoolz.models.Loan;
 import ch.heigvd.easytoolz.models.State;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 public interface LoanService {
 
@@ -13,4 +17,7 @@ public interface LoanService {
     ResponseEntity<String> store(Loan newLoan);
 
     ResponseEntity<String> updateState(int loanId, State state);
+
+    List<Loan> getLoan(String username, boolean borrower, boolean pending, boolean refused, boolean accepted, boolean cancel);
+
 }

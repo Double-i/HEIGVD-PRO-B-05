@@ -43,7 +43,7 @@ public class EZObjectServiceImpl implements EZObjectService {
     }
 
     public List<EZObjectView> getAll() {
-        return objectViewRepository.findAll();
+        return objectViewRepository.findByOrderByObjectIdAsc();
     }
 
     public List<EZObjectView> getObjectByOwner(String username) {

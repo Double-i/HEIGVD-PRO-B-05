@@ -30,7 +30,7 @@ public class EZObjectController {
     @Autowired
     EZObjectService ezObjectService;
 
-    @GetMapping
+    /*@GetMapping
     public CollectionModel<EntityModel<EZObjectView>> index()
     {
         List<EntityModel<EZObjectView>> obj = ezObjectService.getAll().stream().map(
@@ -42,6 +42,12 @@ public class EZObjectController {
 
         return new CollectionModel<EntityModel<EZObjectView>>(obj,
                 linkTo(methodOn(EZObjectController.class).index()).withSelfRel());
+    }*/
+
+    @GetMapping
+    public List<EZObjectView> index()
+    {
+        return ezObjectService.getAll();
     }
 
     @GetMapping("/{id}")

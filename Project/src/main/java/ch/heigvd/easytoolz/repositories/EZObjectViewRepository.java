@@ -10,6 +10,8 @@ import java.util.List;
 public interface EZObjectViewRepository extends JpaRepository<EZObjectView,String> {
 
 
+    List<EZObjectView> findByOrderByObjectIdAsc();
+
     List<EZObjectView> findByObjectOwner(String owner);
 
     EZObjectView findByObjectId(int id);

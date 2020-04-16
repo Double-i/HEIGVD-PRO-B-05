@@ -89,7 +89,19 @@ public class EZObjectView {
     EZObject ezObject;
 
 
-
     public EZObjectView() {
+    }
+
+    public EZObjectView(int objectId, String objectName, String objectDescription, String objectOwner, String ownerAddress, String ownerDistrict, String ownerPostalCode, BigDecimal ownerLatitude, BigDecimal ownerLongitude, EZObject ezObject) {
+        this.objectId = objectId;
+        this.objectName = objectName;
+        this.objectDescription = objectDescription;
+        this.objectOwner = objectOwner;
+        this.ownerAddress = ownerAddress;
+        this.ownerDistrict = ownerDistrict;
+        this.ownerPostalCode = ownerPostalCode;
+        this.ownerLatitude = ownerLatitude;
+        this.ownerLongitude = ownerLongitude;
+        this.ezObject = ezObject;
     }
 }

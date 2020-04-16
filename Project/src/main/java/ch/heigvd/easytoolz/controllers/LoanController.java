@@ -2,15 +2,16 @@ package ch.heigvd.easytoolz.controllers;
 
 
 import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
-import ch.heigvd.easytoolz.controllers.exceptions.loan.BadParameterException;
 import ch.heigvd.easytoolz.models.Loan;
 
 import ch.heigvd.easytoolz.models.State;
 import ch.heigvd.easytoolz.models.StateRequest;
 import ch.heigvd.easytoolz.repositories.LoanRepository;
 import ch.heigvd.easytoolz.services.LoanService;
+import ch.heigvd.easytoolz.specifications.LoanSpecs;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,18 +44,40 @@ public class LoanController {
      * @param username
      * @return
      */
-
     @GetMapping("/find/user/{username}")
     @ResponseBody
-    public List<Loan> getLoanByUser(@PathVariable String username, @RequestParam boolean borrower) {
-        if (loanRepository.findByBorrower_UserName(username).size() == 0)
-            throw new EZObjectNotFoundException("No loans where found for user " + username);
+    public List<Loan> getLoanByUser(@PathVariable String username, @RequestParam boolean borrower,
+                                    @RequestParam(required = false) boolean pending,
+                                    @RequestParam(required = false) boolean refused,
+                                    @RequestParam(required = false) boolean accepted,
+                                    @RequestParam(required = false) boolean cancel)
+    {
 
-        if (borrower) {
-            return loanRepository.findByBorrower_UserName(username);
-        } else {
-            return loanRepository.findByEZObject_Owner_UserName(username);
+       if(loanRepository.findByBorrower_UserName(username).size() == 0)
+           throw new EZObjectNotFoundException("No loans where found for user "+username);
+
+        Specification<Loan> specs;
+
+        if(borrower) {
+            specs = Specification.where(LoanSpecs.getLoanByBorrower(username));
         }
+        else{
+            specs = Specification.where(LoanSpecs.getLoanByOwner(username));
+        }
+
+        if(pending)
+            specs = specs.and(LoanSpecs.getPendingLoan());
+
+        if(refused)
+            specs = specs.and(LoanSpecs.getRefusedLoan());
+
+        if(accepted)
+            specs = specs.and(LoanSpecs.getAcceptedLoan());
+
+        if(cancel)
+            specs = specs.and(LoanSpecs.getCancelLoan());
+
+        return loanRepository.findAll(specs);
     }
 
     /**

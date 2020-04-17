@@ -87,7 +87,6 @@ public class User {
     @JoinColumn(name = "fk_address", referencedColumnName = "id")
     private Address address;
 
-
     // Required for creating JSON parsing
     public User() {
     }
@@ -96,7 +95,6 @@ public class User {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
-        // TODO : Hasher le mot de passe
         this.password = password;
         this.isAdmin = isAdmin;
         this.address = address;

@@ -1,9 +1,12 @@
 import * as React from "react";
+import SearchTools  from "../searchTools/searchTools";
 
 class Home extends React.Component{
     render() {
         return (
-            <div>HOME PAGE</div>
+            <div>
+                <SearchTools />
+            </div>
         )
     }
 }

@@ -1,11 +1,16 @@
 package ch.heigvd.easytoolz.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -15,12 +20,7 @@ public class Loan {
     public int getPkLoan() {
         return pkLoan;
     }
-    public Date getDateStart() {
-        return dateStart;
-    }
-    public Date getDateEnd() {
-        return dateEnd;
-    }
+
     public Date getDateReturn() {
         return dateReturn;
     }
@@ -33,15 +33,33 @@ public class Loan {
     public EZObject getEZObject() {
         return EZObject;
     }
+    public List<Period> getPeriods() {
+        return periods;
+    }
+    public Period getValidPeriod(){
+        Period validPeriod = null;
+        for(Period period : periods){
+            if(period.getState().equals(State.accepted)){
+                validPeriod = period;
+                break;
+            }
+        }
+        return validPeriod;
+    }
+    // TODO à voir si utile
+    public List<Period> getPendingPeriods(){
+        List<Period> pendingPeriod = new ArrayList<>();
+        for(Period period : periods){
+            if(period.getState().equals(State.pending)){
+                pendingPeriod.add(period);
+            }
+        }
+        return pendingPeriod;
+    }
+
 
     public void setPkLoan(int pkLoan) {
         this.pkLoan = pkLoan;
-    }
-    public void setdateStart(Date dateStart) {
-        this.dateStart = dateStart;
-    }
-    public void setdateEnd(Date dateEnd) {
-        this.dateEnd = dateEnd;
     }
     public void setDateReturn(Date dateReturn) {
         this.dateReturn = dateReturn;
@@ -55,21 +73,14 @@ public class Loan {
     public void setEZObject(EZObject EZObject) {
         this.EZObject = EZObject;
     }
+    public void setPeriods(List<Period> periods) {
+        this.periods = periods;
+    }
 
     @Id
     @Column(name="pkloan")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pkLoan;
-
-    @Column(name="datestart")
-    @NotNull
-    @Future
-    private Date dateStart;
-
-    @Column(name="dateend")
-    @NotNull
-    @Future
-    private Date dateEnd;
 
     @Column(name="datereturn")
     private Date dateReturn;
@@ -89,29 +100,20 @@ public class Loan {
     @JoinColumn(name="EZObject", referencedColumnName = "ID")
     private EZObject EZObject;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "loan")
+    private List<Period> periods;
+
+
     public Loan(){}
 
-    public Loan(Date dateStart,Date dateEnd, Date dateReturn, State state, User borrower, EZObject EZObject) {
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
+    public Loan( Date dateReturn, State state, User borrower, EZObject EZObject ) {
         this.dateReturn = dateReturn;
         this.state = state;
         this.borrower = borrower;
         this.EZObject = EZObject;
+
     }
 
-    @Override
-    public String toString() {
-        return "Loan{" +
-                "pkLoan=" + pkLoan +
-                ", dateStart='" + dateStart + '\'' +
-                ", dateEnd='" + dateEnd + '\'' +
-                ", dateReturn='" + dateReturn + '\'' +
-                ", state='" + state + '\'' +
-                ", borrower='" + borrower + '\'' +
-                ", EZObject='" + EZObject + '\'' +
-                "}\n";
-    }
 
 
 }

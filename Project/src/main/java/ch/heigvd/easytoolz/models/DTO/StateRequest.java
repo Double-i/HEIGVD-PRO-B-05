@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.models;
+package ch.heigvd.easytoolz.models.DTO;
 
 public class StateRequest {
     private String state;

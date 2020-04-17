@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.repositories;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.Loan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -51,11 +52,39 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
      * @return boolean return true if already used
      */
     @Query("SELECT CASE WHEN COUNT(lo) > 0 THEN true ELSE false END FROM Loan lo" +
-            " WHERE lo.EZObject = :tool AND lo.state = :state"  +
-            " AND ((:dateStart BETWEEN lo.dateStart AND lo.dateEnd )" +  // get all loans with dateStart during another loan period
-            " OR (:dateEnd BETWEEN lo.dateStart AND lo.dateEnd)" +     // get all loans with dateEnd during another loan period
-            " OR (lo.dateStart BETWEEN  :dateStart AND :dateEnd))")     // get all loans with dateStart during the new loan period*/
-    boolean isAlreadyBorrow(EZObject tool, Date dateStart, Date dateEnd, State state);
+            " INNER JOIN Period peri ON lo.pkLoan = peri.loan.pkLoan" +
+            " WHERE peri.state = :periodState " +
+            " AND lo.state = :toolState " +
+            " AND lo.EZObject = :tool"  +
+            " AND ((:dateStart BETWEEN peri.dateStart AND peri.dateEnd )" +  // get all loans with dateStart during another loan period
+            " OR (:dateEnd BETWEEN peri.dateStart AND peri.dateEnd)" +     // get all loans with dateEnd during another loan period
+            " OR (peri.dateStart BETWEEN  :dateStart AND :dateEnd))")     // get all loans with dateStart during the new loan period
+    boolean isAlreadyBorrow(EZObject tool, Date dateStart, Date dateEnd, State toolState, State periodState);
+
+
+    /**
+     * Return true if the tool is already (accepted) borrowed for a given period (between dateStart and dateEnd)
+     * This version of isAlreadyBorrow exclude the loan we've given in the parameters
+     *
+     * @param tool the tool of the loans
+     * @param loan the loan to ignore
+     * @param dateStart start date period
+     * @param dateEnd end date period
+     * @param toolState the tool state we're interested in
+     * @param periodState the period state we're interested in
+     * @return
+     */
+    @Query("SELECT CASE WHEN COUNT(lo) > 0 THEN true ELSE false END FROM Loan lo" +
+            " INNER JOIN Period peri ON lo.pkLoan = peri.loan.pkLoan" +
+            " WHERE peri.state = :periodState " +
+            " AND lo.pkLoan <> :loan" +                                         // ignore the loan related to the given loan
+            " AND lo.state = :toolState " +
+            " AND lo.EZObject = :tool"  +
+            " AND ((:dateStart BETWEEN peri.dateStart AND peri.dateEnd )" +     // get all loans with dateStart during another loan period
+            " OR (:dateEnd BETWEEN peri.dateStart AND peri.dateEnd)" +          // get all loans with dateEnd during another loan period
+            " OR (peri.dateStart BETWEEN  :dateStart AND :dateEnd))")           // get all loans with dateStart during the new loan period
+    boolean isAlreadyBorrow(EZObject tool, Loan loan, Date dateStart, Date dateEnd, State toolState, State periodState);
+
 
     //EZObject findByLocalisation(int localisation);
 

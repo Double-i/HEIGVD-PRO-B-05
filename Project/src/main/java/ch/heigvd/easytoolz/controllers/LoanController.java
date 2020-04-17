@@ -1,17 +1,15 @@
 package ch.heigvd.easytoolz.controllers;
 
 
-import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
-import ch.heigvd.easytoolz.models.Loan;
+import ch.heigvd.easytoolz.models.*;
 
-import ch.heigvd.easytoolz.models.State;
-import ch.heigvd.easytoolz.models.StateRequest;
+import ch.heigvd.easytoolz.models.DTO.LoanRequest;
+import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
+import ch.heigvd.easytoolz.models.DTO.StateRequest;
 import ch.heigvd.easytoolz.repositories.LoanRepository;
 import ch.heigvd.easytoolz.services.LoanService;
-import ch.heigvd.easytoolz.specifications.LoanSpecs;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +23,7 @@ public class LoanController {
 
     @Autowired
     LoanService loanService;
+
 
     /**
      * Get the list of all the loans
@@ -62,7 +61,8 @@ public class LoanController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<String> addLoan(@RequestBody Loan newLoan) {
+    public ResponseEntity<String> addLoan(@RequestBody LoanRequest newLoan) {
+        System.out.println(newLoan);
         return loanService.store(newLoan);
     }
 
@@ -76,10 +76,22 @@ public class LoanController {
     public ResponseEntity<String> updateState(@PathVariable int loanId, @RequestBody StateRequest stateRequest ) {
 
             State state = State.valueOf(stateRequest.getState());
-            System.out.println(state);
+
             return loanService.updateState(loanId,state);
-
-
-
     }
+
+    @PostMapping("/{loanId}/periods/")
+    public ResponseEntity<String> addPeriod(@PathVariable int loanId, @RequestBody PeriodRequest periodRequest){
+        return loanService.addPeriod( loanId,  periodRequest);
+    }
+
+
+    @PatchMapping("/{loanId}/periods/{periodId}/state")
+    public ResponseEntity<String> updatePeriodState(@PathVariable int loanId, @PathVariable int periodId, @RequestBody StateRequest stateRequest){
+        State state = State.valueOf(stateRequest.getState());
+        return loanService.updatePeriodState(loanId, periodId, state);
+    }
+    
+
+
 }

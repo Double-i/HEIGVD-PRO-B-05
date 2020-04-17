@@ -36,8 +36,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-
-
         // old way
         //final String authorizationHeader = request.getHeader("Authorization");
         // todo : delete me ! mtn le token est récupérer via le cookie fourni automatiquement par le navigateur web.

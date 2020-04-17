@@ -7,6 +7,8 @@ import ch.heigvd.easytoolz.controllers.exceptions.loan.LoanInvalidUserException;
 import ch.heigvd.easytoolz.controllers.exceptions.loan.LoanPeriodAlreadyPassedException;
 import ch.heigvd.easytoolz.controllers.exceptions.loan.LoanStateCantBeUpdatedException;
 import ch.heigvd.easytoolz.models.*;
+import ch.heigvd.easytoolz.models.DTO.LoanRequest;
+import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import ch.heigvd.easytoolz.repositories.LoanRepository;
 import ch.heigvd.easytoolz.repositories.PeriodRepository;

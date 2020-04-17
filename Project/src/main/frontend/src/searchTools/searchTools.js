@@ -8,8 +8,8 @@ import Button from "react-bootstrap/Button";
 //TODO : Si le user est pas log, on arrive pas a fetch les objets ?!
 class SearchTools extends React.Component{
 
-    SEARCH_URI = '/objects';
-
+    SEARCH_URI = '/objects'
+    TAGS_URI = '/tags'
     constructor(props){
         super(props);
 
@@ -28,10 +28,20 @@ class SearchTools extends React.Component{
     componentDidMount() {
         sendEzApiRequest(this.SEARCH_URI)
             .then((response) =>{
-                this.setState({tools:response})})
+                this.setState({tools:response})
+                console.log(this.state.tools);
+            })
 
-        //Get tags from db
-        this.setState({tags:['sport' , 'skateboard' , 'jardin', 'ete']})
+
+        sendEzApiRequest(this.TAGS_URI)
+            .then( (response) => {
+                    //Get tags from db
+                    if(response.status == 403) {
+                        console.log('pas reussi a fetch les tags...');
+                    }else{
+                        this.setState({tags: response.map((value) => value.name)})
+                    }
+                })
     }
 
     //En cas de submit, on recherche la query dans
@@ -43,6 +53,7 @@ class SearchTools extends React.Component{
         if(this.state.search !== ''){
             URL += '/find/name/' + this.state.search;
         }
+        console.log(URL);
         //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
         event.preventDefault();
         sendEzApiRequest(URL)
@@ -52,6 +63,7 @@ class SearchTools extends React.Component{
                         console.log('No tools founded')
                     } else {
                         console.log('items founded')
+                        console.log(result);
                         this.setState({tools : result});
                     }
                 },
@@ -63,6 +75,7 @@ class SearchTools extends React.Component{
         //
     }
 
+    //Dynaminc update of searched tags fields
     handleTagChange(e){
         let options = e.target.options;
         let value = [];

@@ -37,7 +37,7 @@ class DisplayTools extends React.Component {
                             name={item.name}
                             description={item.description}
                             ownerUserName={item.ownerUserName}
-                            objecttag={item.objecttags}
+                            objectTags={item.objectTags}
                         >
                         </DisplayTool>
                     ))}

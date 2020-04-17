@@ -25,9 +25,9 @@ class DisplayTool extends React.Component {
                 <div className="col-2">
                     <div>
                         {
-                            this.props.objecttag.map(tag =>(
+                            this.props.objectTags.map(tag =>(
                             <li key={tag.id}>{tag.name}</li>
-                        ))
+                            ))
                         }
                     </div>
                 </div>

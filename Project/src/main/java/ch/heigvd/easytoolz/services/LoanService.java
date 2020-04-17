@@ -6,6 +6,7 @@ import ch.heigvd.easytoolz.models.Loan;
 import ch.heigvd.easytoolz.models.State;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Date;
 import java.util.List;
 
 import java.security.InvalidParameterException;
@@ -23,5 +24,6 @@ public interface LoanService {
     ResponseEntity<String> addPeriod(int loanId, PeriodRequest periodRequest);
 
     ResponseEntity<String> updatePeriodState(int loanId, int periodId, State newState) throws InvalidParameterException;
-    List<Loan> getLoan(String username, boolean borrower, String state);
+
+    List<Loan> getLoan(String username, boolean borrower, List<String> state, List<String> city, Date dateStart, Date dateEnd);
 }

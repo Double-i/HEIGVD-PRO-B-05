@@ -210,43 +210,54 @@ public class LoanServiceImpl implements LoanService {
     }
 
     /**
-     * Get loans of a borrower or owner, it's possible to apply filters in the search (for the moment, only with "state")
+     * Get loans of a borrower or owner, it's possible to apply filters in the search
      *
      * @param username
      * @param borrower
      * @param state
+     * @param city
+     * @param dateStart
+     * @param dateEnd
      * @return
      */
     @Override
-    public List<Loan> getLoan(String username, boolean borrower, String state) {
+    public List<Loan> getLoan(String username, boolean borrower, List<String> state,  List<String> city, Date dateStart, Date dateEnd) {
         if(loanRepository.findByBorrower_UserName(username).size() == 0)
             throw new EZObjectNotFoundException("No loans where found for user "+username);
 
         Specification<Loan> specs;
 
         if(borrower) {
-            specs = Specification.where(LoanSpecs.getLoanByBorrower(username));
+            specs = LoanSpecs.getLoanByBorrower(username);
         }
         else{
-            specs = Specification.where(LoanSpecs.getLoanByOwner(username));
+            specs = LoanSpecs.getLoanByOwner(username);
         }
 
-
-        // Filtre par un état de l'emprunt
-        if(state.equals(State.pending.getState())) {
-            specs = specs.and(LoanSpecs.getPendingLoan());
-        }
-        else if (state.equals(State.refused.getState())){
-                specs = specs.and(LoanSpecs.getRefusedLoan());
-        }
-        else if(state.equals(State.accepted.getState())) {
-            specs = specs.and(LoanSpecs.getAcceptedLoan());
-        }
-        else if(state.equals(State.cancel.getState())) {
-            specs = specs.and(LoanSpecs.getCancelLoan());
+        ///////////////////////// TODO : A AMELIORER
+        if(state != null){
+            Specification<Loan> states = LoanSpecs.getState(state.get(0));
+            for(int i = 1; i< state.size();++i){
+                states = states.or(LoanSpecs.getState(state.get(i)));
+            }
+            specs = specs.and(states);
         }
 
-        //Ajouter les filtres city, dateStart et dateEnd
+        if(city != null){
+            Specification<Loan> cities = LoanSpecs.getCity(city.get(0));
+            for(int i = 1; i< city.size();++i){
+                cities = cities.or(LoanSpecs.getCity(city.get(i)));
+            }
+            specs = specs.and(cities);
+        }
+        ////////////////////////////////////
+
+        if(dateStart != null)
+            specs = specs.and(LoanSpecs.getDateStart(dateStart));
+
+        if(dateEnd != null)
+            specs = specs.and(LoanSpecs.getDateEnd(dateEnd));
+
 
         return loanRepository.findAll(specs);
     }

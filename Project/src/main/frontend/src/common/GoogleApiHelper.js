@@ -1,7 +1,7 @@
 import { prepareUrl, sendRequest } from "./ApiHelper"
 
-const GOOGLE_API_KEY = "" // voir telegrame
-const GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?"
+const GOOGLE_API_KEY = ""; // voir telegrame
+const GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
 
 /**
  * This function check with google API if the given address is valid. It returns an array,

@@ -122,7 +122,7 @@ public class EZObjectController {
             @RequestParam(name="names",required = false) List<String> names,
             @RequestParam(name="owners",required = false) List<String> owners,
             @RequestParam(name="description",required = false) List<String> description,
-            @RequestBody List<Tag> tags)
+            @RequestParam(name="tags", required  = false) List<Tag> tags)
 
     {
 

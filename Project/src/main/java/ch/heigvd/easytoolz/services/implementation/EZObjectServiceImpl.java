@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -48,27 +49,36 @@ public class EZObjectServiceImpl implements EZObjectService {
         CriteriaQuery<EZObject> query = criteriaBuilder.createQuery(EZObject.class);
         Root<EZObject> root = query.from(EZObject.class);
 
-        Predicate name = criteriaBuilder.disjunction(),
-                owners = criteriaBuilder.disjunction(),
-                description = criteriaBuilder.disjunction(),
-                tags = criteriaBuilder.disjunction(),
-                finalQuery = criteriaBuilder.disjunction();
+        List<Predicate> predicates = new LinkedList<>();
 
+        Predicate finalQuery = criteriaBuilder.disjunction();
 
-        if(namesList != null)
-            name = criteriaBuilder.like(root.get("name"),"%"+namesList.get(0)+"%");
-        if(ownersList !=null)
-            owners = criteriaBuilder.equal(root.get("owner").get("userName"),ownersList.get(0));
-        if(descriptionList != null)
-            description = criteriaBuilder.like(root.get("description"),"%"+descriptionList.get(0)+"%");
+        if(namesList != null) {
+            for(String s : namesList) {
+                predicates.add(criteriaBuilder.like(root.get("name"),"%"+s+"%"));
+            }
+        }
 
+        if(ownersList !=null) {
+            for(String s : ownersList) {
+                predicates.add(criteriaBuilder.equal(root.get("owner").get("userName"),s));
+            }
+
+        }
+        if(descriptionList != null) {
+            for(String s : descriptionList) {
+                predicates.add(criteriaBuilder.like(root.get("description"),"%"+s+"%"));
+            }
+        }
         Join<Tag,EZObject> objectJoin = root.join("objectTags",JoinType.INNER);
+        if(tagList != null && tagList.size() > 0) {
+            for(Tag t : tagList) {
+                predicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
+            }
+        }
 
-        if(tags !=null && tagList.size() > 0)
-            tags = criteriaBuilder.equal(objectJoin.get("name").as(String.class),tagList.get(0).getName());
 
-
-        finalQuery = criteriaBuilder.or(name,owners,description,tags);
+        finalQuery = criteriaBuilder.or(predicates.toArray(new Predicate[0]));
         query.where(finalQuery).distinct(true);
 
         objects = entityManager.createQuery(query).getResultList();

@@ -26,7 +26,7 @@ function SignInForm(props) {
         setHasBeenLoggedIn(false)
 
         sendEzApiRequest(LOGIN_URI, 'POST', {
-            username: username,
+            userName: username,
             password: password,
         }).then(
             result => {

@@ -14,7 +14,7 @@ import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
-import BorrowerLoans from './userDashboard/loanManagement/borrowerLoans'
+import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 
 
 import { SessionContext, SessionHelper } from './common/SessionHelper'
@@ -65,6 +65,9 @@ function App() {
                             </Route>
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails />
+                            </Route>
+                            <Route exact path="/dashboard/borrower">
+                                <BorrowerLoans />
                             </Route>
                         </Switch>
                     </Container>

@@ -9,6 +9,7 @@ import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
+import Map from './searchTools/map'
 
 
 import { SessionContext, SessionHelper } from './common/SessionHelper'
@@ -56,6 +57,9 @@ function App() {
                                 ) : (
                                     <SignUp />
                                 )}
+                            </Route>
+                            <Route exact path="/map">
+                                <Map />
                             </Route>
                         </Switch>
                     </Container>

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -41,16 +42,25 @@ public class LoanController {
      * url: /api/loan/find/{username}
      *
      * @param username
+     * @param borrower
+     * @param state
+     * @param city
+     * @param dateStartLess
+     * @param dateEndLess
      * @return
      */
     @GetMapping("/find/user/{username}")
     @ResponseBody
     public List<Loan> getLoanByUser(@PathVariable String username, @RequestParam boolean borrower,
-                                    @RequestParam(required = false) String state)
+                                    @RequestParam(required = false) List<String> state,
+                                    @RequestParam(required = false) List<String> city,
+                                    @RequestParam(required = false, name = "startLT") Date dateStartLess,
+                                    @RequestParam(required = false, name = "endLT") Date dateEndLess,
+                                    @RequestParam(required = false, name = "startGT") Date dateStartGreater,
+                                    @RequestParam(required = false, name = "endGT") Date dateEndGreater)
     {
 
-    return loanService.getLoan(username, borrower, state);
-
+        return loanService.getLoan(username, borrower, state, city, dateStartLess, dateEndLess,dateStartGreater,dateEndGreater);
     }
 
     /**
@@ -91,7 +101,5 @@ public class LoanController {
         State state = State.valueOf(stateRequest.getState());
         return loanService.updatePeriodState(loanId, periodId, state);
     }
-    
-
 
 }

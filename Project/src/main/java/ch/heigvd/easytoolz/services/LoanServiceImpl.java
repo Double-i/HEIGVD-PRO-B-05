@@ -118,7 +118,7 @@ public class LoanServiceImpl implements LoanService {
         Creator creator = getRole(loan);
 
         // Check period date
-        if (!isValidDate(periodRequest.getDateStart(), periodRequest.getDateEnd())  )
+        if (!isValidDate(periodRequest.getDateStart(), periodRequest.getDateEnd()))
             throw new LoanInvalidParameterException("Invalid parameters");
 
 
@@ -137,7 +137,7 @@ public class LoanServiceImpl implements LoanService {
         Date now = new Date();
         if (!loan.getValidPeriod().getDateEnd().after(now)
                 || !periodRequest.getDateEnd().before(loan.getValidPeriod().getDateEnd())
-                || !periodRequest.getDateEnd().after(now)){
+                || !periodRequest.getDateEnd().after(now)) {
             System.out.println(!loan.getValidPeriod().getDateEnd().after(now));
             System.out.println(!periodRequest.getDateEnd().before(loan.getValidPeriod().getDateEnd()));
             System.out.println(!periodRequest.getDateEnd().after(now));
@@ -159,7 +159,7 @@ public class LoanServiceImpl implements LoanService {
     }
 
     /**
-     *  Update the state of a loan. Check that the user has the right to update (only the period creator can )
+     * Update the state of a loan. Check that the user has the right to update (only the period creator can )
      *
      * @param loanId
      * @param periodId
@@ -176,20 +176,20 @@ public class LoanServiceImpl implements LoanService {
             throw new LoanInvalidParameterException("Period doesn't exist for this loan");
 
 
-        if(!toUpdatePeriod.getState().equals(State.pending)){
-            System.out.println("test "+toUpdatePeriod);
+        if (!toUpdatePeriod.getState().equals(State.pending)) {
+            System.out.println("test " + toUpdatePeriod);
             throw new LoanInvalidParameterException("Period cannot be update");
 
         }
 
         // Check that the period has been created by the opposite Role and the new period isn't passed
-        if(!toUpdatePeriod.getDateEnd().after(new Date()))
+        if (!toUpdatePeriod.getDateEnd().after(new Date()))
             throw new LoanPeriodAlreadyPassedException("Loan : period already passed");
 
         Creator creator = getRole(loan);
         // Check the user has the appropriate right to update the state
-        if(newState.equals(State.cancel)){
-            if(!toUpdatePeriod.getCreator().equals(creator))
+        if (newState.equals(State.cancel)) {
+            if (!toUpdatePeriod.getCreator().equals(creator))
                 throw new LoanInvalidUserException("no right to do this");
 
         } else {
@@ -210,43 +210,64 @@ public class LoanServiceImpl implements LoanService {
     }
 
     /**
-     * Get loans of a borrower or owner, it's possible to apply filters in the search (for the moment, only with "state")
+     * Get loans of a borrower or owner, it's possible to apply filters in the search
      *
      * @param username
      * @param borrower
      * @param state
+     * @param city
+     * @param dateStartLess
+     * @param dateEndLess
+     * @param dateStartGreater
+     * @param dateEndGreater
      * @return
      */
     @Override
-    public List<Loan> getLoan(String username, boolean borrower, String state) {
+    public List<Loan> getLoan(String username, boolean borrower, List<String> state,  List<String> city, Date dateStartLess, Date dateEndLess,
+                              Date dateStartGreater, Date dateEndGreater) {
         if(loanRepository.findByBorrower_UserName(username).size() == 0)
             throw new EZObjectNotFoundException("No loans where found for user "+username);
 
         Specification<Loan> specs;
 
-        if(borrower) {
-            specs = Specification.where(LoanSpecs.getLoanByBorrower(username));
-        }
-        else{
-            specs = Specification.where(LoanSpecs.getLoanByOwner(username));
-        }
-
-
-        // Filtre par un état de l'emprunt
-        if(state.equals(State.pending.getState())) {
-            specs = specs.and(LoanSpecs.getPendingLoan());
-        }
-        else if (state.equals(State.refused.getState())){
-                specs = specs.and(LoanSpecs.getRefusedLoan());
-        }
-        else if(state.equals(State.accepted.getState())) {
-            specs = specs.and(LoanSpecs.getAcceptedLoan());
-        }
-        else if(state.equals(State.cancel.getState())) {
-            specs = specs.and(LoanSpecs.getCancelLoan());
+        if (borrower) {
+            specs = LoanSpecs.getLoanByBorrower(username);
+        } else {
+            specs = LoanSpecs.getLoanByOwner(username);
         }
 
-        //Ajouter les filtres city, dateStart et dateEnd
+        ///////////////////////// TODO : A AMELIORER
+        if (state != null) {
+            Specification<Loan> states = LoanSpecs.getState(state.get(0));
+
+            for (int i = 1; i < state.size(); ++i) {
+                states = states.or(LoanSpecs.getState(state.get(i)));
+
+                specs = specs.and(states);
+            }
+
+        }
+
+        if (city != null) {
+            Specification<Loan> cities = LoanSpecs.getCity(city.get(0));
+            for (int i = 1; i < city.size(); ++i) {
+                cities = cities.or(LoanSpecs.getCity(city.get(i)));
+            }
+            specs = specs.and(cities);
+        }
+        ////////////////////////////////////
+
+        if(dateStartLess != null)
+            specs = specs.and(LoanSpecs.getDateStartLess(dateStartLess));
+
+        if(dateEndLess != null)
+            specs = specs.and(LoanSpecs.getDateEndLess(dateEndLess));
+
+        if(dateStartGreater != null)
+            specs = specs.and(LoanSpecs.getDateStartGreater(dateStartGreater));
+
+        if(dateEndGreater != null)
+            specs = specs.and(LoanSpecs.getDateEndGreater(dateEndGreater));
 
         return loanRepository.findAll(specs);
     }

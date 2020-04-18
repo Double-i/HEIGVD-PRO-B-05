@@ -7,7 +7,7 @@ import org.springframework.web.method.HandlerTypePredicate;
 import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
-/*@EnableWebMvc*/ // <<-- TODO : delete me  | ici le problème
+@EnableWebMvc // <<-- TODO : delete me  | ici le problème
 public class WebConfig implements WebMvcConfigurer {
 
     @Override

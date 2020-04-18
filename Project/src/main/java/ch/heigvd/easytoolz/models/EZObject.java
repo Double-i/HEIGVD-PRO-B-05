@@ -39,7 +39,7 @@ public class EZObject {
         return images;
     }
 
-    public Set<Tag> getObjectTags() {
+    public List<Tag> getObjectTags() {
         return objectTags;
     }
 
@@ -67,7 +67,7 @@ public class EZObject {
         this.images = ezobject;
     }
 
-    public void setObjectTags(Set<Tag> objecttags) {
+    public void setObjectTags(List<Tag> objecttags) {
         this.objectTags = objecttags;
     }
 
@@ -95,7 +95,7 @@ public class EZObject {
     private List<EZObjectImage> images;
 
     @Transient
-    private String ownerUserName;
+    public String ownerUserName;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -103,18 +103,18 @@ public class EZObject {
     private User owner;
 
     //association class
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "ezobject_tag",
             joinColumns = @JoinColumn(name = "fk_ezobject"),
             inverseJoinColumns = @JoinColumn(name = "fk_tag")
     )
-    Set<Tag> objectTags;
+    List<Tag> objectTags;
 
     public EZObject() {
     }
 
-    public EZObject(String name, String description, Set<Tag> tags, List<EZObjectImage> images) {
+    public EZObject(String name, String description, List<Tag> tags, List<EZObjectImage> images) {
         this.name = name;
         this.description = description;
         this.objectTags = tags;

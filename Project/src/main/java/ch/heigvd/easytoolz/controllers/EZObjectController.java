@@ -5,6 +5,7 @@ import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/objects")
@@ -25,20 +28,34 @@ public class EZObjectController {
     @Autowired
     EZObjectService ezObjectService;
 
-    @GetMapping
-    public List<EZObject> index()
+    /*@GetMapping
+    public CollectionModel<EntityModel<EZObjectView>> index()
     {
-        return ezObjectService.get();
+        List<EntityModel<EZObjectView>> obj = ezObjectService.getAll().stream().map(
+                object -> new EntityModel<>(
+                        object,
+
+                        linkTo(methodOn(EZObjectController.class).get(object.getID())).withSelfRel()
+        )).collect(Collectors.toList());
+
+        return new CollectionModel<EntityModel<EZObjectView>>(obj,
+                linkTo(methodOn(EZObjectController.class).index()).withSelfRel());
+    }*/
+
+    @GetMapping
+    public List<EZObjectView> index()
+    {
+        return ezObjectService.getAll();
     }
 
-    @GetMapping("find/{id}")
+    @GetMapping("/{id}")
     public EZObjectView get(@PathVariable int id)
     {
         return ezObjectService.getObject(id);
     }
 
 
-    @GetMapping("/find/user/{username}")
+    @GetMapping("/owner/{username}")
     @ResponseBody
     public List<EZObjectView> getByOwner(@PathVariable String username)
     {
@@ -51,7 +68,7 @@ public class EZObjectController {
     {
         ezObjectService.addObject(newObject);
 
-        return new ResponseEntity<>("Object has been savec", HttpStatus.OK);
+        return new ResponseEntity<>("Object has been saved", HttpStatus.OK);
     }
 
 
@@ -95,9 +112,21 @@ public class EZObjectController {
 
     @GetMapping("find/tags")
     @ResponseBody
-    public List<EZObject> getByTags(@RequestBody List<Tag> tags)
+    public List<EZObjectView> getByTags(@RequestBody List<Tag> tags)
     {
         return ezObjectService.getObjectsByTag(tags);
+    }
+
+    @GetMapping("filter")
+    public List<EZObject> findFiltered(
+            @RequestParam(name="names",required = false) List<String> names,
+            @RequestParam(name="owners",required = false) List<String> owners,
+            @RequestParam(name="description",required = false) List<String> description,
+            @RequestParam(name="tags", required  = false) List<Tag> tags)
+
+    {
+
+        return ezObjectService.getFiltered(names,owners,description,tags);
     }
 
 }

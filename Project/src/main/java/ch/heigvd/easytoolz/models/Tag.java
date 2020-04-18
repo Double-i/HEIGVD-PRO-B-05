@@ -20,7 +20,7 @@ public class Tag {
     @NotNull
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "objectTags")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "objectTags")
     Set<EZObject> tagObjects;
 
     public Tag() {

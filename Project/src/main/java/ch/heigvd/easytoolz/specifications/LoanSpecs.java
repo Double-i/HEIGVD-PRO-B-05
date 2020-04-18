@@ -8,7 +8,7 @@ import java.util.Date;
 public class LoanSpecs {
 
     public static Specification<Loan> getState(String state) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(Loan_.state), State.valueOf(state));
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(Loan_.STATE), State.valueOf(state));
     }
 
     public static Specification<Loan> getDateStart(Date dateStart) {
@@ -30,7 +30,7 @@ public class LoanSpecs {
         {
             Join<Loan, Period> periodJoin = root.join(Loan_.periods);
 
-            Predicate date =  criteriaBuilder.greaterThanOrEqualTo(periodJoin.get(Period_.DATE_END), dateEnd);
+            Predicate date =  criteriaBuilder.lessThanOrEqualTo(periodJoin.get(Period_.DATE_END), dateEnd);
             Predicate accepted =  criteriaBuilder.equal(periodJoin.get(Period_.STATE), State.accepted);
 
             return criteriaBuilder.and(date,accepted);

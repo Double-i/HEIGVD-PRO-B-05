@@ -45,8 +45,8 @@ public class LoanController {
      * @param borrower
      * @param state
      * @param city
-     * @param dateStart
-     * @param dateEnd
+     * @param dateStartLess
+     * @param dateEndLess
      * @return
      */
     @GetMapping("/find/user/{username}")
@@ -54,11 +54,13 @@ public class LoanController {
     public List<Loan> getLoanByUser(@PathVariable String username, @RequestParam boolean borrower,
                                     @RequestParam(required = false) List<String> state,
                                     @RequestParam(required = false) List<String> city,
-                                    @RequestParam(required = false, name = "dateStart") Date dateStart,
-                                    @RequestParam(required = false, name = "dateEnd") Date dateEnd)
+                                    @RequestParam(required = false, name = "startLT") Date dateStartLess,
+                                    @RequestParam(required = false, name = "endLT") Date dateEndLess,
+                                    @RequestParam(required = false, name = "startGT") Date dateStartGreater,
+                                    @RequestParam(required = false, name = "endGT") Date dateEndGreater)
     {
 
-        return loanService.getLoan(username, borrower, state, city, dateStart, dateEnd);
+        return loanService.getLoan(username, borrower, state, city, dateStartLess, dateEndLess,dateStartGreater,dateEndGreater);
     }
 
     /**
@@ -99,7 +101,5 @@ public class LoanController {
         State state = State.valueOf(stateRequest.getState());
         return loanService.updatePeriodState(loanId, periodId, state);
     }
-    
-
 
 }

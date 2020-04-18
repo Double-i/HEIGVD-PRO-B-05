@@ -216,14 +216,17 @@ public class LoanServiceImpl implements LoanService {
      * @param borrower
      * @param state
      * @param city
-     * @param dateStart
-     * @param dateEnd
+     * @param dateStartLess
+     * @param dateEndLess
+     * @param dateStartGreater
+     * @param dateEndGreater
      * @return
      */
     @Override
-    public List<Loan> getLoan(String username, boolean borrower, List<String> state, List<String> city, Date dateStart, Date dateEnd) {
-        if (loanRepository.findByBorrower_UserName(username).size() == 0)
-            throw new EZObjectNotFoundException("No loans where found for user " + username);
+    public List<Loan> getLoan(String username, boolean borrower, List<String> state,  List<String> city, Date dateStartLess, Date dateEndLess,
+                              Date dateStartGreater, Date dateEndGreater) {
+        if(loanRepository.findByBorrower_UserName(username).size() == 0)
+            throw new EZObjectNotFoundException("No loans where found for user "+username);
 
         Specification<Loan> specs;
 
@@ -254,12 +257,17 @@ public class LoanServiceImpl implements LoanService {
         }
         ////////////////////////////////////
 
-        if (dateStart != null)
-            specs = specs.and(LoanSpecs.getDateStart(dateStart));
+        if(dateStartLess != null)
+            specs = specs.and(LoanSpecs.getDateStartLess(dateStartLess));
 
-        if (dateEnd != null)
-            specs = specs.and(LoanSpecs.getDateEnd(dateEnd));
+        if(dateEndLess != null)
+            specs = specs.and(LoanSpecs.getDateEndLess(dateEndLess));
 
+        if(dateStartGreater != null)
+            specs = specs.and(LoanSpecs.getDateStartGreater(dateStartGreater));
+
+        if(dateEndGreater != null)
+            specs = specs.and(LoanSpecs.getDateEndGreater(dateEndGreater));
 
         return loanRepository.findAll(specs);
     }

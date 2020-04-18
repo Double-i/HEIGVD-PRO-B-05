@@ -25,5 +25,5 @@ public interface LoanService {
 
     ResponseEntity<String> updatePeriodState(int loanId, int periodId, State newState) throws InvalidParameterException;
 
-    List<Loan> getLoan(String username, boolean borrower, List<String> state, List<String> city, Date dateStart, Date dateEnd);
+    List<Loan> getLoan(String username, boolean borrower, List<String> state, List<String> city, Date dateStartLess, Date dateEndLess,Date dateStartGreater, Date dateEndGreater);
 }

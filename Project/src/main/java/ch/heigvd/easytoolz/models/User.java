@@ -2,6 +2,7 @@ package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name="user")
@@ -26,16 +27,24 @@ public class User {
     @NotNull
     private boolean isAdmin;
 
+    @OneToMany(mappedBy = "owner")
+    private List<EZObject> ezobject;
+
     // Required for creating JSON parsing
     public User(){}
 
-    public User(String userName, String firstName, String lastName, String password, String email, boolean isAdmin){
+    @ManyToOne
+    @JoinColumn(name="fkaddress", referencedColumnName = "id")
+    private Address address;
+
+    public User(String userName, String firstName, String lastName, String password, String email, Address address, boolean isAdmin){
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         // TODO : Hasher le mot de passe
         this.password = password;
         this.isAdmin = isAdmin;
+        this.address  = address;
         this.email = email;
     }
 
@@ -69,6 +78,24 @@ public class User {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public Address getAddress(){return address;}
+    public void setAddress(Address address) { this.address = address;}
+
+    @Override
+    public String toString() {
+        return String.format(
+                "User{" +
+                        "username=%s," +
+                        "firstName=%s," +
+                        "lastName=%s," +
+                        "isAdmin=%b" +
+                        "}",
+                userName,
+                firstName,
+                lastName,
+                isAdmin);
     }
 
     public String getEmail() {

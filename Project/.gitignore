@@ -29,12 +29,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
 *.properties
-
-
-##System
 *.ini
-
 
 src/main/frontend/node_modules
 src/main/frontend/node

@@ -14,16 +14,26 @@ public class LoanSpecs {
     public static Specification<Loan> getDateStart(Date dateStart) {
         return (root, query, criteriaBuilder) ->
         {
+
             Join<Loan, Period> periodJoin = root.join(Loan_.periods);
-            return criteriaBuilder.greaterThanOrEqualTo(periodJoin.get(Period_.DATE_START), dateStart);
+
+            Predicate date =  criteriaBuilder.greaterThanOrEqualTo(periodJoin.get(Period_.DATE_START), dateStart);
+            Predicate accepted =  criteriaBuilder.equal(periodJoin.get(Period_.STATE), State.accepted);
+
+            return criteriaBuilder.and(date,accepted);
         };
+
     }
 
     public static Specification<Loan> getDateEnd(Date dateEnd) {
         return (root, query, criteriaBuilder) ->
         {
             Join<Loan, Period> periodJoin = root.join(Loan_.periods);
-            return criteriaBuilder.greaterThanOrEqualTo(periodJoin.get(Period_.DATE_END), dateEnd);
+
+            Predicate date =  criteriaBuilder.greaterThanOrEqualTo(periodJoin.get(Period_.DATE_END), dateEnd);
+            Predicate accepted =  criteriaBuilder.equal(periodJoin.get(Period_.STATE), State.accepted);
+
+            return criteriaBuilder.and(date,accepted);
         };
     }
 

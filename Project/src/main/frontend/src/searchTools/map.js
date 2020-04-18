@@ -70,17 +70,20 @@ class Map extends React.Component
         return(
         <div id="parent">
             <div id="map">
+                <script> function initMap(){this.initMap()} </script>
             </div>
-            <script>
-                this.initMap();
-            </script>
         </div>
       )
     }
 
     componentDidMount()
     {
+        const script = document.createElement("script");
 
+        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCwmIS0mKIfWPvmZke7plXkeR1uZ6ahwcU&callback=initMap";
+        script.async = true;
+
+        document.body.appendChild(script);
     }
 }
 

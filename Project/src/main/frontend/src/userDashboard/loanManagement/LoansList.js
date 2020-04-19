@@ -1,21 +1,38 @@
-import React, { Fragment } from 'react'
-import { Image, Media, Button, Row, Col } from 'react-bootstrap'
+import React, {Fragment} from 'react'
+import {Image, Media, Button, Row, Col} from 'react-bootstrap'
 import {
     FaUser,
     FaRegClock,
     FaRegCalendarAlt,
     FaLocationArrow,
 } from 'react-icons/fa'
-
+import * as moment from 'moment'
 // TODO :
 //  - SI isOwner est true alors afficher l'emprunteur
 //  - AUTREMENT, afficher le propriétaire
-
+function transformState(state){
+    let stateInfo = [];
+    switch(state){
+        case "pending":
+            stateInfo= [ <FaRegClock/>, " En attente"]
+            break
+        case "accepted":
+            stateInfo=[<FaRegClock/>," Accepté"]
+            break
+        case "refused":
+            stateInfo=[ <FaRegClock/>," Refusé"]
+            break
+        case "cancel":
+            stateInfo= [<FaRegClock/>," Annulé"]
+            break
+    }
+    return stateInfo
+}
 function LoansList(props) {
     return (
         <Fragment>
             {props.loansData.map((value, idx) => (
-                <Fragment>
+                <Fragment key={"loan-id-" + idx}>
                     <Media as="li">
                         <Row className="justify-content-md-center">
                             <Col xs="4" sm="4" md="3" lg="2">
@@ -23,7 +40,7 @@ function LoansList(props) {
                                     src="tools_img_placeholder.png"
                                     rounded
                                     fluid
-                                    style={{ maxWidth: '140px' }}
+                                    style={{maxWidth: '140px'}}
                                 />
                             </Col>
                             <Col
@@ -31,7 +48,7 @@ function LoansList(props) {
                                 xs="8"
                                 sm="8"
                             >
-                                <h3>Marteau à tête creuse</h3>
+                                <h3>{value.ezobject.name}</h3>
                             </Col>
 
                             <Col xs="12" sm="12" md="9" lg="8">
@@ -43,22 +60,20 @@ function LoansList(props) {
                                         md="12"
                                         lg="12"
                                     >
-                                        <h4>Marteau à tête creuse</h4>
+                                        <h4>{value.ezobject.name}</h4>
                                     </Col>
                                     <Col xs="6" sm="6" md="6" lg="6">
-                                        <span style={{ fontSize: 'smaller' }}>
-                                            <FaUser /> Robert le Trolleur
-                                            <hr />
-                                            <FaLocationArrow /> Rue de la
-                                            boulangerie 9, 1428 Provence Suisse
+                                        <span style={{fontSize: 'smaller'}}>
+                                            <FaUser/> {props.isOwner ? value.borrower.userName : value.ezobject.owner.userName}
+                                            <hr/>
+                                            <FaLocationArrow/> {props.isOwner ? "TODO LORSQUE ADRESSE est present" : "TODO LORSQUE ADRESSE est present "}
                                         </span>
                                     </Col>
                                     <Col xs="6" sm="6" md="6" lg="6">
                                         <span>
-                                            <FaRegClock /> En attente
-                                            <hr />
-                                            <FaRegCalendarAlt /> Du 02.02.2020
-                                            au 02.03.2020
+                                            {transformState(value.state)}
+                                            <hr/>
+                                            <FaRegCalendarAlt/> Du {moment(value.validPeriod.dateStart).format("DD/MM/YYYY")} au {moment(value.validPeriod.dateEnd).format("DD/MM/YYYY")}
                                         </span>
                                     </Col>
                                 </Row>
@@ -81,10 +96,11 @@ function LoansList(props) {
                         </Row>
                     </Media>
 
-                    <hr />
+                    <hr/>
                 </Fragment>
             ))}
         </Fragment>
     )
 }
+
 export default LoansList

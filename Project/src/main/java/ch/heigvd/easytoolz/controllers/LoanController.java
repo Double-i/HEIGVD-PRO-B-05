@@ -10,6 +10,7 @@ import ch.heigvd.easytoolz.repositories.LoanRepository;
 import ch.heigvd.easytoolz.services.LoanService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,12 +55,15 @@ public class LoanController {
     public List<Loan> getLoanByUser(@PathVariable String username, @RequestParam boolean borrower,
                                     @RequestParam(required = false) List<String> state,
                                     @RequestParam(required = false) List<String> city,
-                                    @RequestParam(required = false, name = "startLT") Date dateStartLess,
-                                    @RequestParam(required = false, name = "endLT") Date dateEndLess,
-                                    @RequestParam(required = false, name = "startGT") Date dateStartGreater,
-                                    @RequestParam(required = false, name = "endGT") Date dateEndGreater)
+                                    @RequestParam(required = false, name = "startLT") @DateTimeFormat(pattern="yyyy-MM-dd")  Date dateStartLess,
+                                    @RequestParam(required = false, name = "endLT") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateEndLess,
+                                    @RequestParam(required = false, name = "startGT") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateStartGreater,
+                                    @RequestParam(required = false, name = "endGT") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateEndGreater)
     {
-
+        System.out.println("startLT "+dateStartLess);
+        System.out.println("endLT "+dateEndLess);
+        System.out.println("startGT "+dateStartGreater);
+        System.out.println("endGT "+dateEndGreater);
         return loanService.getLoan(username, borrower, state, city, dateStartLess, dateEndLess,dateStartGreater,dateEndGreater);
     }
 

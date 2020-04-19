@@ -1,11 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {  Container } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom'
 import LoansList from './LoansList'
+import {sendEzApiRequest} from "../../common/ApiHelper";
+import * as moment from 'moment'
+import {SessionContext} from '../../common/SessionHelper'
+
+const PENDING_REQUEST = "/loans/find/user/"
 
 function BorrowerLoans(props) {
-    const loans = [1, 2, 3, 4]
+    const session = useContext(SessionContext)
+    const username = session.session.getUserLastName()
+    const [loans, setLoans] = useState([]);
+    console.log(moment().format('YYYY-MM-DD'))
+
+    useEffect(() => {
+        sendEzApiRequest(PENDING_REQUEST+username,'GET',{}, {
+            borrower : true,
+            state: "pending",
+            startGT: moment().format('YYYY-MM-DD')
+        }).then((result)=> {
+            console.log(result)
+            setLoans(result);
+        },(error) => {
+            console.log(error)
+        })
+    },[]); // the array is to avoid infinite loop https://stackoverflow.com/a/54923969
+
     const btnDisplayLoanClicked = (toolId) => {
         props.history.push(`/tools/${toolId}`)
     }

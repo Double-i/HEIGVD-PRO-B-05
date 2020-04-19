@@ -69,7 +69,7 @@ public class LoanServiceImpl implements LoanService {
 
         periodRepository.save(period);
 
-        return new ResponseEntity<>("The loans has been stored :", HttpStatus.OK);
+        return new ResponseEntity<>(" {\"status\": \"ok\",\"msg\": \"The loans has been stored\"}", HttpStatus.OK);
     }
 
     /**
@@ -108,7 +108,7 @@ public class LoanServiceImpl implements LoanService {
         if (!done)
             throw new RuntimeException("LoanService - Something went wrong while trying to update loan state");
 
-        return new ResponseEntity<>("The loans has been ", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"The loans has been\"}", HttpStatus.OK);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class LoanServiceImpl implements LoanService {
         // Save
         Period newPeriod = new Period(periodRequest.getDateStart(), periodRequest.getDateEnd(), State.pending, creator, loan);
         periodRepository.save(newPeriod);
-        return new ResponseEntity<>("New period added", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Period added\"}", HttpStatus.OK);
     }
 
     /**
@@ -243,8 +243,8 @@ public class LoanServiceImpl implements LoanService {
             for (int i = 1; i < state.size(); ++i) {
                 states = states.or(LoanSpecs.getState(state.get(i)));
 
-                specs = specs.and(states);
             }
+            specs = specs.and(states);
 
         }
 

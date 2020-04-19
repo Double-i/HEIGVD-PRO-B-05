@@ -15,6 +15,7 @@ import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
+import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 
 
 import { SessionContext, SessionHelper } from './common/SessionHelper'
@@ -66,12 +67,21 @@ function App() {
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails />
                             </Route>
-<<<<<<< HEAD
                             <Route exacte path="/dashboard/myloans/borrower">
-=======
-                            <Route exact path="/dashboard/borrower">
->>>>>>> fb-fe-loan-managing
-                                <BorrowerLoans />
+                                {user.session.isUserLogin() ? (
+                                    <BorrowerLoans />
+                                ) : (
+                                    <NotRigthToBeHere />
+                                )}
+
+                            </Route>
+                            <Route exacte path="/dashboard/myloans/owner">
+                                {user.session.isUserLogin() ? (
+                                    <OwnerLoans />
+                                ) : (
+                                    <NotRigthToBeHere />
+                                )}
+
                             </Route>
                         </Switch>
                     </Container>

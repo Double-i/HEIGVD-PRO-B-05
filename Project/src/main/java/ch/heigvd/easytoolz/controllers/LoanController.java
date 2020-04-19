@@ -64,6 +64,8 @@ public class LoanController {
         System.out.println("endLT "+dateEndLess);
         System.out.println("startGT "+dateStartGreater);
         System.out.println("endGT "+dateEndGreater);
+
+        System.out.println("state: "+ state.get(0));
         return loanService.getLoan(username, borrower, state, city, dateStartLess, dateEndLess,dateStartGreater,dateEndGreater);
     }
 

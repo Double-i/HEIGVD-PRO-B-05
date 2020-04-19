@@ -7,9 +7,7 @@ import {
     FaLocationArrow,
 } from 'react-icons/fa'
 import * as moment from 'moment'
-// TODO :
-//  - SI isOwner est true alors afficher l'emprunteur
-//  - AUTREMENT, afficher le propriétaire
+
 function transformState(state){
     let stateInfo = [];
     switch(state){
@@ -37,7 +35,7 @@ function LoansList(props) {
                         <Row className="justify-content-md-center">
                             <Col xs="4" sm="4" md="3" lg="2">
                                 <Image
-                                    src="tools_img_placeholder.png"
+                                    src="/tools_img_placeholder.png"
                                     rounded
                                     fluid
                                     style={{maxWidth: '140px'}}
@@ -64,6 +62,7 @@ function LoansList(props) {
                                     </Col>
                                     <Col xs="6" sm="6" md="6" lg="6">
                                         <span style={{fontSize: 'smaller'}}>
+
                                             <FaUser/> {props.isOwner ? value.borrower.userName : value.ezobject.owner.userName}
                                             <hr/>
                                             <FaLocationArrow/> {props.isOwner ? "TODO LORSQUE ADRESSE est present" : "TODO LORSQUE ADRESSE est present "}

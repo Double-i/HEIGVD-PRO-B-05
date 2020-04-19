@@ -66,7 +66,11 @@ function App() {
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails />
                             </Route>
+<<<<<<< HEAD
                             <Route exacte path="/dashboard/myloans/borrower">
+=======
+                            <Route exact path="/dashboard/borrower">
+>>>>>>> fb-fe-loan-managing
                                 <BorrowerLoans />
                             </Route>
                         </Switch>

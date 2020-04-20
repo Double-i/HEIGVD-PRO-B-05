@@ -7,25 +7,9 @@ import {
     FaLocationArrow,
 } from 'react-icons/fa'
 import * as moment from 'moment'
+import {transformState} from "../../common/State";
 
-function transformState(state){
-    let stateInfo = [];
-    switch(state){
-        case "pending":
-            stateInfo= [ <FaRegClock/>, " En attente"]
-            break
-        case "accepted":
-            stateInfo=[<FaRegClock/>," Accepté"]
-            break
-        case "refused":
-            stateInfo=[ <FaRegClock/>," Refusé"]
-            break
-        case "cancel":
-            stateInfo= [<FaRegClock/>," Annulé"]
-            break
-    }
-    return stateInfo
-}
+
 function LoansList(props) {
     return (
         <Fragment>

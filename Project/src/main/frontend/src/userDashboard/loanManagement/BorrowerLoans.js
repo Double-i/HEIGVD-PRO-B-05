@@ -24,7 +24,6 @@ function BorrowerLoans(props) {
     console.log(moment().format('YYYY-MM-DD'))
 
     useEffect(() => {
-
         console.log("test",username)
 
         // Request for pending loans

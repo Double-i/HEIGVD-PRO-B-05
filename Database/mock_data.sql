@@ -1,5 +1,3 @@
-
-
 insert into tag (name) values("jardin"),("bricolage"),("sport"),("dessin"),("skateboard"),("electricite"),("bois"),("neige"),("ete"),("hiver");
 
 insert into country(country) values("Suisse");
@@ -18,12 +16,12 @@ insert into address(address,district,postalcode,lat,lng,fk_city) values ("Place 
 insert into address(address,district,postalcode,lat,lng,fk_city) values ("Avanue de la Gare 5","Valais","1920",46.0972172,7.0747864,3);
 insert into address(address,district,postalcode,lat,lng,fk_city) values ("Allée de la Petite Prairie 14","Vaud","1260",46.3884263,6.221818,6);
 
-insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("heymanuel","emmanuel","janssens","password",0,"emmanuel.janssens@heig-vd.ch",1);
-insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("fukuchimiste","bastien","potet","password",0,"bastien.potet@heig-vd.ch",5);
-insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("double-i","Ilias","Goujgali","password",1,"Ilias.Goujgali@heig-vd.ch",3);
-insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("robinr","Robin","Reuteler","password",0,"Robin.Reuteler@heig-vd.ch",6);
-insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("vitorvaz","Vitor","Vaz Afomzo","password",0,"Vitor.vazafonzo@heig-vd.ch",2);
-insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("mauricel","Maurice","Lehman","password",0,"Maurice.Lehman@heig-vd.ch",4);
+insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("heymanuel","emmanuel","janssens","$2a$10$8sFTFnSd.COg/GFQG9BIruaI5SJYtcmewjFunqo4CbtFtTpMW2/Ya",0,"emmanuel.janssens@heig-vd.ch",1);
+insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("fukuchimiste","bastien","potet","$2a$10$8sFTFnSd.COg/GFQG9BIruaI5SJYtcmewjFunqo4CbtFtTpMW2/Ya",0,"bastien.potet@heig-vd.ch",5);
+insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("double-i","Ilias","Goujgali","$2a$10$8sFTFnSd.COg/GFQG9BIruaI5SJYtcmewjFunqo4CbtFtTpMW2/Ya",1,"Ilias.Goujgali@heig-vd.ch",3);
+insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("robinr","Robin","Reuteler","$2a$10$8sFTFnSd.COg/GFQG9BIruaI5SJYtcmewjFunqo4CbtFtTpMW2/Ya",0,"Robin.Reuteler@heig-vd.ch",6);
+insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("vitorvaz","Vitor","Vaz Afomzo","$2a$10$8sFTFnSd.COg/GFQG9BIruaI5SJYtcmewjFunqo4CbtFtTpMW2/Ya",0,"Vitor.vazafonzo@heig-vd.ch",2);
+insert into user (user_name,first_name,last_name,password,is_admin,email,fk_address) values("mauricel","Maurice","Lehman","$2a$10$8sFTFnSd.COg/GFQG9BIruaI5SJYtcmewjFunqo4CbtFtTpMW2/Ya",0,"Maurice.Lehman@heig-vd.ch",4);
 
 insert into ezobject (name,description,owner) values("pelle","pelle de jardinage en bon etat","fukuchimiste");
 insert into ezobject (name,description,owner) values("perceuse","super perceuse","double-i");
@@ -59,3 +57,4 @@ insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) 
 insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-10-2","2020-10-10",null,"pending","double-i",8);
 insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-8-1","2020-8-13",null,"pending","vitorvaz",12);
 insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-9-5","2020-9-20",null,"pending","mauricel",5);
+© 2020 GitHub, Inc.

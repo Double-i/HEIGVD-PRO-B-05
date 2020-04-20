@@ -1,6 +1,6 @@
 import { prepareUrl, sendRequest } from "./ApiHelper"
 
-const GOOGLE_API_KEY = ""; // voir telegrame
+const GOOGLE_API_KEY = "AIzaSyCDaaFc6krVmxR43Be81BVgYuXIbXLE1r8"; // voir telegrame
 const GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
 
 /**
@@ -16,8 +16,11 @@ const GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?"
  */
 export function checkAddress(addressData) {
     const url = getSearchAddressUrl(addressData)
-    return sendRequest(url, "GET", {}).then(
-        result => {
+    return fetch(url)
+        .then((response) => {
+            return response.json();
+        })
+        .then((result) => {
             let address
             // Address seems valid
             if (result.status === "OK") {
@@ -34,14 +37,8 @@ export function checkAddress(addressData) {
             }
             console.log("Adresse Invalide")
             return [0, address]
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-            console.log(error)
-        }
-    )
+
+        });
 }
 /**
  * Transform a google format address into an Object with the different part of the address we need

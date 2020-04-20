@@ -1,4 +1,3 @@
-
 DROP SCHEMA IF EXISTS easytoolz;
 CREATE SCHEMA IF NOT EXISTS easytoolz;
 

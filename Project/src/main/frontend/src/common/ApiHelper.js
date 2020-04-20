@@ -15,7 +15,7 @@ export function sendEzApiRequest(
     params = {}
 ) {
     const url = prepareUrl(EZT_API.concat(endpoint), verb, params)
-    return sendRequest(url, verb, data, params)
+    return sendRequest(url, verb, data)
 }
 /**
  * Send the request, format it decode json and return the result as Promise

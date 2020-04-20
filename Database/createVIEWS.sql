@@ -1,5 +1,3 @@
-
-    
 CREATE VIEW `EZObjectView` AS 
         SELECT                                               
                 ezobject.id as object_id,                     

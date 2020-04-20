@@ -15,6 +15,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 
 @RestController
@@ -35,7 +36,7 @@ class AuthenticationController {
     private UserService userService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest){
 
         if(!authenticationService.authenticateUser(authenticationRequest.getUserName(), authenticationRequest.getPassword()))
             throw new BadCredentialsException("Incorrect username or password");
@@ -58,8 +59,9 @@ class AuthenticationController {
 
     }
 
-    @PostMapping(value = "/signup")
+    @PostMapping(value = "/signup", consumes = "application/json")
     public ResponseEntity<JSONObject> signUp(@RequestBody User user){
+        user.setAdmin(false);
         userService.storeUser(user);
         return ResponseEntity.ok().body(new SuccessResponse("The user has been stored"));
     }

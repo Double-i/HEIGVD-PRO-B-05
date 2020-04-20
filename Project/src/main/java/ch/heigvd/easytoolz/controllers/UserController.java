@@ -2,6 +2,7 @@ package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import net.minidev.json.JSONObject;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    AuthenticationService authenticationService;
 
     @GetMapping
     public List<User> index(

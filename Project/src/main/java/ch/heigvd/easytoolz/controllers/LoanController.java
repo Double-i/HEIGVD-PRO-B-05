@@ -7,7 +7,7 @@ import ch.heigvd.easytoolz.models.DTO.LoanRequest;
 import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
 import ch.heigvd.easytoolz.models.DTO.StateRequest;
 import ch.heigvd.easytoolz.repositories.LoanRepository;
-import ch.heigvd.easytoolz.services.LoanService;
+import ch.heigvd.easytoolz.services.interfaces.LoanService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -65,6 +65,7 @@ public class LoanController {
         System.out.println("endLT "+dateEndLess);
         System.out.println("startGT "+dateStartGreater);
         System.out.println("endGT "+dateEndGreater);
+        System.out.println("-----");
 
         return loanService.getLoan(username, borrower, state, city, dateStartLess, dateEndLess,dateStartGreater,dateEndGreater);
     }

@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.services;
+package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectAlreadyUsed;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
@@ -14,6 +14,7 @@ import ch.heigvd.easytoolz.repositories.LoanRepository;
 import ch.heigvd.easytoolz.repositories.PeriodRepository;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
+import ch.heigvd.easytoolz.services.interfaces.LoanService;
 import ch.heigvd.easytoolz.specifications.LoanSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.List;

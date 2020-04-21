@@ -46,7 +46,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         List<Predicate> predicates = new LinkedList<>();
 
-        Predicate finalQuery = criteriaBuilder.disjunction();
+        Predicate finalQuery;
 
         if(namesList != null) {
             for(String s : namesList) {

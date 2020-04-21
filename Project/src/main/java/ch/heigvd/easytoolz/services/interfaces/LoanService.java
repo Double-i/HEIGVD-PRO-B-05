@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.services;
+package ch.heigvd.easytoolz.services.interfaces;
 
 import ch.heigvd.easytoolz.models.DTO.LoanRequest;
 import ch.heigvd.easytoolz.models.DTO.PeriodRequest;

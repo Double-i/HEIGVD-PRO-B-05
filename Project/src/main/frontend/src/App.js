@@ -1,9 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Container } from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
+
+
 import {
     BrowserRouter as Router,
     Switch,

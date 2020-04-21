@@ -155,7 +155,7 @@ public class LoanServiceImpl implements LoanService {
         // Save
         Period newPeriod = new Period(periodRequest.getDateStart(), periodRequest.getDateEnd(), State.pending, creator, loan);
         periodRepository.save(newPeriod);
-        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Period added\"}", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Period added\", \"id\": "+newPeriod.getId()+"}", HttpStatus.OK);
     }
 
     /**
@@ -208,7 +208,7 @@ public class LoanServiceImpl implements LoanService {
         toUpdatePeriod.setState(newState);
         periodRepository.save(toUpdatePeriod);
 
-        return new ResponseEntity<>("Période mise à jour", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Période mis à jour\"}", HttpStatus.OK);
     }
 
     /**

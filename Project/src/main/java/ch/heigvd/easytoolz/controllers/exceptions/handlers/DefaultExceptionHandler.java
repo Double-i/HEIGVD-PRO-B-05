@@ -18,7 +18,7 @@ import java.util.Calendar;
 
 public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
     /**
-     * @return the current timme
+     * @return the current time
      */
     protected static Date Now()
     {

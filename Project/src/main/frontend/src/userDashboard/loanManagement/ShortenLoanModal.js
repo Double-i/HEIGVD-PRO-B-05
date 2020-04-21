@@ -4,6 +4,7 @@ import LoansList from './LoansList'
 import * as moment from "moment";
 import {sendEzApiRequest} from "../../common/ApiHelper";
 import {STATE, transformState} from "../../common/State";
+import {ROLE, oppositeRole} from "../../common/Role";
 
 function ShortenLoanModal(props) {
     return (
@@ -24,7 +25,7 @@ function ShortenLoanModal(props) {
                 <Table striped bordered hover>
                     <tbody>
                     {
-                        props.loan.periods.filter(period => period.creator === "owner" && period.state !== STATE.accepted)
+                        props.loan.periods.filter(period => period.creator === props.role && period.state !== STATE.accepted)
                             .map((period, idx) => {
                                 return (
                                     <tr>
@@ -35,7 +36,7 @@ function ShortenLoanModal(props) {
                                             <Button
                                                 variant="outline-primary"
                                                 block
-                                                disabled={moment(period.dateEnd).isBefore(moment())}
+                                                disabled={moment(period.dateEnd).isBefore(moment()) || period.state === STATE.cancel || period.state === STATE.refused}
                                                 onClick={() =>
                                                     props.cancelPeriod(props.loan, period)
                                                 }
@@ -50,7 +51,7 @@ function ShortenLoanModal(props) {
                 <Table striped bordered hover>
                     <tbody>
                     {
-                        props.loan.periods.filter(period => period.creator === "borrower" && period.state !== STATE.accepted)
+                        props.loan.periods.filter(period => period.creator === oppositeRole(props.role) && period.state !== STATE.accepted)
                             .map((period, idx) => {
 
                                 return (

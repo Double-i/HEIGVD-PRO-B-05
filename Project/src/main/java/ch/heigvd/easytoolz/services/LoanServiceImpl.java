@@ -239,13 +239,10 @@ public class LoanServiceImpl implements LoanService {
         ///////////////////////// TODO : A AMELIORER
         if (state != null) {
             Specification<Loan> states = LoanSpecs.getState(state.get(0));
-
             for (int i = 1; i < state.size(); ++i) {
                 states = states.or(LoanSpecs.getState(state.get(i)));
-
-                specs = specs.and(states);
             }
-
+            specs = specs.and(states);
         }
 
         if (city != null) {

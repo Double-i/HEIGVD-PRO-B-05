@@ -1,11 +1,11 @@
 package ch.heigvd.easytoolz.services;
 
-import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectAlreadyUsed;
-import ch.heigvd.easytoolz.controllers.exceptions.ezobject.EZObjectNotFoundException;
-import ch.heigvd.easytoolz.controllers.exceptions.loan.LoanInvalidParameterException;
-import ch.heigvd.easytoolz.controllers.exceptions.loan.LoanInvalidUserException;
-import ch.heigvd.easytoolz.controllers.exceptions.loan.LoanPeriodAlreadyPassedException;
-import ch.heigvd.easytoolz.controllers.exceptions.loan.LoanStateCantBeUpdatedException;
+import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectAlreadyUsed;
+import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.exceptions.loan.LoanInvalidParameterException;
+import ch.heigvd.easytoolz.exceptions.loan.LoanInvalidUserException;
+import ch.heigvd.easytoolz.exceptions.loan.LoanPeriodAlreadyPassedException;
+import ch.heigvd.easytoolz.exceptions.loan.LoanStateCantBeUpdatedException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.models.DTO.LoanRequest;
 import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
@@ -13,6 +13,7 @@ import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import ch.heigvd.easytoolz.repositories.LoanRepository;
 import ch.heigvd.easytoolz.repositories.PeriodRepository;
 import ch.heigvd.easytoolz.repositories.UserRepository;
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.specifications.LoanSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;

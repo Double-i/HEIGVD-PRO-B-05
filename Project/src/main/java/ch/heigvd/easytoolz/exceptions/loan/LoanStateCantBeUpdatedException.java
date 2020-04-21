@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions.loan;
+package ch.heigvd.easytoolz.exceptions.loan;
 
 public class LoanStateCantBeUpdatedException extends RuntimeException {
     public LoanStateCantBeUpdatedException(String message)

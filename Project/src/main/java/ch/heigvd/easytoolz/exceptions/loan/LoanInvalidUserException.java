@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controllers.exceptions.loan;
+package ch.heigvd.easytoolz.exceptions.loan;
 
 public class LoanInvalidUserException extends RuntimeException {
     public LoanInvalidUserException(String message)

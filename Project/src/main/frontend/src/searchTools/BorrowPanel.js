@@ -31,12 +31,11 @@ class BorrowPanel extends React.Component {
         }
 
         sendEzApiRequest(this.sendLoansAPIEndpoint, "POST", {
-            dateStart : beginDate,
-            dateEnd : endDate,
+            dateStart : beginDate.toString(),
+            dateEnd : endDate.toString(),
             toolId : this.props.tool.id
         }).then(
             (response) => {
-                //Get tags from db
                 if(response.status === 403 || response.status === 404 ) {
                     alert("Erreur dans l'envoi de la requete : " + response.status);
                 }else{

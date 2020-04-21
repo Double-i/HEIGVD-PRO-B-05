@@ -33,11 +33,6 @@ public class EZObjectServiceImpl implements EZObjectService {
     @PersistenceContext
     EntityManager entityManager;
 
-
-    private String like(String s)
-    {
-        return "%"+"%";
-    }
     public List<EZObject> getFiltered( List<String> namesList,
                                            List<String> ownersList,
                                            List<String> descriptionList,
@@ -78,12 +73,11 @@ public class EZObjectServiceImpl implements EZObjectService {
         }
 
 
-        finalQuery = criteriaBuilder.or(predicates.toArray(new Predicate[0]));
+        finalQuery = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         query.where(finalQuery).distinct(true);
 
         objects = entityManager.createQuery(query).getResultList();
-
-
+        
         return objects;
     }
     public boolean exists(EZObject obj) {

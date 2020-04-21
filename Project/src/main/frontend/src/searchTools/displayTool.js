@@ -12,7 +12,7 @@ class DisplayTool extends React.Component {
 
     render() {
         return (
-            <div className="row border-bottom" key={"itemId" + this.props.id}>
+            <div className="row border-bottom" style={{marginTop: '10px'}} key={"itemId" + this.props.id}>
                 <div className="col-2">
                     <div>{this.props.name}</div>
                 </div>
@@ -22,7 +22,7 @@ class DisplayTool extends React.Component {
                 <div className="col-2">
                     <div>{this.props.ownerUserName}</div>
                 </div>
-                <div className="col-2">
+                <div className="col-2" style={{marginBottom: '10px'}}>
                     <div>
                         {
                             this.props.objectTags.map(tag =>(
@@ -35,6 +35,9 @@ class DisplayTool extends React.Component {
                     <Button
                         disabled = {this.state.isBorrowable}
                         key={"buttonId" + this.props.id}
+                        style={{
+                            marginBottom: '10px'
+                        }}
                     >
                         Emprunter
                     </Button>

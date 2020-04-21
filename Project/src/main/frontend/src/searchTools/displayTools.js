@@ -15,7 +15,7 @@ class DisplayTools extends React.Component {
 
             <div className="content">
                 {/* Result */}
-                <div className="container">
+                <div className="container" style={{marginTop: '20px'}}>
                     <div className="row border-bottom header">
                         <div className="col-2">
                             <div>Nom de l'outil</div>

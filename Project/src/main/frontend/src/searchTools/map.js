@@ -1,86 +1,63 @@
-import React, { Component } from "react"
+import { Map, GoogleApiWrapper, Marker} from 'google-maps-react';
+import React from "react"
+import {sendEzApiRequest} from "../common/ApiHelper";
 
-/* eslint-disable no-undef */
+const mapStyles = {
+    width:  '100%'
+}
 
-class Map extends React.Component
-{
-    SEARCH_URI = '/objects'
-    TAGS_URI = '/tags'
+class MapContainer extends React.Component {
 
-    state = {
-        tools: [{
-            name: "Marteau",
-            category: "Outil non-electrique",
-            lat: 63.0125156,
-            lng: 14.5161565
-            },
-            {
-            name: "Tournevis",
-            category: "Outil non-electrique",
-            lat: 61.0125156,
-            lng: -16.5161565
-        }]
-    };
-
-    constructor(props){
+    constructor(props)
+    {
         super(props);
 
-        //Utilisé pour appelé this dans handleSubmit
-        //this.handleSubmit = this.handleSubmit.bind(this)
-    }
-
-    initMap() {
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 2,
-        center: new google.maps.LatLng(2.8,-187.3),
-        mapTypeId: 'terrain'
-    });
-
-    var infowindow = new google.maps.InfoWindow();
-
-        function placeMarker (tool)
-        {
-            var latLng = new google.maps.LatLng(tool.lat, tool.lng);
-            var marker = new google.maps.Marker({
-            position: latLng,
-            map: map
-            });
-
-            var info = '<div class = "info"><ul><li><b>Name : </b>'
-            +tool.name+'</li><li><b>Category : </b>'
-            +tool.category+'</li></ul><a href='+'...'+'>'+'...'+'</a>'
-            +'</div>';
-
-            marker.addListener('click', function() {
-                infowindow.close();
-                infowindow.setContent(info);
-                infowindow.open(map, marker);
-            });
+        this.state = {
+            search : '',
+            tools : [],
+            tags : [],
+            searchTags : []
         }
 
-        for (var i = 0; i < this.state.tools.length; i++) {
-        this.state.tools.forEach(placeMarker);
-        }
+        sendEzApiRequest(this.SEARCH_URI)
+        .then((response) =>{
+            if(response.status === 403)
+            {
+                console.log("Tools not found !");
+            }
+            else
+            {
+                console.log(response);
+                this.setState({tools:response});
+                console.log(this.state.tools);
+            }
+        })
     }
 
+    getMarkers()
+    {
+        return this.state.tools.map(tool => {
+            return <Marker position={{
+             lat: tool.latitude,
+             lng: tool.longitude
+            }} />
+        })
+    }
 
     render()
     {
-        return(
-        <div id="parent">
-            <div id="map">
-                <script> function initMap(){this.initMap()} </script>
-                <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwmIS0mKIfWPvmZke7plXkeR1uZ6ahwcU&callback=initMap"></script>
-            </div>
-        </div>
-      )
-    }
-
-    componentDidMount()
-    {
+        return <Map
+                 google={this.props.google}
+                 zoom={10}
+                 style={mapStyles}
+                 initialCenter={{ lat: 46.5, lng: 6.5}}
+               >
+               {this.getMarkers()}
+               </Map>
 
     }
 }
 
-export default Map
+export default GoogleApiWrapper({
+  apiKey: 'AIzaSyCwmIS0mKIfWPvmZke7plXkeR1uZ6ahwcU'
+})(MapContainer);

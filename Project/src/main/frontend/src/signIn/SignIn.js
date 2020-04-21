@@ -26,7 +26,7 @@ function SignInForm(props) {
         setHasBeenLoggedIn(false)
 
         sendEzApiRequest(LOGIN_URI, 'POST', {
-            username: username,
+            userName: username,
             password: password,
         }).then(
             result => {
@@ -37,12 +37,11 @@ function SignInForm(props) {
                     console.log('So far so good')
                     setHasBeenLoggedIn(true)
 
-                    // TODO : utiliser les vrais données renvoyer par /api/authenticate
                     props.setLoggedUser({
-                        username: 'bE5tU5s3r3V3R',
-                        admin: false,
-                        lastname: 'la Chouin',
-                        firstname: 'Carlin',
+                        username: result.userName,
+                        admin: result.admin,
+                        lastname: result.lastName,
+                        firstname: result.firstName,
                     })
                 
                 }

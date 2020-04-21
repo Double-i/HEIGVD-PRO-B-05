@@ -9,7 +9,7 @@ import {sendEzApiRequest, sendRequest} from '../common/ApiHelper'
 
 function SignUpForm(props) {
     // TODO delete comment - Pour Bastien, le /api est ajouté automatiquement, change signUpAPIEndpoint avec le bon endpoint
-    const signUpAPIEndpoint = '/users'
+    const signUpAPIEndpoint = '/signup'
 
     const [isSigningUp, setIsSigningUp] = useState(false)
     const [hasConnectionProblem, setHasConnectionProblem] = useState(false)
@@ -35,54 +35,62 @@ function SignUpForm(props) {
     // })
 
     const attemptSignUp = values => {
-        /*checkAddress({
+
+        // TODO : changer pour que ça vérifie bien l'adresse
+        checkAddress({
             address: values.userAddress,
             npa: values.userNpa,
             city: values.userCity,
             country: values.userCountry,
-        }).then(([isValid, address]) => {
-            if (isValid === 1) {
-                setIsValidAddress(true)
-                console.log(address)
-            } else {
-                setIsValidAddress(false)
-            }
-        })*/
-        values = {
-            "userName":"vanlong",
-            "firstName":"henri",
-            "lastName":"patoche",
-            "email":"vanlong@gmail.com",
-            "password":"1234",
-            "isAdmin":"false"
-        };
-        setIsValidAddress(true);
-        if (isValidAddress) {
-            sendEzApiRequest(signUpAPIEndpoint, "POST", /*JSON.stringify(values)*/
-                values
-                ).then(
-                result => {
-                    // en principe seul les requete http 200 passe ici
-                    console.log('Connection ok et réponse du serveur, ' + values)
+        }).then(([isValid, googleAddress]) => {
+            if(isValid === 1){
+                setIsValidAddress(true);
+                sendEzApiRequest(signUpAPIEndpoint, "POST",{
+                    userName: values.userName,
+                    firstName: values.userFirstname,
+                    lastName: values.userLastname,
+                    password:values.userPassword,
+                    email:values.userEmail,
+                    address: {
+                        address: values.userAddress,
+                        district: values.userDistrict,
+                        postalCode: values.userNpa,
+                        lat: "46.019811",
+                        lng: "7.1333",
+                        city: {
+                            id: "1"
+                        }
+                    }
+                }).then(
+                    result => {
+                        // en principe seul les requete http 200 passe ici
+                        console.log('Connection ok et réponse du serveur, ' + values)
 
-                    setIsSigningUp(false)
-                    setHasBeenSignedUp(true)
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                error => {
-                    // en principe requete à problemes ici => code http 400 & 500 ou pas de co au serveur
-                    setHasConnectionProblem(true)
-                    setAlreadyExists(true)
-                    setIsSigningUp(false)
-                }
-            )
-        }
+                        setIsSigningUp(false)
+                        setHasBeenSignedUp(true)
+                    },
+                    // Note: it's important to handle errors here
+                    // instead of a catch() block so that we don't swallow
+                    // exceptions from actual bugs in components.
+                    error => {
+                        console.log(error);
+                        // en principe requete à problemes ici => code http 400 & 500 ou pas de co au serveur
+                        setHasConnectionProblem(true)
+                        setAlreadyExists(true)
+                        setIsSigningUp(false)
+                    }
+                );
+            }else{
+                setIsValidAddress(false);
+            }
+        });
     }
 
     // validation rules
     const schema = yup.object({
+        userName: yup
+            .string()
+            .required('Requis'),
         userEmail: yup
             .string()
             .required('Requis')
@@ -121,6 +129,9 @@ function SignUpForm(props) {
             .required('Requis')
             .min(2)
             .max(20),
+        userDistrict: yup
+            .string()
+            .required('Requis'),
         userCity: yup
             .string()
             .required('Requis')
@@ -136,13 +147,13 @@ function SignUpForm(props) {
     return (
         <>
             <Alert variant="success" hidden={!hasBeenSignedUp}>
-                Vous êtes connecté !
+                Vous vous êtes inscrit !
             </Alert>
             <Alert variant="danger" hidden={!hasConnectionProblem}>
                 hum humm.. problème de connexion au serveur
             </Alert>
             <Alert variant="warning" hidden={!alreadyExists}>
-                Cette adresse e-mail est déjà utilisé
+                Ce nom d'utilisateur est déjà utilisé
             </Alert>
             <Alert variant="warning" hidden={isValidAddress}>
                 L'adresse semble incorrecte ou peu précise veuillez complétez
@@ -153,7 +164,23 @@ function SignUpForm(props) {
                     setIsSigningUp(!isSigningUp)
                     attemptSignUp(values)
                 }}
+
                 initialValues={{
+                    userName: 'bloup',
+                    userEmail: 'vanlong@gmail.com',
+                    userPassword: '12345678',
+                    userPasswordRepeat: '12345678',
+                    userFirstname: 'Bastien',
+                    userLastname: 'Potet',
+                    userAddress: 'Somlaproz 48',
+                    userNpa: '1937',
+                    userDistrict: 'Valais',
+                    userCity: 'Orsières',
+                    userCountry: 'Suisse',
+                }}
+                /*
+                initialValues={{
+                    userName: '',
                     userEmail: '',
                     userPassword: '',
                     userPasswordRepeat: '',
@@ -161,9 +188,10 @@ function SignUpForm(props) {
                     userLastname: '',
                     userAddress: '',
                     userNpa: '',
+                    userDistrict: '',
                     userCity: '',
                     userCountry: '',
-                }}
+                }}*/
             >
                 {({
                     handleSubmit,
@@ -174,6 +202,17 @@ function SignUpForm(props) {
                     errors,
                 }) => (
                     <Form noValidate onSubmit={handleSubmit}>
+                        <Form.Group controlId="formUsername">
+                            <Form.Label>Nom d'utilisateur</Form.Label>
+                            <Form.Control
+                                name="userName"
+                                type="text"
+                                placeholder="Nom d'utilisateur"
+                                value={values.userName}
+                                onChange={handleChange}
+                                isValid={touched.userName && !errors.userName}
+                            />
+                        </Form.Group>
                         <Form.Group controlId="formEmail">
                             <Form.Label>E-mail</Form.Label>
                             <Form.Control
@@ -266,6 +305,17 @@ function SignUpForm(props) {
                                 isValid={touched.userNpa && !errors.userNpa}
                             />
                         </Form.Group>
+                        <Form.Group controlId="formDistrict">
+                            <Form.Label>District</Form.Label>
+                            <Form.Control
+                                name="userDistrict"
+                                type="text"
+                                placeholder="District"
+                                value={values.userDistrict}
+                                onChange={handleChange}
+                                isValid={touched.userDistrict && !errors.userDistrict}
+                            />
+                        </Form.Group>
                         <Form.Group controlId="formCity">
                             <Form.Label>Ville/village</Form.Label>
                             <Form.Control
@@ -298,7 +348,7 @@ function SignUpForm(props) {
                             block
                             disabled={isSigningUp}
                         >
-                            Se Connecter
+                            S'inscrire
                             <Spinner
                                 as="span"
                                 animation="border"

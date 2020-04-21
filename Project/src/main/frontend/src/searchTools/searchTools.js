@@ -7,7 +7,6 @@ import Button from "react-bootstrap/Button";
 
 //TODO : Si le user est pas log, on arrive pas a fetch les objets ?!
 class SearchTools extends React.Component{
-
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
     constructor(props){
@@ -19,6 +18,7 @@ class SearchTools extends React.Component{
             tags : [],
             searchTags : []
         };
+
         //Utilisé pour appelé this dans handleSubmit
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleTagChange = this.handleTagChange.bind(this)
@@ -36,7 +36,7 @@ class SearchTools extends React.Component{
         sendEzApiRequest(this.TAGS_URI)
             .then( (response) => {
                     //Get tags from db
-                    if(response.status == 403) {
+                    if(response.status === 403) {
                         console.log('pas reussi a fetch les tags...');
                     }else{
                         this.setState({tags: response.map((value) => value.name)})
@@ -51,8 +51,22 @@ class SearchTools extends React.Component{
 
         //Search by name
         if(this.state.search !== ''){
-            URL += '/find/name/' + this.state.search;
+            URL += '/filter?name=' + this.state.search;
+            if(this.state.searchTags.length !== 0)
+                URL += '&';
         }
+
+        if(this.state.searchTags.length !== 0){
+            if(this.state.search === '')
+                URL += "/filter?"
+            URL += 'tags=';
+            for(let i = 0; i < this.state.searchTags.length; ++i){
+                if(i > 0)
+                    URL += ",";
+                URL += this.state.searchTags[i];
+            }
+        }
+
         console.log(URL);
         //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
         event.preventDefault();
@@ -84,7 +98,7 @@ class SearchTools extends React.Component{
                 value.push(options[i].value);
             }
         }
-        this.setState({searchTag: value});
+        this.setState({searchTags: value});
     }
 
     render(){

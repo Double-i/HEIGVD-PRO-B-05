@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.config;
+package ch.heigvd.easytoolz;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
     // TODO : voir si à supprimer, permet de pouvoir faire des requêtes cross origin pour utiliser le frontend avec  npm start
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("http://127.0.0.1:3000").allowCredentials(true);
+        registry.addMapping("/**").allowedOrigins("http://127.0.0.1:3000","http://localhost:3000").allowedMethods("POST", "PATCH", "GET", "DELETE", "PUT").allowCredentials(true);
     }
 
     // redirect all the url to index.html (frontend entry point)
@@ -31,7 +31,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
                 .setViewName("forward:/index.html");
     }
-
 
 
 }

@@ -70,7 +70,7 @@ public class LoanServiceImpl implements LoanService {
 
         periodRepository.save(period);
 
-        return new ResponseEntity<>("The loans has been stored :", HttpStatus.OK);
+        return new ResponseEntity<>(" {\"status\": \"ok\",\"msg\": \"The loans has been stored\"}", HttpStatus.OK);
     }
 
     /**
@@ -109,7 +109,7 @@ public class LoanServiceImpl implements LoanService {
         if (!done)
             throw new RuntimeException("LoanService - Something went wrong while trying to update loan state");
 
-        return new ResponseEntity<>("The loans has been ", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"The loans has been\"}", HttpStatus.OK);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class LoanServiceImpl implements LoanService {
         // Save
         Period newPeriod = new Period(periodRequest.getDateStart(), periodRequest.getDateEnd(), State.pending, creator, loan);
         periodRepository.save(newPeriod);
-        return new ResponseEntity<>("New period added", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Period added\", \"id\": "+newPeriod.getId()+"}", HttpStatus.OK);
     }
 
     /**
@@ -198,16 +198,18 @@ public class LoanServiceImpl implements LoanService {
                 throw new LoanInvalidUserException("no right to do this");
             if (newState.equals(State.accepted)) {
                 // Set state to refused for the other pending periods
-                for (Period period : loan.getPendingPeriods()) {
+                for (Period period : loan.getPeriods()) {
                     period.setState(State.refused);
+                    periodRepository.save(period);
                 }
+
 
             }
         }
         toUpdatePeriod.setState(newState);
         periodRepository.save(toUpdatePeriod);
 
-        return new ResponseEntity<>("Période mise à jour", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Période mis à jour\"}", HttpStatus.OK);
     }
 
     /**
@@ -226,8 +228,7 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public List<Loan> getLoan(String username, boolean borrower, List<String> state,  List<String> city, Date dateStartLess, Date dateEndLess,
                               Date dateStartGreater, Date dateEndGreater) {
-        if(loanRepository.findByBorrower_UserName(username).size() == 0)
-            throw new EZObjectNotFoundException("No loans where found for user "+username);
+
 
         Specification<Loan> specs;
 
@@ -244,8 +245,8 @@ public class LoanServiceImpl implements LoanService {
             for (int i = 1; i < state.size(); ++i) {
                 states = states.or(LoanSpecs.getState(state.get(i)));
 
-                specs = specs.and(states);
             }
+            specs = specs.and(states);
 
         }
 

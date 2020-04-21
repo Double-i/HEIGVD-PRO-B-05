@@ -1,20 +1,27 @@
 import React from 'react'
 import { useState } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Container } from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
+
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    useParams,
+} from 'react-router-dom'
 import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
+import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
+import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 
 
 import { SessionContext, SessionHelper } from './common/SessionHelper'
 
 function App() {
-
     const userStorage = sessionStorage.getItem('user')
     const userObject = userStorage === null ? {} : JSON.parse(userStorage)
     const [showSignInForm, setShowSignInForm] = useState(false)
@@ -24,7 +31,7 @@ function App() {
 
     const user = {
         userInfo: userSession,
-        session: session
+        session: session,
     }
 
     return (
@@ -33,7 +40,7 @@ function App() {
                 <NavigationBar showSignInForm={() => setShowSignInForm(true)} />
                 <SignIn
                     showSignInForm={showSignInForm}
-                    setShowSignInForm={value => setShowSignInForm(value)}
+                    setShowSignInForm={(value) => setShowSignInForm(value)}
                     setLoggedUser={user.session.login}
                 />
                 <div className="row">
@@ -41,6 +48,7 @@ function App() {
                         <Switch>
                             <Route exact path="/home">
                                 <Home />
+
                             </Route>
                             <Route exact path="/dashboard">
                                 {user.session.isUserLogin() ? (
@@ -57,6 +65,25 @@ function App() {
                                     <SignUp />
                                 )}
                             </Route>
+                            <Route exact path="/tools/:toolId">
+                                <TmpToolDetails />
+                            </Route>
+                            <Route exacte path="/dashboard/myloans/borrower">
+                                {user.session.isUserLogin() ? (
+                                    <BorrowerLoans />
+                                ) : (
+                                    <NotRigthToBeHere />
+                                )}
+
+                            </Route>
+                            <Route exacte path="/dashboard/myloans/owner">
+                                {user.session.isUserLogin() ? (
+                                    <OwnerLoans />
+                                ) : (
+                                    <NotRigthToBeHere />
+                                )}
+
+                            </Route>
                         </Switch>
                     </Container>
                 </div>
@@ -64,10 +91,28 @@ function App() {
         </SessionContext.Provider>
     )
 }
+function TmpToolDetails() {
+    let { toolId } = useParams()
+    return <h1> Affichage de l'outil id:  {toolId}</h1>
+}
 function NotRigthToBeHere() {
-    return <p> Hey ho biquette ouste ! <img alt="biquette" src="https://images2.minutemediacdn.com/image/upload/c_crop,h_843,w_1500,x_0,y_10/f_auto,q_auto,w_1100/v1555172614/shape/mentalfloss/iStock-177369626_1.jpg" /> </p>
+    return (
+        <p>
+            {' '}
+            Hey ho biquette ouste !{' '}
+            <img
+                alt="biquette"
+                src="https://images2.minutemediacdn.com/image/upload/c_crop,h_843,w_1500,x_0,y_10/f_auto,q_auto,w_1100/v1555172614/shape/mentalfloss/iStock-177369626_1.jpg"
+            />{' '}
+        </p>
+    )
 }
 function AlreadyConnect() {
-    return <p>Vous êtes déjà connecté... <img alt="retarded" src="https://i.imgflip.com/2e1lxv.jpg" /></p>
+    return (
+        <p>
+            Vous êtes déjà connecté...{' '}
+            <img alt="retarded" src="https://i.imgflip.com/2e1lxv.jpg" />
+        </p>
+    )
 }
-export default App 
+export default App

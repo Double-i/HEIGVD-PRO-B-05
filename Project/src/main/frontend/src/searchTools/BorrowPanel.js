@@ -4,18 +4,14 @@ import Modal from "react-bootstrap/Modal";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import {sendEzApiRequest} from "../common/ApiHelper";
-import { SessionContext } from '../common/SessionHelper'
 
 class BorrowPanel extends React.Component {
 
-    //TODO : mettre le bon endpoint
-    sendLoansAPIEndpoint = "..."
-    username = ""
+    sendLoansAPIEndpoint = "/loans"
 
     constructor(props){
         super(props);
         this.state = {
-            username : '',
             dateRange : new Date()
         }
         this.onChange = this.onChange.bind(this);
@@ -25,6 +21,7 @@ class BorrowPanel extends React.Component {
     sendValidation() {
         let beginDate = this.state.dateRange;
         let endDate
+        //React calendar provide either an array or a single value , depends of the user choice (range choice or not)
         if (beginDate instanceof Array) {
             endDate = beginDate[1].toISOString().slice(0, 10)
             beginDate = beginDate[0].toISOString().slice(0, 10)
@@ -33,13 +30,10 @@ class BorrowPanel extends React.Component {
             endDate = beginDate
         }
 
-        let dataDate = {beginDate, endDate}
-        let itemId = this.props.tool.id;
-        //TODO : Envoyer la bonne requete POST avec dataDate & itemId + userid ?
         sendEzApiRequest(this.sendLoansAPIEndpoint, "POST", {
-            username : this.username,
-            item : itemId,
-            rangeDate : dataDate
+            dateStart : beginDate,
+            dateEnd : endDate,
+            toolId : this.props.tool.id
         }).then(
             (response) => {
                 //Get tags from db
@@ -62,16 +56,6 @@ class BorrowPanel extends React.Component {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
-              <SessionContext.Consumer>
-                    {({ session }) => {
-                        //Maurice : J'ai fais comme ça parce que je peux pas utiliser les Hook dans des classes :/
-                        if (session.isUserLogin()) {
-                            this.username = session.getUserName();
-                        }else{
-                            console.log("vous n'avez rien a faire ici zomg!")
-                        }}}
-                </SessionContext.Consumer>
-
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Louer

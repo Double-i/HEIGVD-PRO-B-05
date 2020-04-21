@@ -29,7 +29,6 @@ class SearchTools extends React.Component{
         sendEzApiRequest(this.SEARCH_URI)
             .then((response) =>{
                 this.setState({tools:response})
-                console.log(this.state.tools);
             })
 
 
@@ -67,7 +66,6 @@ class SearchTools extends React.Component{
             }
         }
 
-        console.log(URL);
         //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
         event.preventDefault();
         sendEzApiRequest(URL)
@@ -77,16 +75,12 @@ class SearchTools extends React.Component{
                         console.log('No tools founded')
                     } else {
                         console.log('items founded')
-                        console.log(result);
                         this.setState({tools : result});
                     }
                 },
                 error => {
                     console.log('Connection PAS ok', error)
                 })
-        //Adding search by tags
-
-        //
     }
 
     //Dynaminc update of searched tags fields

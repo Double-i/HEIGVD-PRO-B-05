@@ -60,12 +60,12 @@ public class LoanController {
                                     @RequestParam(required = false, name = "startGT") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateStartGreater,
                                     @RequestParam(required = false, name = "endGT") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateEndGreater)
     {
+        System.out.println("borrower: "+borrower);
         System.out.println("startLT "+dateStartLess);
         System.out.println("endLT "+dateEndLess);
         System.out.println("startGT "+dateStartGreater);
         System.out.println("endGT "+dateEndGreater);
 
-        System.out.println("state: "+ state.get(0));
         return loanService.getLoan(username, borrower, state, city, dateStartLess, dateEndLess,dateStartGreater,dateEndGreater);
     }
 

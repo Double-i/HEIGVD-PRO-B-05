@@ -22,7 +22,7 @@ function OwnerLoans(props) {
     const [passedLoans, setPassedLoans] = useState([]);
     const [refusedLoans, setRefusedLoans] = useState([]);
     const [showShortenLoansModal, setShowShortenLoansModal] = useState(false);
-    const [periods, setPeriods] = useState([])
+    const [loan, setLoan] = useState({periods: []}) // should be defined because of ShortenLoanModal
 
 
     useEffect(() => {
@@ -135,7 +135,7 @@ function OwnerLoans(props) {
     const btnShowPeriodClicked = (loan) => {
         console.log("wtf")
         // Show modal
-        setPeriods(loan.periods)
+        setLoan(loan)
         setShowShortenLoansModal(true)
         console.log(showShortenLoansModal)
     };
@@ -143,25 +143,41 @@ function OwnerLoans(props) {
     const btnPassBackClicked = (loan) => {
         console.log("ask pass back")
     };
-    const updatePeriodState = (period, state) => {
-        sendEzApiRequest("")
+    const updatePeriodState = (loan, period, state) => {
+        console.log("UPDATE" ,loan, period, state)
+        return sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST+ `${loan.pkLoan}/periods/${period.id}/state`, 'PATCH', {
+            state: state
+        })
     };
-    const refusePeriod = (period) => {
-        console.log("refuse",period)
+    const refusePeriod = (loan, period) => {
+        updatePeriodState(loan, period, STATE.refused).then( result => {
+            console.log(result)
+        }, (error)=>{
+            console.log(error)
+        })
     };
-    const acceptPeriod = (period) => {
-        console.log("accept", period)
-    };
-    const cancelPeriod = (period) => {
-        console.log("cancel", period)
+    const acceptPeriod = (loan, period) => {
+        updatePeriodState(loan, period, STATE.accepted).then( result =>{
+            console.log(result)
+        },error => {
+            console.log(error)
+        })
     };
 
+    const cancelPeriod = (loan, period) => {
+        updatePeriodState(loan, period, STATE.cancel).then( result =>{
+            console.log(result)
+        },error => {
+            console.log(error)
+        })
+    };
 
     return (
+
         <Container>
             <ShortenLoanModal show={showShortenLoansModal}
                               onHide={() => setShowShortenLoansModal(false)}
-                              periods={periods}
+                              loan={loan}
                               refusePeriod={refusePeriod}
                               acceptPeriod={acceptPeriod}
                               cancelPeriod={cancelPeriod}

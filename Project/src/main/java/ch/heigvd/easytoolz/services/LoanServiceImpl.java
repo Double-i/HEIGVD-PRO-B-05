@@ -197,9 +197,11 @@ public class LoanServiceImpl implements LoanService {
                 throw new LoanInvalidUserException("no right to do this");
             if (newState.equals(State.accepted)) {
                 // Set state to refused for the other pending periods
-                for (Period period : loan.getPendingPeriods()) {
+                for (Period period : loan.getPeriods()) {
                     period.setState(State.refused);
+                    periodRepository.save(period);
                 }
+
 
             }
         }
@@ -225,8 +227,7 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public List<Loan> getLoan(String username, boolean borrower, List<String> state,  List<String> city, Date dateStartLess, Date dateEndLess,
                               Date dateStartGreater, Date dateEndGreater) {
-        if(loanRepository.findByBorrower_UserName(username).size() == 0)
-            throw new EZObjectNotFoundException("No loans where found for user "+username);
+
 
         Specification<Loan> specs;
 

@@ -2,14 +2,19 @@ package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.repositories.EzObjectImageRepository;
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
+import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,9 +31,17 @@ public class EZObjectServiceImpl implements EZObjectService {
     @Autowired
     EZObjectRepository ezObjectRepository;
 
+    @Autowired
+    EzObjectImageRepository imagesRepository;
+
+    @Autowired
+    StorageService storageService;
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    AuthenticationService authenticationService;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -110,11 +123,25 @@ public class EZObjectServiceImpl implements EZObjectService {
         return res;
     }
 
-    public void addObject(EZObject newObject) {
-        User owner = userService.getUser(newObject.getOwnerUserName());
+    public void addObject(EZObject newObject, List<MultipartFile> files) throws Exception {
+
+        User owner = authenticationService.getTheDetailsOfCurrentUser();
+
         newObject.setOwner(owner);
+        List<EZObjectImage>images = new ArrayList<>();
 
         ezObjectRepository.save(newObject);
+
+        for(int i = 0; i < files.size(); i++)
+        {
+            EZObjectImage  img_path = new EZObjectImage();
+            img_path.setObject(newObject);
+
+            storageService.store(files.get(i),newObject, img_path);
+            images.add(img_path);
+            imagesRepository.save(img_path);
+        }
+
     }
 
 

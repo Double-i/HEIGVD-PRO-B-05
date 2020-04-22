@@ -15,6 +15,7 @@ public class EZObjectImage {
         this.pathToImage = pathtoimg;
     }
 
+    public void setObject(EZObject obj){object_image = obj;}
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;

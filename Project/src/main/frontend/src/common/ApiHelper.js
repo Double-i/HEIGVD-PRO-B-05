@@ -28,6 +28,7 @@ export function sendRequest(url, verb = 'GET', data = {}) {
     const requestInfo = {
         method: verb,
         credentials: 'include',
+        mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
         },

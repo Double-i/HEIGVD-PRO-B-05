@@ -25,7 +25,7 @@ public interface UserService {
      * @throws UserAlreadyPresent       if the username is already present
      * @throws UserFailedStoreException if the insertion of the user fails
      */
-    void storeUser(User user) throws UserAlreadyPresent, UserFailedStoreException;
+    User storeUser(User user) throws UserAlreadyPresent, UserFailedStoreException;
 
     /**
      * deletes the user which has the username passed in parameter

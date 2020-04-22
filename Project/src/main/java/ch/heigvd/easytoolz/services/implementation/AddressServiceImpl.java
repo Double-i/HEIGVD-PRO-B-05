@@ -5,6 +5,7 @@ import ch.heigvd.easytoolz.exceptions.address.AddressNotFoundException;
 import ch.heigvd.easytoolz.models.Address;
 import ch.heigvd.easytoolz.repositories.AddressRepository;
 import ch.heigvd.easytoolz.services.interfaces.AddressService;
+import ch.heigvd.easytoolz.services.interfaces.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +15,18 @@ import java.util.Optional;
 public class AddressServiceImpl implements AddressService {
     @Autowired
     private AddressRepository addressRepository;
+    @Autowired
+    private CityService cityService;
 
     @Override
-    public void storeAddress(Address address) {
-        addressRepository.save(address);
+    public Address storeAddress(Address address) {
+        if(address.getId() == 0)
+            cityService.storeCity(address.getCity());
+        Address addressStored = addressRepository.save(address);
         if (addressRepository.findById(address.getId()).isEmpty()) {
             throw new AddressFailedStoreException();
         }
+        return addressStored;
     }
 
     @Override

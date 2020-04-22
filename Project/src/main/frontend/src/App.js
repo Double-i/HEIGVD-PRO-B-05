@@ -1,21 +1,26 @@
 import React from 'react'
-import { useState } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import {useState} from 'react'
 import './App.css'
-import { Container } from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    useParams,
+} from 'react-router-dom'
 import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
+import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
+import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 
 
-import { SessionContext, SessionHelper } from './common/SessionHelper'
+import {SessionContext, SessionHelper} from './common/SessionHelper'
 
 function App() {
-
-    const userStorage = sessionStorage.getItem('user')
+    const userStorage = localStorage.getItem('user')
     const userObject = userStorage === null ? {} : JSON.parse(userStorage)
     const [showSignInForm, setShowSignInForm] = useState(false)
     const [userSession, setUserSession] = useState(userObject)
@@ -24,39 +29,64 @@ function App() {
 
     const user = {
         userInfo: userSession,
-        session: session
+        session: session,
     }
 
     return (
         <SessionContext.Provider value={user}>
             <Router>
-                <NavigationBar showSignInForm={() => setShowSignInForm(true)} />
+                <NavigationBar showSignInForm={() => setShowSignInForm(true)}/>
                 <SignIn
                     showSignInForm={showSignInForm}
-                    setShowSignInForm={value => setShowSignInForm(value)}
-                    setLoggedUser={user.session.login}
+                    setShowSignInForm={(value) => setShowSignInForm(value)}
+                    setLoggedUser={loginInfo => {
+                        user.session.login(loginInfo)
+                        setShowSignInForm(false)
+                    }}
                 />
                 <div className="row">
                     <Container>
                         <Switch>
                             <Route exact path="/home">
-                                <Home />
+                                <Home/>
+
                             </Route>
                             <Route exact path="/dashboard">
                                 {user.session.isUserLogin() ? (
-                                    <DashBoard />
+                                    <DashBoard/>
                                 ) : (
-                                    <NotRigthToBeHere />
+                                    <NotRigthToBeHere/>
                                 )}
                             </Route>
                             <Route exact path="/disconnect"></Route>
                             <Route exact path="/signup">
                                 {user.session.isUserLogin() ? (
-                                    <AlreadyConnect />
+                                    <AlreadyConnect/>
                                 ) : (
-                                    <SignUp />
+                                    <SignUp/>
                                 )}
                             </Route>
+                            <Route exact path="/tools/:toolId">
+                                <TmpToolDetails/>
+                            </Route>
+                            <Route exacte path="/dashboard/myloans/borrower">
+                                {user.session.isUserLogin() ? (
+                                    <BorrowerLoans/>
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
+
+                            </Route>
+                            <Route exacte path="/dashboard/myloans/owner">
+                                {user.session.isUserLogin() ? (
+                                    <OwnerLoans/>
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
+
+                            </Route>
+
+                            <Route component={UnkownPage}/>
                         </Switch>
                     </Container>
                 </div>
@@ -64,10 +94,56 @@ function App() {
         </SessionContext.Provider>
     )
 }
+
+function TmpToolDetails() {
+    let {toolId} = useParams()
+    return <h1> Affichage de l'outil id: {toolId}</h1>
+}
+
 function NotRigthToBeHere() {
-    return <p> Hey ho biquette ouste ! <img alt="biquette" src="https://images2.minutemediacdn.com/image/upload/c_crop,h_843,w_1500,x_0,y_10/f_auto,q_auto,w_1100/v1555172614/shape/mentalfloss/iStock-177369626_1.jpg" /> </p>
+    return (
+        <Container className={"col-md-6 col-md-offset-3"}>
+            <br/>
+
+            <p>
+                <h3>Vous n'avez pas le droit d'accéder à cette page.</h3>
+                <img
+                    alt="forbideen"
+                    src="/forbidden.jpg"
+                />
+            </p>
+        </Container>
+    )
 }
+
 function AlreadyConnect() {
-    return <p>Vous êtes déjà connecté... <img alt="retarded" src="https://i.imgflip.com/2e1lxv.jpg" /></p>
+    return (
+        <Container className={"col-md-6 col-md-offset-3"}>
+            <br/>
+            <p>
+                <h3> Vous êtes déjà connecté. Vous ne pouvez donc pas accéder à cette page.</h3>
+                <img
+                    alt="forbideen"
+                    src="/useless.png"
+                />
+            </p>
+        </Container>
+    )
 }
-export default App 
+
+function UnkownPage() {
+    return (
+        <Container className={"col-md-6 col-md-offset-3"}>
+            <br/>
+            <p>
+                <h3>Cette page n'existe pas</h3>
+                <img
+                    alt="forbideen"
+                    src="/404.jpg"
+                />
+            </p>
+        </Container>
+    )
+}
+
+export default App

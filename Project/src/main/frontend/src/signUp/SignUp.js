@@ -55,10 +55,13 @@ function SignUpForm(props) {
                         address: values.userAddress,
                         district: values.userDistrict,
                         postalCode: values.userNpa,
-                        lat: "46.019811",
-                        lng: "7.1333",
+                        lat: googleAddress.lat,
+                        lng: googleAddress.long,
                         city: {
-                            id: "1"
+                            city: values.userCity,
+                            country: {
+                                country: values.userCountry
+                            }
                         }
                     }
                 }).then(

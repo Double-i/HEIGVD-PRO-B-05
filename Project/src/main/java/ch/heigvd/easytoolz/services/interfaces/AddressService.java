@@ -10,8 +10,9 @@ public interface AddressService {
      *
      * @param address the new address
      * @throws AddressFailedStoreException if the address isn't stored in the database
+     * @return the new address stored
      */
-    void storeAddress(Address address) throws AddressFailedStoreException;
+    Address storeAddress(Address address) throws AddressFailedStoreException;
 
     /**
      * Update the address

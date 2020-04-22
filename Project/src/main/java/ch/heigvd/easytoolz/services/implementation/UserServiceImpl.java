@@ -73,16 +73,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void storeUser(User user) throws UserAlreadyPresent, UserFailedStoreException {
+    public User storeUser(User user) throws UserAlreadyPresent, UserFailedStoreException {
         if (userRepository.findById(user.getUserName()).isPresent()) {
             throw new UserAlreadyPresent(user.getUserName());
         } else {
             addressService.storeAddress(user.getAddress());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
+            User storedUser = userRepository.save(user);
             if (userRepository.findById(user.getUserName()).isEmpty()) {
                 throw new UserFailedStoreException(user.getUserName());
             }
+            return storedUser;
         }
     }
 

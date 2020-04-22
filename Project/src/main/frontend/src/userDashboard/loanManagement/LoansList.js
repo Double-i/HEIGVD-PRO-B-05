@@ -47,7 +47,7 @@ function LoansList(props) {
                                     <Col xs="6" sm="6" md="6" lg="6">
                                         <span style={{fontSize: 'smaller'}}>
 
-                                            <FaUser/> {props.isOwner ? value.borrower.userName : value.ezobject.owner.userName}
+                                            <FaUser/> {props.isOwner ? value.borrower.userName : value.ezobject.ownerUserName}
                                             <hr/>
                                             <FaLocationArrow/> {props.isOwner ? "TODO LORSQUE ADRESSE est present" : "TODO LORSQUE ADRESSE est present "}
                                         </span>

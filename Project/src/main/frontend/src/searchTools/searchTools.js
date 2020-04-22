@@ -29,7 +29,6 @@ class SearchTools extends React.Component{
         sendEzApiRequest(this.SEARCH_URI)
             .then((response) =>{
                 this.setState({tools:response})
-                console.log(this.state.tools);
             })
 
 
@@ -51,7 +50,7 @@ class SearchTools extends React.Component{
 
         //Search by name
         if(this.state.search !== ''){
-            URL += '/filter?name=' + this.state.search;
+            URL += '/filter?names=' + this.state.search;
             if(this.state.searchTags.length !== 0)
                 URL += '&';
         }
@@ -67,7 +66,6 @@ class SearchTools extends React.Component{
             }
         }
 
-        console.log(URL);
         //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
         event.preventDefault();
         sendEzApiRequest(URL)
@@ -77,16 +75,12 @@ class SearchTools extends React.Component{
                         console.log('No tools founded')
                     } else {
                         console.log('items founded')
-                        console.log(result);
                         this.setState({tools : result});
                     }
                 },
                 error => {
                     console.log('Connection PAS ok', error)
                 })
-        //Adding search by tags
-
-        //
     }
 
     //Dynaminc update of searched tags fields
@@ -103,13 +97,14 @@ class SearchTools extends React.Component{
 
     render(){
         return (
-            <div className="container">
-
+            <div className="container" style={{
+                marginTop: '10px'
+            }}>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group controlId="formBasicEmail" >
                         <Form.Control
                             type="text"
-                            placeholder="Search"
+                            placeholder="Rechercher"
                             onChange={event => this.setState({search : event.target.value})}
                         />
                     </Form.Group>

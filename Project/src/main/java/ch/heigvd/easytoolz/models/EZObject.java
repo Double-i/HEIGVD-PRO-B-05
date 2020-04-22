@@ -15,6 +15,7 @@ import java.util.Set;
 @Where(clause = "is_active=1")
 public class EZObject {
 
+
     public int getID() {
         return ID;
     }

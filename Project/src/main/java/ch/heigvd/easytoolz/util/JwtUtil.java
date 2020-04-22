@@ -4,6 +4,7 @@ import ch.heigvd.easytoolz.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtil {
+    @Value("${ch.heigvd.easytools.jwtToken.duration}")
+    private String duration;
+
 
     // TODO : A DEPLACER DANS UN FICHIER DE CONFIG ET METTRE UNE CLEE PLUS FORTE
     private String SECRET_KEY = "secret";
@@ -44,9 +48,9 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-
+        System.out.println("FIN SESSION : "+new Date(System.currentTimeMillis() + 1000 * Integer.parseInt(duration)));
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * Integer.parseInt(duration)))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 

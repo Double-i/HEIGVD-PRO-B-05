@@ -171,8 +171,8 @@ function SignUpForm(props) {
                 initialValues={{
                     userName: 'bloup',
                     userEmail: 'vanlong@gmail.com',
-                    userPassword: '12345678',
-                    userPasswordRepeat: '12345678',
+                    userPassword: 'password',
+                    userPasswordRepeat: 'password',
                     userFirstname: 'Bastien',
                     userLastname: 'Potet',
                     userAddress: 'Somlaproz 48',

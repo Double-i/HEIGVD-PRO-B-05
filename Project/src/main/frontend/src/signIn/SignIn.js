@@ -27,29 +27,32 @@ function SignInForm(props) {
             password: password,
         }).then(
             result => {
-                if (result.status === 403) {
-                    console.log('Bad credential amigo')
-                    sethasWrongCredential(true)
-                } else {
-                    console.log('So far so good')
-
-                    //todo voir si à supprimer car pour l'instant inutile car le modal se ferme tout seul après connexion
-                    //setHasBeenLoggedIn(true)
-
-                    props.setLoggedUser({
-                        username: result.userName,
-                        admin: result.admin,
-                        lastname: result.lastName,
-                        firstname: result.firstName,
-                    })
-                
-                }
                 setIsLogging(false)
+
+                console.log('So far so good')
+                //todo voir si à supprimer car pour l'instant inutile car le modal se ferme tout seul après connexion
+                //setHasBeenLoggedIn(true)
+
+                props.setLoggedUser({
+                    username: result.userName,
+                    admin: result.admin,
+                    lastname: result.lastName,
+                    firstname: result.firstName,
+                })
+
+
             },
             error => {
-                console.log('Connection PAS ok', error)
-                setHasConnectionProblem(true)
                 setIsLogging(false)
+
+                if(error.errorCode === 403){
+                    console.log('Bad credential amigo')
+                    sethasWrongCredential(true)
+                }else{
+                    console.log('Connection PAS ok', error)
+                    setHasConnectionProblem(true)
+
+                }
             }
         )
     }

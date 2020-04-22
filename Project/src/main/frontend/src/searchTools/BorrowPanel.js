@@ -36,11 +36,16 @@ class BorrowPanel extends React.Component {
             toolId : this.props.tool.id
         }).then(
             (response) => {
-                if(response.status === 403 || response.status === 404 ) {
-                    alert("Erreur dans l'envoi de la requete : " + response.status);
-                }else{
-                    alert("Requete envoyée!" + response.status)
-                }
+                alert("Requete envoyée!" + response.status)
+
+            }, (error)=>{
+                alert("Erreur dans l'envoi de la requete : " + error.errorCode);
+
+                /*if(error.errorCode === 403 || error.errorCode === 404 ) {
+                    alert("Erreur dans l'envoi de la requete : " + error.errorCode);
+                } else{
+                    alert("Erreur dans l'envoi de la requete : " + error.errorCode);
+                }*/
             })
     }
     onChange(date){

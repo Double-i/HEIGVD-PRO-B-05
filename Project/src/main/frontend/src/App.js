@@ -71,6 +71,7 @@ function App() {
 
                             <Route exact path="/map">
                                 <Map />
+                            </Route>
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails />
                             </Route>

@@ -32,6 +32,7 @@ class MapContainer extends React.Component {
                 console.log(this.state.tools);
             }
         })
+        .catch(err => alert(err));
     }
 
     getMarkers()

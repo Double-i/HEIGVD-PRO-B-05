@@ -55,34 +55,22 @@ public class UserServiceImpl implements UserService {
         if (!authenticationService.isTheCurrentUserAdmin())
             throw new AccessDeniedNotAdminException();
 
-        List<Specification<User>> specifications = new LinkedList<>();
+        Specification<User> specs = UserSpecs.getAll();
 
         if (firstName != null) {
-            specifications.add(UserSpecs.getFirstname(firstName));
+            specs = specs.and(UserSpecs.getFirstname(firstName));
         }
 
         if(lastName != null) {
-            specifications.add(UserSpecs.getLastname(lastName));
+            specs = specs.and(UserSpecs.getLastname(lastName));
         }
 
         if(userName != null) {
-            specifications.add(UserSpecs.getUsername(userName));
+            specs = specs.and(UserSpecs.getUsername(userName));
         }
 
         if(email != null) {
-            specifications.add(UserSpecs.getEmail(email));
-        }
-
-        Specification<User> specs = null;
-
-        if(specifications.size() > 0){
-            for (Specification<User> specification : specifications) {
-                if (specs == null) {
-                    specs = specification;
-                } else {
-                    specs.and(specification);
-                }
-            }
+            specs = specs.and(UserSpecs.getEmail(email));
         }
 
         return userRepository.findAll(specs);

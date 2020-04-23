@@ -7,7 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.function.Predicate;
 
-public class UserSpecs {
+public class UserSpecs extends DefaultSpecs{
     public static Specification<User> getFirstname(String firstname){
         return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(root.get(User_.FIRST_NAME), ServiceUtils.transformLike(firstname));
     }

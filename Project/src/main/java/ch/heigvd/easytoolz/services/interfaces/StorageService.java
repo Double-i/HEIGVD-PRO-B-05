@@ -1,6 +1,6 @@
 package ch.heigvd.easytoolz.services.interfaces;
 
-import ch.heigvd.easytoolz.FileStorageProperties;
+import ch.heigvd.easytoolz.config.FileStorageProperties;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.EZObjectImage;
 import org.springframework.core.io.Resource;

@@ -3,12 +3,14 @@ package ch.heigvd.easytoolz.services.implementation;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
+import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.util.ServiceUtils;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,9 +27,17 @@ public class EZObjectServiceImpl implements EZObjectService {
     @Autowired
     EZObjectRepository ezObjectRepository;
 
+    @Autowired
+    EzObjectImageRepository imagesRepository;
+
+    @Autowired
+    StorageService storageService;
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    AuthenticationService authenticationService;
 
     @PersistenceContext
     EntityManager entityManager;
@@ -44,9 +54,11 @@ public class EZObjectServiceImpl implements EZObjectService {
         Root<EZObject> root = query.from(EZObject.class);
 
         List<Predicate> predicates = new LinkedList<>();
+        List<Predicate> tagPredicates = new LinkedList<>();
 
         Predicate finalQuery;
-
+        Predicate queries;
+        Predicate tagQuery;
         if(namesList != null) {
             for(String s : namesList) {
                 predicates.add(criteriaBuilder.like(root.get(EZObject_.NAME), ServiceUtils.transformLike(s)));
@@ -67,12 +79,15 @@ public class EZObjectServiceImpl implements EZObjectService {
         Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS,JoinType.INNER);
         if(tagList != null && tagList.size() > 0) {
             for(Tag t : tagList) {
-                predicates.add(criteriaBuilder.equal(objectJoin.get(Tag_.NAME).as(String.class),t.getName()));
+                predicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
             }
         }
 
 
-        finalQuery = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        queries = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        tagQuery = criteriaBuilder.or(tagPredicates.toArray(new Predicate[0]));
+
+        finalQuery = criteriaBuilder.and(queries,tagQuery);
         query.where(finalQuery).distinct(true);
 
         objects = entityManager.createQuery(query).getResultList();
@@ -103,11 +118,25 @@ public class EZObjectServiceImpl implements EZObjectService {
         return res;
     }
 
-    public void addObject(EZObject newObject) {
-        User owner = userService.getUser(newObject.getOwnerUserName());
+    public void addObject(EZObject newObject, List<MultipartFile> files) throws Exception {
+
+        User owner = authenticationService.getTheDetailsOfCurrentUser();
+
         newObject.setOwner(owner);
+        List<EZObjectImage>images = new ArrayList<>();
 
         ezObjectRepository.save(newObject);
+
+        for(int i = 0; i < files.size(); i++)
+        {
+            EZObjectImage  img_path = new EZObjectImage();
+            img_path.setObject(newObject);
+
+            storageService.store(files.get(i),newObject, img_path);
+            images.add(img_path);
+            imagesRepository.save(img_path);
+        }
+
     }
 
 

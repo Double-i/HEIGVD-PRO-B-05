@@ -2,6 +2,8 @@ import {RequestError} from "./Errors";
 
 const EZT_API = 'http://127.0.0.1:8080/api'
 
+
+
 /**
  * Send a request to EzTools API
  *
@@ -45,6 +47,31 @@ export function sendRequest(url, verb = 'GET', data = {}) {
             throw new RequestError("Request error", response.status, response)
         }
     })
+}
+/**
+ * Send a request to EzTools API
+ *
+ * @param {String} endpoint of the Easytool api
+ * @param {String} verb HTTP verb
+ * @param {FormData} data data of the request
+ * @param {Object} params used for GET request
+ */
+export function sendForm(
+    endpoint,
+    verb='POST',
+    data,
+    params ={}
+)
+{
+    const requestInfo = {
+        method: verb,
+        credentials: 'include',
+        mode: 'cors',
+        body : data
+    }
+    const url = prepareUrl(EZT_API.concat(endpoint), verb, params)
+
+    return fetch(url, requestInfo).then(res => res.json())
 }
 /**
  * Prepare URL with parameter if GET params given

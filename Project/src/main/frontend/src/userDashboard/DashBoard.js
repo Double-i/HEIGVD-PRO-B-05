@@ -14,7 +14,7 @@ class DashBoard extends React.Component {
                             <Card.Text>
                                 Ajouter, supprimer ou modifier un de vos outils
                             </Card.Text>
-                            <Link to="/dashboard/<TOOL>"><Button variant="primary">Consulter</Button></Link>
+                            <Link to="/dashboard/addTool"><Button variant="primary">Consulter</Button></Link>
                         </Card.Body>
                     </Card>
                     <Card style={{width: '18rem'}}>

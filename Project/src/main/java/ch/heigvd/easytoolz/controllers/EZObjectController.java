@@ -55,7 +55,7 @@ public class EZObjectController {
     
     ObjectMapper mapper = new ObjectMapper();
 
-    @PostMapping(name="/add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value="/add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> add(@RequestParam(name="object") String newObject,
                                       @RequestParam(name="image")List<MultipartFile> files) throws Exception {
 

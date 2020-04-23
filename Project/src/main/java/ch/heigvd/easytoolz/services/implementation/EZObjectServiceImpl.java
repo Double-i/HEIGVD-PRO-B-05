@@ -1,16 +1,14 @@
 package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
-import ch.heigvd.easytoolz.models.EZObject;
-import ch.heigvd.easytoolz.models.EZObjectImage;
-import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.repositories.EzObjectImageRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
+import ch.heigvd.easytoolz.util.ServiceUtils;
 import ch.heigvd.easytoolz.views.EZObjectView;
-import ch.heigvd.easytoolz.models.Tag;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,25 +63,25 @@ public class EZObjectServiceImpl implements EZObjectService {
         Predicate tagQuery;
         if(namesList != null) {
             for(String s : namesList) {
-                predicates.add(criteriaBuilder.like(root.get("name"),"%"+s+"%"));
+                predicates.add(criteriaBuilder.like(root.get(EZObject_.NAME), ServiceUtils.transformLike(s)));
             }
         }
 
         if(ownersList !=null) {
             for(String s : ownersList) {
-                predicates.add(criteriaBuilder.equal(root.get("owner").get("userName"),s));
+                predicates.add(criteriaBuilder.equal(root.get(EZObject_.OWNER).get("userName"),s));
             }
 
         }
         if(descriptionList != null) {
             for(String s : descriptionList) {
-                predicates.add(criteriaBuilder.like(root.get("description"),"%"+s+"%"));
+                predicates.add(criteriaBuilder.like(root.get(EZObject_.DESCRIPTION),ServiceUtils.transformLike(s)));
             }
         }
-        Join<Tag,EZObject> objectJoin = root.join("objectTags",JoinType.INNER);
+        Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS,JoinType.INNER);
         if(tagList != null && tagList.size() > 0) {
             for(Tag t : tagList) {
-                tagPredicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
+                predicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
             }
         }
 

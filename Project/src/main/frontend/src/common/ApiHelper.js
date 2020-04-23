@@ -1,3 +1,5 @@
+import {RequestError} from "./Errors";
+
 const EZT_API = 'http://127.0.0.1:8080/api'
 
 
@@ -38,7 +40,13 @@ export function sendRequest(url, verb = 'GET', data = {}) {
     if (verb !== 'GET' && verb !== 'HEAD') {
         requestInfo.body = JSON.stringify(data) // body data type must match "Content-Type" header
     }
-    return fetch(url, requestInfo).then(res => res.json())
+    return fetch(url, requestInfo).then(response => {
+        if(response.status >= 200 && response.status <= 299){
+            return response.json()
+        }else{
+            throw new RequestError("Request error", response.status, response)
+        }
+    })
 }
 /**
  * Send a request to EzTools API

@@ -9,6 +9,9 @@ import {
 import * as moment from 'moment'
 import {transformState} from "../../common/State";
 
+function formatAdress(address){
+    return `${address.address} ${address.city.city} (${address.district} - ${address.city.country.country})`
+}
 
 function LoansList(props) {
     return (
@@ -33,7 +36,7 @@ function LoansList(props) {
                                 <h3>{value.ezobject.name}</h3>
                             </Col>
 
-                            <Col xs="12" sm="12" md="9" lg="8">
+                            <Col xs="12" sm="12" md="9" lg="8" xl="8">
                                 <Row>
                                     <Col
                                         className="d-none d-md-block"
@@ -41,18 +44,19 @@ function LoansList(props) {
                                         sm="12"
                                         md="12"
                                         lg="12"
+                                        xl="12"
                                     >
                                         <h4>{value.ezobject.name}</h4>
                                     </Col>
-                                    <Col xs="6" sm="6" md="6" lg="6">
+                                    <Col xs="6" sm="6" md="6" lg="6" xl="6">
                                         <span style={{fontSize: 'smaller'}}>
 
                                             <FaUser/> {props.isOwner ? value.borrower.userName : value.ezobject.ownerUserName}
                                             <hr/>
-                                            <FaLocationArrow/> {props.isOwner ? "TODO LORSQUE ADRESSE est present" : "TODO LORSQUE ADRESSE est present "}
+                                            <FaLocationArrow/> {props.isOwner ? "TODO" : formatAdress(value.borrower.address) }
                                         </span>
                                     </Col>
-                                    <Col xs="6" sm="6" md="6" lg="6">
+                                    <Col xs="6" sm="6" md="6" lg="6" xl="6">
                                         <span>
                                             {transformState(value.state)}
                                             <hr/>
@@ -61,11 +65,11 @@ function LoansList(props) {
                                     </Col>
                                 </Row>
                             </Col>
-
-                            <Col xs="12" sm="12" md="12" lg="2">
+                            <Col xs="12" sm="12" md="12" lg="2" xl="2">
                                 <span><br/></span>
                                 {props.actionButtons.map((button, key) => (
                                     <Button
+                                        key={"ctrl-"+key}
                                         variant="outline-primary"
                                         block
                                         onClick={() => {

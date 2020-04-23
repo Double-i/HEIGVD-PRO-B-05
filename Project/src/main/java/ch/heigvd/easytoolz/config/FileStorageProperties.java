@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz;
+package ch.heigvd.easytoolz.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

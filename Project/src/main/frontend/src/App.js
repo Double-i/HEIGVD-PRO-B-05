@@ -47,9 +47,8 @@ function App() {
                 <div className="row">
                     <Container>
                         <Switch>
-                            <Route exact path="/home">
+                            <Route exact path="/(home|accueil|)/">
                                 <Home/>
-
                             </Route>
                             <Route exact path="/dashboard">
                                 {user.session.isUserLogin() ? (

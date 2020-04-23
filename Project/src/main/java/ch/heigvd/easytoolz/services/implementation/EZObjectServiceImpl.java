@@ -2,6 +2,8 @@ package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.*;
+import ch.heigvd.easytoolz.repositories.EzObjectImageRepository;
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;

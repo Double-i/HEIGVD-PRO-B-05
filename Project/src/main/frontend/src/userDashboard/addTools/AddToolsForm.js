@@ -4,6 +4,7 @@ import { Formik } from 'formik'
 import { Alert, Button, Form } from 'react-bootstrap'
 import {sendRequest, sendEzApiRequest, sendEZAPIForm, sendForm} from '../../common/ApiHelper'
 import { schema } from 'json-schema-traverse'
+import Redirect from "react-router-dom/es/Redirect";
 
 class AddToolsForm extends React.Component {
 
@@ -67,6 +68,12 @@ class AddToolsForm extends React.Component {
                 console.log("errors  :")
                 console.log(errors)
             }
+        ).then(
+            alert("Outil ajouté!")
+        ).then(
+            //this.props.history.push("DashBoard")
+            //return <Redirect to={'DashBoard'} />
+
         )
     }
 
@@ -135,8 +142,6 @@ class AddToolsForm extends React.Component {
                             {/* https://react-bootstrap.netlify.com/components/forms/#forms-validation-libraries */}
 
                             <Form.Group controlId="formToolName">
-                                {JSON.stringify(values)}
-                                {JSON.stringify(tags)}
                                 <Form.Control
                                     name="toolName"
                                     type="text"

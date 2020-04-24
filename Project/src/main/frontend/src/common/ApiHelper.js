@@ -44,7 +44,8 @@ export function sendRequest(url, verb = 'GET', data = {}) {
         if(response.status >= 200 && response.status <= 299){
             return response.json()
         }else{
-            throw new RequestError("Request error", response.status, response)
+            console.log("Error" + response)
+            //throw new RequestError("Request error", response.status, response)
         }
     })
 }

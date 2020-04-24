@@ -1,6 +1,7 @@
 import Button from "react-bootstrap/Button";
 import * as React from "react";
 import BorrowPanel from "./BorrowPanel";
+import EditToolPanel from "../userDashboard/editTools/EditToolPanel";
 
 
 class DisplayTool extends React.Component {
@@ -12,13 +13,17 @@ class DisplayTool extends React.Component {
         super(props);
         this.state = {
             isBorrowable : true,
-            modalShow : false
+            borrowModalShow : false,
+            editModalShow : false
         }
     }
 
-    setModalShow(value){
-        this.setState({modalShow : value});
-        console.log("modalShow = " + this.state.modalShow)
+    setBorrowModalShow(value){
+        this.setState({borrowModalShow : value});
+    }
+
+    setEditModalShow(value){
+        this.setState({editModalShow: value})
     }
 
     render() {
@@ -30,7 +35,7 @@ class DisplayTool extends React.Component {
                 <div className="col-4">
                     <div>{this.props.description}</div>
                 </div>
-                <div className="col-2">
+                <div className="col-2" hidden={this.props.hideOwner}>
                     <div>{this.props.ownerUserName}</div>
                 </div>
                 <div className="col-2" style={{marginBottom: '10px'}}>
@@ -42,23 +47,42 @@ class DisplayTool extends React.Component {
                         }
                     </div>
                 </div>
-                <div className="col-2" key={"DivButtonId" + this.props.id}>
+                <div className="col-2" key={"DivButtonId" + this.props.id} hidden={this.props.hideBorrowButton}>
                     <Button
                         disabled = {false} //TODO : avoir une props de l'item isBorrowable !
                         key={"buttonId" + this.props.id}
                         style={{
                             marginBottom: '10px'
                         }}
-                        onClick = {() => this.setModalShow(true)}
+                        onClick = {() => this.setBorrowModalShow(true)}
                     >
                         Emprunter
                     </Button>
                     <BorrowPanel
-                        show={this.state.modalShow}
-                        onHide={() => this.setModalShow(false)}
+                        show={this.state.borrowModalShow}
+                        onHide={() => this.setBorrowModalShow(false)}
                         tool = {this.props}
                     />
                 </div>
+
+                <div className="col-2" key={"DivEditButtonId" + this.props.id} hidden={this.props.hideEditButton}>
+                    <Button
+                        key={"editButtonId" + this.props.id}
+                        style={{
+                            marginBottom: '10px'
+                        }}
+                        onClick = {() => this.setEditModalShow(true)}
+                    >
+                        Editer l'outil
+                    </Button>
+
+                    <EditToolPanel
+                        show={this.state.editModalShow}
+                        onHide={() => this.setEditModalShow(false)}
+                        tool = {this.props}
+                    />
+                </div>
+
             </div>
         )
     }

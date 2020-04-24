@@ -23,7 +23,7 @@ class DisplayTools extends React.Component {
                         <div className="col-4">
                             <div>Description</div>
                         </div>
-                        <div className="col-2">
+                        <div className="col-2" hidden={this.props.hideOwner}>
                             <div>Prêteur</div>
                         </div>
                         <div className="col-2">
@@ -38,6 +38,9 @@ class DisplayTools extends React.Component {
                             description={item.description}
                             ownerUserName={item.ownerUserName}
                             objectTags={item.objectTags}
+                            hideOwner={this.props.hideOwner}
+                            hideBorrowButton={this.props.hideBorrowButton}
+                            hideEditButton={this.props.hideEditButton}
                         >
                         </DisplayTool>
                     ))}

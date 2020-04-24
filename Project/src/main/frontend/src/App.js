@@ -16,6 +16,7 @@ import SignIn from './signIn/SignIn'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
+import ToolsList from "./userDashboard/toolsList/ToolsList";
 
 import {SessionContext, SessionHelper} from './common/SessionHelper'
 
@@ -79,6 +80,14 @@ function App() {
                             <Route exacte path="/dashboard/addTool">
                                 {user.session.isUserLogin() ? (
                                     <AddToolsForm/>
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
+
+                            </Route>
+                            <Route exacte path="/dashboard/toolList">
+                                {user.session.isUserLogin() ? (
+                                    <ToolsList/>
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}

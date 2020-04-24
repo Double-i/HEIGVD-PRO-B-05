@@ -136,6 +136,9 @@ class SearchTools extends React.Component{
 
                 <DisplayTools
                     data = {this.state.tools}
+                    hideOwner={false}
+                    hideBorrowButton={false}
+                    hideEditButton={true}
                 />
             </div>
         )

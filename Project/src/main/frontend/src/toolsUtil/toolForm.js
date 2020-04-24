@@ -1,28 +1,89 @@
-import * as React from 'react'
-import * as yup from 'yup'
-import { Formik } from 'formik'
-import { Alert, Button, Form } from 'react-bootstrap'
-import {sendRequest, sendEzApiRequest, sendEZAPIForm, sendForm} from '../../common/ApiHelper'
-import { schema } from 'json-schema-traverse'
-import Redirect from "react-router-dom/es/Redirect";
+import * as React from "react";
+import {Formik} from "formik";
+import {Button, Form} from "react-bootstrap";
+import {sendEzApiRequest, sendForm} from "../common/ApiHelper";
+import * as yup from "yup";
 
-class AddToolsForm extends React.Component {
 
-    addToolAPIEndpoint = '/objects/add';
+class ToolForm extends React.Component {
+
     TAGS_URI = '/tags';
 
-    SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
-    FILE_SIZE = 1000000;
-
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state = {
-            tags : []
-        };
-        this.attemptAddTool = this.attemptAddTool.bind(this);
+
+        if(this.props.action === 'add'){
+            this.state = {
+                toolId: '',
+                toolName: '',
+                toolDescription: '',
+                toolTags: '',
+                toolImage: '',
+                tags: [],
+                ApiRequest : '/objects/add'
+            };
+        }else if(this.props.action === 'update'){
+            this.state = {
+                toolId: this.props.tool.id,
+                toolName: this.props.tool.name,
+                toolDescription: this.props.tool.description,
+                toolTags: this.props.tool.objectTags,
+                toolImage: this.props.tool.toolImage,
+                tags: [],
+                ApiRequest : '/objects/update'
+            };
+        }
+        this.sendToolForm = this.sendToolForm.bind(this);
+    }
+
+    sendToolForm(values){
+        const tags = [];
+
+        //Change the input format of the values -> we want [ { name : "name" } , { name : "name" }, ... ]
+        for (let i = 0; i < values.toolTags.length ; i++) {
+            tags.push({ "name" : values.toolTags[i]})
+        }
+
+        let data = {
+            name: values.toolName,
+            description: values.toolDescription,
+            objectTags : tags,
+            id : this.state.toolId
+        }
+
+
+        const formData = new FormData();
+        formData.append('object', JSON.stringify(data));
+        formData.append('image', values.toolImage);
+
+        for (let p of formData.entries()){
+            console.log(p)
+        }
+        // A voir en fonction de notre API
+        sendForm(this.state.ApiRequest, 'POST', formData
+        ).then(
+            (result) => {
+                console.log("result  :")
+                console.log(result)
+            },
+            (errors) => {
+                console.log("errors  :")
+                console.log(errors)
+            }
+        ).then(
+            alert("Opération réussie!")
+        ).then(
+            //this.props.history.push("DashBoard")
+            //return <Redirect to={'DashBoard'} />
+        )
     }
 
     componentDidMount() {
+
+        console.log("mounted !")
+        console.log(this.props.tool)
+        console.log(this.state)
+
         sendEzApiRequest(this.TAGS_URI)
             .then( (response) => {
                 //Get tags from db
@@ -34,52 +95,6 @@ class AddToolsForm extends React.Component {
             })
     }
 
-    attemptAddTool = (values) => {
-
-        const tags = [];
-
-        //Change the input format of the values -> we want [ { name : "name" } , { name : "name" }, ... ]
-        for (let i = 0; i < values.toolTags.length ; i++) {
-            tags.push({ "name" : values.toolTags[i]})
-        }
-
-        const data = {
-            name: values.toolName,
-            description: values.toolDescription,
-            objectTags : tags
-        }
-
-        const formData = new FormData();
-        formData.append('object', JSON.stringify(data));
-        formData.append('image', values.toolImage);
-
-        console.log(data)
-        for (let p of formData.entries()){
-            console.log(p)
-        }
-        // A voir en fonction de notre API
-        sendForm(this.addToolAPIEndpoint, 'POST', formData
-        ).then(
-            (result) => {
-                console.log("result  :")
-                console.log(result)
-            },
-            (errors) => {
-                console.log("errors  :")
-                console.log(errors)
-            }
-        ).then(
-            alert("Outil ajouté!")
-        ).then(
-            //this.props.history.push("DashBoard")
-            //return <Redirect to={'DashBoard'} />
-
-        )
-    }
-
-    //TODO  Ilias : < !!! > ATTENTION, en JS le ``this`` est OBLIGATOIRE. Ex:  validationSchema={schema} utilise une variable schema qui est probablement undefined meme si this.schema est défini
-
-    // validation rules
     schema = yup.object().shape({
         toolName: yup
             .string()
@@ -89,39 +104,22 @@ class AddToolsForm extends React.Component {
         toolDescription: yup.string().min(0).max(200),
         toolTags: yup.array().of(yup.string())
             .min(1, 'Minimum 1 catégorie!'),
-        /*toolImage: yup
-            .mixed()
-            //TODO : Les tests ne marche pas, peut être doit on faire un autre schema pour que les files ?
-            //Maurice : Les tests marchent, mais le message ne s'affiche pas
-            //Pb asynchrone de Formik ? https://github.com/testing-library/react-testing-library/issues/224
-            .test(
-                'fileSize',
-                'Fichier trop grand!',
-                (value) =>
-                    typeof value !== 'undefined' && value.size <= this.FILE_SIZE
-            )
-            .test(
-                'fileType',
-                'Extension invalide!',
-                (value) =>
-                    typeof value !== 'undefined' &&
-                    this.SUPPORTED_FORMATS.includes(value.type)
-            ),*/
     })
+
     render() {
-        return (
+        return(
             <>
-                <h1>Ajouter un outil</h1>
+                <h1>{this.props.formTitle}</h1>
                 <Formik
                     validationSchema={this.schema}
                     onSubmit={(values, { setSubmitting }) => {
-                        this.attemptAddTool(values)
+                        this.sendToolForm(values);
                     }}
                     initialValues={{
-                        toolName: '',
-                        toolDescription: '',
-                        toolImage: '',
-                        toolTags: [],
+                        toolName: this.state.toolName,
+                        toolDescription: this.state.toolDescription,
+                        toolImage: this.state.toolImage,
+                        toolTags: this.state.toolTags,
                     }}
                 >
                     {({
@@ -241,4 +239,4 @@ class AddToolsForm extends React.Component {
     }
 }
 
-export default AddToolsForm
+export default ToolForm;

@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import * as React from "react";
-import BorrowPanel from "./BorrowPanel";
+import BorrowPanel from "../searchTools/BorrowPanel";
 import EditToolPanel from "../userDashboard/editTools/EditToolPanel";
 
 

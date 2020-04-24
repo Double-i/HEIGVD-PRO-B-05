@@ -1,4 +1,4 @@
-import DisplayTools from "./displayTools";
+import DisplayTools from "../toolsUtil/displayTools";
 import React, {useState} from "react";
 import {sendEzApiRequest} from "../common/ApiHelper";
 import Form from "react-bootstrap/Form";

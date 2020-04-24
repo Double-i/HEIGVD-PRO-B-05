@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import {Button, Card} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import {sendEzApiRequest} from "../../common/ApiHelper";
-import DisplayTools from "../../searchTools/displayTools";
+import DisplayTools from "../../toolsUtil/displayTools";
 
 
 class ToolsList extends React.Component {

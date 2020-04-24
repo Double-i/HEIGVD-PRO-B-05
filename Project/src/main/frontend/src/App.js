@@ -15,10 +15,10 @@ import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
-import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
 import ToolsList from "./userDashboard/toolsList/ToolsList";
 
 import {SessionContext, SessionHelper} from './common/SessionHelper'
+import ToolForm from "./toolsUtil/toolForm";
 
 function App() {
     const userStorage = localStorage.getItem('user')
@@ -79,7 +79,11 @@ function App() {
                             </Route>
                             <Route exacte path="/dashboard/addTool">
                                 {user.session.isUserLogin() ? (
-                                    <AddToolsForm/>
+                                    <ToolForm
+                                        tool = {null}
+                                        formTitle={"Ajouter"}
+                                        action={"add"}
+                                    />
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}

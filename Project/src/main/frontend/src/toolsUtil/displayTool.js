@@ -16,6 +16,7 @@ class DisplayTool extends React.Component {
             borrowModalShow : false,
             editModalShow : false
         }
+        console.log(this.props.ownerUserName)
     }
 
     setBorrowModalShow(value){

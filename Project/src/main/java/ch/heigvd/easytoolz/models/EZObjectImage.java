@@ -15,7 +15,7 @@ public class EZObjectImage {
         this.pathToImage = pathtoimg;
     }
 
-    public void setObject(EZObject obj){object_image = obj;}
+    public void setObject(EZObject obj){ezObject = obj;}
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
@@ -23,7 +23,7 @@ public class EZObjectImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_ezobject", referencedColumnName = "id")
-    private EZObject object_image;
+    private EZObject ezObject;
 
     public EZObjectImage() {
     }

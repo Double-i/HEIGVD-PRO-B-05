@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,9 @@ public class EZObjectController {
 
     @Autowired
     EZObjectService ezObjectService;
+
+
+
 
     @GetMapping
     public List<EZObjectView> index()
@@ -121,6 +126,13 @@ public class EZObjectController {
     {
 
         return ezObjectService.getFiltered(names,owners,description,tags);
+    }
+
+    @GetMapping("/images/{id}")
+    @ResponseBody
+    public List<EZObjectImage> getObjecImagePath(@PathVariable int id)
+    {
+        return ezObjectService.getObjectImages(id);
     }
 
 }

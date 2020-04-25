@@ -166,6 +166,10 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     }
 
+    public List<EZObjectImage> getObjectImages(int id)
+    {
+        return imagesRepository.findByEzObject_ID(id);
+    }
 
     public List<EZObjectView> getObjectByName(String objectName) {
         return ezObjectRepository.getAllByNameContaining(objectName);

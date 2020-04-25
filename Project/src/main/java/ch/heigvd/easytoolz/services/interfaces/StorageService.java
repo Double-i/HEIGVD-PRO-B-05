@@ -17,7 +17,7 @@ public interface StorageService {
 
     Stream<Path> loadAll();
     Path load(String fileName);
-    Resource loadAsRessource(String filename);
+    Resource loadAsRessource(String filename) throws Exception;
 
     void store(MultipartFile file, EZObject ezObject, EZObjectImage img) throws Exception;
     void loadMultiple(List<MultipartFile> files);

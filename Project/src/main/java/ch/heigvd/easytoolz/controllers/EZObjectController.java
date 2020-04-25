@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +39,7 @@ public class EZObjectController {
 
 
 
+    @Secured("ROLE_TEST")
     @GetMapping
     public List<EZObjectView> index()
     {
@@ -84,7 +86,6 @@ public class EZObjectController {
         ezObjectService.deleteObject(id);
         return new ResponseEntity<>("Object has been deleted",HttpStatus.OK);
     }
-
 
     @GetMapping("find/name/{objectName}")
     @ResponseBody

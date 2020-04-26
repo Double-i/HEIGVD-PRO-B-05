@@ -97,20 +97,21 @@ public class UserServiceImpl implements UserService {
             if (!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
                 throw new AccessDeniedNotAdminException();
         }
+        System.out.println(newUser);
 
         return userRepository.findById(username)
-                .map(oldUser -> {
-                    if (newUser.getFirstName() != null) oldUser.setFirstName(newUser.getFirstName());
-                    if (newUser.getLastName() != null) oldUser.setLastName(newUser.getLastName());
-                    if (oldUser.isAdmin() != newUser.isAdmin()) oldUser.setAdmin(newUser.isAdmin());
-                    if (newUser.getEmail() != null) oldUser.setEmail(newUser.getEmail());
-                    if (newUser.getAddress() != null)
-                        addressService.updateAddress(newUser.getAddress(), newUser.getAddress().getId());
-                    return userRepository.save(oldUser);
-                })
-                .orElseThrow(
-                        () -> new UserNotFoundException(username)
-                );
+            .map(oldUser -> {
+                if (newUser.getFirstName() != null) oldUser.setFirstName(newUser.getFirstName());
+                if (newUser.getLastName() != null) oldUser.setLastName(newUser.getLastName());
+                if (oldUser.isAdmin() != newUser.isAdmin()) oldUser.setAdmin(newUser.isAdmin());
+                if (newUser.getEmail() != null) oldUser.setEmail(newUser.getEmail());
+                if (newUser.getAddress() != null)
+                    addressService.updateAddress(newUser.getAddress(), oldUser.getAddress().getId());
+                return userRepository.save(oldUser);
+            })
+            .orElseThrow(
+                    () -> new UserNotFoundException(username)
+            );
     }
 
     @Override

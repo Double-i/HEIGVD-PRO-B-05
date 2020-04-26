@@ -37,14 +37,17 @@ public class AddressServiceImpl implements AddressService {
         if (address == null)
             throw new IllegalArgumentException("parameter address : address is null");
 
+        System.out.println("new adress :"+address);
+        System.out.println("old id :"+id);
+
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
-        if (optionalAddress.isPresent())
+        if (!optionalAddress.isPresent())
             throw new AddressNotFoundException(id);
 
         Address oldAddress = optionalAddress.get();
 
-        if (address.getCity() != null) oldAddress.setCity(address.getCity());
+        //if (address.getCity() != null) oldAddress.setCity(address.getCity());
         if (!address.getDistrict().isEmpty()) oldAddress.setDistrict(address.getDistrict());
         if (address.getLat() != null) oldAddress.setLat(address.getLat());
         if (address.getLng() != null) oldAddress.setLng(address.getLng());

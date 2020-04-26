@@ -48,6 +48,12 @@ export class SessionHelper {
         return this.userSession.lastname
     }
     /**
+     * Return the email of the user stored in userSession Object
+     */
+    getUserEmail = () => {
+        return this.userSession.email
+    }
+    /**
      * Log the user out by calling the react dispatcher and by removing the session storage cookie
      */
     logout = () => {
@@ -58,8 +64,18 @@ export class SessionHelper {
      * Log the user in by calling the react dispatcher and by adding a session storage cookie ( for persistence after refresh) 
      */
     login = user => {
+        console.log("login",user)
         this.setUserSession(user)
         localStorage.setItem('user', JSON.stringify(user))
+    }
+    update = info => {
+        this.setUserSession({
+            username: info.userName,
+            firstname: info.firstName,
+            lastname: info.lastName,
+            isadmin: info.isAdmin
+        })
+
     }
 }
 export const SessionContext = React.createContext({user:{}})

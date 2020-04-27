@@ -1,6 +1,8 @@
 import React from "react"
 import Message from "./Message";
 import Button from "react-bootstrap/Button";
+const SockJS = require("sockjs-client")
+const Stomp = require( "@stomp/stompjs")
 class Conversation extends React.Component
 {
 
@@ -43,12 +45,42 @@ class Conversation extends React.Component
                 right:0,
                 bottom:0
             }
-
+        this.socket = null;
+        this.client = null;
         this.sendMessage = this.sendMessage.bind(this)
     }
+
+    componentWillUnmount() {
+        if(this.client !== null)
+        {
+            this.client.disconnect();
+            console.log("disconnected");
+        }
+    }
+
     componentWillReceiveProps(nextProps, nextContext) {
 
+         this.socket = new SockJS("http://localhost:8080/chat");
+         this.client = Stomp.Stomp.over(this.socket);
 
+
+         //disconect before
+        if(this.client !== null)
+        {
+            this.client.disconnect();
+            console.log("disconnected");
+        }
+
+        this.client.connect({},(frame)=>{
+
+            console.log("connected " + frame)
+            this.client.subscribe('/topic/messages', (content) =>
+            {
+                console.log(content.body)
+                this.showMessageOutput(JSON.parse(content.body))
+            })
+
+        })
 
         console.log(nextProps)
         let messages = [];
@@ -70,6 +102,16 @@ class Conversation extends React.Component
 
     }
 
+    showMessageOutput(output)
+    {
+        let message = (
+            <li className="list-group-item text-right" style={this.senderStyle}> {output.sender}
+                <Message content={output.content} date={"sometime"}/>
+            </li>)
+
+
+        this.setState({messageList:[...this.state.messageList,message]})
+    }
     componentDidMount()
     {
         let messages = [];
@@ -94,15 +136,13 @@ class Conversation extends React.Component
     sendMessage(content_message)
     {
 
-
-        let message = (
-            <li className="list-group-item text-right" style={this.senderStyle}> {this.state.sender}
-                <Message content={content_message} date={"sometime"}/>
-            </li>)
-
-
-        this.setState({messageList:[...this.state.messageList,message]})
-
+        this.client.send("/app/chat",{},JSON.stringify(
+            {
+                content : content_message,
+                sender: this.state.sender,
+                recipient : this.state.recipient
+            }
+        ))
     }
     displayConversation()
     {

@@ -8,8 +8,8 @@ public class ChatMessage {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Messagetype type;
     private String content;
     private String sender;
     private String recipient;
@@ -20,23 +20,11 @@ public class ChatMessage {
     private Conversation fkConversation;
 
 
-    public enum Messagetype{
-        CHAT,
-        JOIN,
-        LEAVE
-    }
 
     public int getId() {
         return id;
     }
 
-    public Messagetype getType() {
-        return type;
-    }
-
-    public void setType(Messagetype type) {
-        this.type = type;
-    }
 
     public String getContent() {
         return content;

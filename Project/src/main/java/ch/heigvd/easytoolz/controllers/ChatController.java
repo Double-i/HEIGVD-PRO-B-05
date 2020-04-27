@@ -17,8 +17,8 @@ public class ChatController {
     @Autowired
     ChatRepository repository;
 
-    @MessageMapping("chat.sendMessage")
-    @SendTo("/topic/public")
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
     public ChatMessage sendMessage(@Payload ChatMessage message)
     {
         repository.save(message);
@@ -26,7 +26,7 @@ public class ChatController {
     }
 
     @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
+    @SendTo("/topic/messages")
     public ChatMessage addUser(@Payload ChatMessage message, SimpMessageHeaderAccessor header)
     {
         header.getSessionAttributes().put("username",message.getSender());

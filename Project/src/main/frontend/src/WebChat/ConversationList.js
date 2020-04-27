@@ -2,8 +2,7 @@
 import React from "react"
 import Conversation from "./Conversation";
 
-const SockJS = require("sockjs-client")
-const Stomp = require( "@stomp/stompjs")
+
 
 class ConversationList  extends React.Component
 {
@@ -36,39 +35,29 @@ class ConversationList  extends React.Component
             {
                 opened : false,
                 currentConversation:"",
-                stomClient : null
+                stomClient : null,
+                socket : null,
+                client : null
 
             };
-        this.socket = null;
-        this.client = null;
     }
 
     toggle()
     {
         let currentState = this.state.opened;
-
         this.setState({opened :!currentState})
-
-        console.log("open")
-
-
     }
 
     componentWillReceiveProps() {
 
 
     }
-
-    openConversation()
+    closeConversation()
     {
 
-        this.socket = new SockJS("http://localhost:8080/chat");
-
-        this.client = Stomp.Stomp.over(this.socket)
-
-        this.client.connect({},()=>{
-            console.log("connected")
-        })
+    }
+    openConversation()
+    {
         return (
             <div class = "container bg-secondary" style={this.style}>
                 <p class >My conversations</p>
@@ -116,20 +105,26 @@ class ConversationList  extends React.Component
     {
         return (
             <div>
-                <span style={this.openButtonStyle} onClick ={() => this.toggle()}>
+                <span style={this.openButtonStyle} onClick =
+                    {
+                        () => {
+                            this.toggle()
+                        }
+                    }>
                     <img src="https://img.icons8.com/carbon-copy/100/000000/chat.png"/>
                 </span>
                     {
                         this.state.opened ?
                             (
-                                <p>
+                                <div>
                                     {this.openConversation()}
-                                </p>
+                                </div>
                             )
                             :
                             (
-                                <>
-                                </>
+                                <div>
+                                    {this.closeConversation()}
+                                </div>
                             )
                     }
             </div>

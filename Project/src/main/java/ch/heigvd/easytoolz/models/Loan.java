@@ -77,6 +77,8 @@ public class Loan {
         this.periods = periods;
     }
 
+    public String getOwner(){return this.EZObject.getOwnerUserName();}
+
     @Id
     @Column(name="pkloan")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

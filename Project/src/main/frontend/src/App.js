@@ -101,7 +101,7 @@ function App() {
 
             </Router>
 
-            <ConversationList/>
+            <ConversationList currentConnected ={user}/>
         </SessionContext.Provider>
     )
 }

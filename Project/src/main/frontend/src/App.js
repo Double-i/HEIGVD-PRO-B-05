@@ -18,6 +18,7 @@ import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
 
 import {SessionContext, SessionHelper} from './common/SessionHelper'
+import ConversationList from "./WebChat/ConversationList";
 
 function App() {
     const userStorage = localStorage.getItem('user')
@@ -97,7 +98,10 @@ function App() {
                         </Switch>
                     </Container>
                 </div>
+
             </Router>
+
+            <ConversationList/>
         </SessionContext.Provider>
     )
 }

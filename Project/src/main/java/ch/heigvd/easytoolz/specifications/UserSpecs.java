@@ -1,6 +1,8 @@
 package ch.heigvd.easytoolz.specifications;
 
 import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.models.User_;
+
 import ch.heigvd.easytoolz.util.ServiceUtils;
 import org.springframework.data.jpa.domain.Specification;
 

@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -86,6 +87,12 @@ public class User {
     @ManyToOne(optional = false)
     @JoinColumn(name = "fk_address", referencedColumnName = "id")
     private Address address;
+
+    @OneToMany(mappedBy = "sender")
+    private List<Conversation> sender;
+
+    @OneToMany(mappedBy = "recipient")
+    private List<Conversation> recipient;
 
     // Required for creating JSON parsing
     public User() {

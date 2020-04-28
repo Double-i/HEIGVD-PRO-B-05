@@ -41,6 +41,7 @@ class DisplayTools extends React.Component {
                             hideOwner={this.props.hideOwner}
                             hideBorrowButton={this.props.hideBorrowButton}
                             hideEditButton={this.props.hideEditButton}
+                            hideDeleteButton={this.props.hideDeleteButton}
                         >
                         </DisplayTool>
                     ))}

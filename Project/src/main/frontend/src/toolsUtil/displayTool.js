@@ -2,12 +2,12 @@ import Button from "react-bootstrap/Button";
 import * as React from "react";
 import BorrowPanel from "../searchTools/BorrowPanel";
 import EditToolPanel from "../userDashboard/editTools/EditToolPanel";
+import {sendEzApiRequest} from "../common/ApiHelper";
 
 
 class DisplayTool extends React.Component {
 
-    modalShow;
-    setModalShow;
+    DELETE_ITEM_URI = '/objects/delete/'
 
     constructor(props){
         super(props);
@@ -16,7 +16,6 @@ class DisplayTool extends React.Component {
             borrowModalShow : false,
             editModalShow : false
         }
-        console.log(this.props.ownerUserName)
     }
 
     setBorrowModalShow(value){
@@ -25,6 +24,15 @@ class DisplayTool extends React.Component {
 
     setEditModalShow(value){
         this.setState({editModalShow: value})
+    }
+
+    deleteItem(){
+        if (window.confirm('Etes-vous sur de vouloir effacer cet outil ?')){
+            sendEzApiRequest(this.DELETE_ITEM_URI + this.props.id, "DELETE")
+                .then((response) =>{
+                    console.log(response)
+                })
+        }
     }
 
     render() {
@@ -82,6 +90,19 @@ class DisplayTool extends React.Component {
                         onHide={() => this.setEditModalShow(false)}
                         tool = {this.props}
                     />
+                </div>
+
+                <div className="col-2" key={"DivDeleteButtonId" + this.props.id} hidden={this.props.hideDeleteButton}>
+                    <Button
+                        variant="danger"
+                        key={"editButtonId" + this.props.id}
+                        style={{
+                            marginBottom: '10px',
+                        }}
+                        onClick = {() => this.deleteItem()}
+                    >
+                        Supprimer l'outil
+                    </Button>
                 </div>
 
             </div>

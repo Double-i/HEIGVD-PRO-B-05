@@ -29,6 +29,8 @@ class SearchTools extends React.Component{
         sendEzApiRequest(this.SEARCH_URI)
             .then((response) =>{
                 this.setState({tools:response})
+            }, error => {
+                console.log(error)
             })
 
 
@@ -40,6 +42,8 @@ class SearchTools extends React.Component{
                     }else{
                         this.setState({tags: response.map((value) => value.name)})
                     }
+                }, error => {
+                    console.log(error)
                 })
     }
 

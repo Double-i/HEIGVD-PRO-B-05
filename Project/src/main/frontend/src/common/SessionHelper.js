@@ -69,13 +69,13 @@ export class SessionHelper {
         localStorage.setItem('user', JSON.stringify(user))
     }
     update = info => {
-        this.setUserSession({
-            username: info.userName,
-            firstname: info.firstName,
-            lastname: info.lastName,
-            isadmin: info.isAdmin
-        })
+        const newUserInfo = {...this.userSession}
 
+        if(info.userFirstname !== 'undefined') newUserInfo.firstname =  info.userFirstname
+        if(info.userLastname !== 'undefined') newUserInfo.lastname = info.userLastname
+        this.setUserSession(newUserInfo)
+
+        localStorage.setItem('user', JSON.stringify(newUserInfo))
     }
 }
 export const SessionContext = React.createContext({user:{}})

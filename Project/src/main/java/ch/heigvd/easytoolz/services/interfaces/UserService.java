@@ -4,6 +4,7 @@ import ch.heigvd.easytoolz.exceptions.user.UserAlreadyPresent;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedDeleteException;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
+import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
 import ch.heigvd.easytoolz.models.User;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface UserService {
      * @throws UserNotFoundException
      */
     User getUser(String username) throws UserNotFoundException;
+
+
 
     /**
      * stores the user passed in parameter
@@ -55,4 +58,12 @@ public interface UserService {
      * @return
      */
     List<User> filters(String firstName, String lastName, String userName, String email);
+
+    /**
+     * Change the user's password. The current password should be send with the request and is check before changing the password
+     *
+     * @param username
+     * @param editPasswordRequest
+     */
+    void editPassword(String username, EditPasswordRequest editPasswordRequest);
 }

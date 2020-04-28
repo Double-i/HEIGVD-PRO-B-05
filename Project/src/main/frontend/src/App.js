@@ -83,7 +83,6 @@ function App() {
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
                             </Route>
                             <Route exacte path="/dashboard/myloans/owner">
                                 {user.session.isUserLogin() ? (
@@ -99,7 +98,13 @@ function App() {
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
+                            </Route>
+                            <Route exacte path="/dashboard/profil/password">
+                                {user.session.isUserLogin() ? (
+                                    <EditProfilForm />
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
                             </Route>
 
                             <Route component={UnkownPage}/>

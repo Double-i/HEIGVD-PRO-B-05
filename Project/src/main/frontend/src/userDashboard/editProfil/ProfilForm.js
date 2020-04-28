@@ -152,8 +152,6 @@ function ProfilForm(props) {
             )
     }
 
-    console.log("teststestestest",props.initialValues)
-
     // validation rules
     const schema = yup.object(schemaSpec)
 
@@ -163,7 +161,7 @@ function ProfilForm(props) {
                 Edition du profil enregistrée
             </Alert>
             <Alert variant="danger" hidden={!hasConnectionProblem}>
-                hum humm.. problème de connexion au serveur
+                hum.. problème de connexion au serveur
             </Alert>
             <Alert variant="warning" hidden={isValidAddress}>
                 L'adresse semble incorrecte ou peu précise veuillez complétez

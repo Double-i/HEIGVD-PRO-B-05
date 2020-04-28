@@ -14,7 +14,6 @@ class DisplayTools extends React.Component {
         return (
 
             <div className="content">
-                {/* Result */}
                 <div className="container" style={{marginTop: '20px'}}>
                     <div className="row border-bottom header">
                         <div className="col-2">

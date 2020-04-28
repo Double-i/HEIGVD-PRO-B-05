@@ -1,10 +1,12 @@
 package ch.heigvd.easytoolz.services.implementation;
 
+import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedException;
 import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedNotAdminException;
 import ch.heigvd.easytoolz.exceptions.user.UserAlreadyPresent;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedDeleteException;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
+import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AddressService;
@@ -74,6 +76,25 @@ public class UserServiceImpl implements UserService {
         }
 
         return userRepository.findAll(specs);
+    }
+
+    @Override
+    public void editPassword(String username, EditPasswordRequest editPasswordRequest) {
+        User connectedUser = authenticationService.getTheDetailsOfCurrentUser();
+     ;
+        // We check the user wants to edit his password and that his current password is correct
+        if(!connectedUser.getUserName().equals(username) )
+            throw new AccessDeniedException();
+
+        // TODO à faire fonctionner, bien que les mots de passe soient identiques le encodage est différent...
+        // TODO se base probablement sur le temps ou quelque chose d'externe... peut etre que passwordEncoder.matches n'est pas la bonne
+        // TODO méthode à utiliser
+        /*if (! passwordEncoder.matches(connectedUser.getPassword(), passwordEncoder.encode(editPasswordRequest.getCurrentPassword())))
+            throw new AccessDeniedException();*/
+
+        // We encode the new password and save it
+        connectedUser.setPassword(passwordEncoder.encode(editPasswordRequest.getNewPassword()));
+        userRepository.save(connectedUser);
     }
 
     @Override

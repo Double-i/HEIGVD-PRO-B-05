@@ -1,10 +1,13 @@
 package ch.heigvd.easytoolz.controllers;
 
+import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
 import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
+import com.sun.net.httpserver.Authenticator;
 import net.minidev.json.JSONObject;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +56,11 @@ public class UserController {
         userService.storeUser(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getUserName()).toUri();
         return ResponseEntity.created(uri).body(new SuccessResponse("The user has been stored"));
+    }
+
+    @PostMapping("/{username}/password")
+    public ResponseEntity<JSONObject> editPassword(@PathVariable String username, @RequestBody EditPasswordRequest editPasswordRequest){
+        userService.editPassword(username, editPasswordRequest);
+        return ResponseEntity.ok(new SuccessResponse("The password has been updated"));
     }
 }

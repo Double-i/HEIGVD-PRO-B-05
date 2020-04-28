@@ -96,10 +96,6 @@ function OwnerLoans(props) {
         props.history.push(`/tools/${loan.ezobject.id}`)
     }
 
-    const btnShortenLoanClicked = (loan) => {
-        console.log("Raccourcir la durée de l'emprunt id : ", loan)
-    }
-
     const updateLoanState = (loan, state) => {
 
         return sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/state`, 'PATCH', {

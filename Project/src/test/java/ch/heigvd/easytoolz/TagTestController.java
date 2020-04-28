@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.controller;
+package ch.heigvd.easytoolz;
 
 import ch.heigvd.easytoolz.controllers.TagController;
 import ch.heigvd.easytoolz.models.Tag;

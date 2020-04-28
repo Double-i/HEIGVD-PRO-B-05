@@ -66,6 +66,14 @@ public class User {
         this.email = email;
     }
 
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
     @Id
     @NotNull
     private String userName;
@@ -82,6 +90,9 @@ public class User {
 
     @OneToMany(mappedBy = "owner")
     private List<EZObject> ezObject;
+
+    @OneToMany(mappedBy = "recipient")
+    private List<Notification> notifications;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "fk_address", referencedColumnName = "id")
@@ -100,21 +111,5 @@ public class User {
         this.address = address;
         this.email = email;
     }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "User{" +
-                        "username=%s," +
-                        "firstName=%s," +
-                        "lastName=%s," +
-                        "isAdmin=%b" +
-                        "}",
-                userName,
-                firstName,
-                lastName,
-                isAdmin);
-    }
-
 
 }

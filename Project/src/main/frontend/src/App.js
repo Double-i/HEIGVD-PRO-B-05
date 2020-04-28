@@ -16,8 +16,11 @@ import SignIn from './signIn/SignIn'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
+import AdminPage from "./admin/AdminPage";
+
 
 import {SessionContext, SessionHelper} from './common/SessionHelper'
+
 
 function App() {
     const userStorage = localStorage.getItem('user')
@@ -92,7 +95,14 @@ function App() {
                                 )}
 
                             </Route>
+                            <Route exacte path="/AdminPage">
+                                {user.session.isUserAdmin() ? (
+                                    <AdminPage/>
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
 
+                            </Route>
                             <Route component={UnkownPage}/>
                         </Switch>
                     </Container>

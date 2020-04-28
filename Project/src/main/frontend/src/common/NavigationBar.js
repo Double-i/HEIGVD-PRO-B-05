@@ -15,13 +15,26 @@ function NavigationBar(props) {
                     {({ session }) => {
                         if (session.isUserLogin()) {
                             return (
-                                <Nav className="mr-auto">
+                                <Nav className="justify-content-end">
                                     <Link to="/DashBoard" className="nav-link">
                                         <NavItem>DashBoard</NavItem>
                                     </Link>
                                 </Nav>
                             )
                         } else {
+                        }
+                    }}
+                </SessionContext.Consumer>
+                <SessionContext.Consumer>
+                    {({ session }) => {
+                        if(session.isUserAdmin()){
+                            return (
+                                <Nav className="justify-content-end">
+                                    <Link to="/AdminPage" className="nav-link">
+                                        <NavItem>Admin</NavItem>
+                                    </Link>
+                                </Nav>
+                            )
                         }
                     }}
                 </SessionContext.Consumer>

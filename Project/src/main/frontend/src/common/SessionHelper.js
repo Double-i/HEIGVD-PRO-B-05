@@ -52,14 +52,14 @@ export class SessionHelper {
      */
     logout = () => {
         this.setUserSession({})
-        sessionStorage.removeItem('user')
+        localStorage.removeItem('user')
     }
     /**
      * Log the user in by calling the react dispatcher and by adding a session storage cookie ( for persistence after refresh) 
      */
     login = user => {
         this.setUserSession(user)
-        sessionStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('user', JSON.stringify(user))
     }
 }
 export const SessionContext = React.createContext({user:{}})

@@ -3,6 +3,7 @@ package ch.heigvd.easytoolz.services.interfaces;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +16,7 @@ public interface EZObjectService {
      * @param newObject
      * @return
      */
-    void addObject(EZObject newObject);
+    void addObject(EZObject newObject, List<MultipartFile> files ) throws Exception;
 
     /**
      * Updates an object into the database

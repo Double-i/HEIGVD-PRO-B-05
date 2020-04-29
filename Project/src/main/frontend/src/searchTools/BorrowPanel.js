@@ -4,6 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import {sendEzApiRequest} from "../common/ApiHelper";
+import * as moment from "moment"
 
 class BorrowPanel extends React.Component {
 
@@ -31,16 +32,21 @@ class BorrowPanel extends React.Component {
         }
 
         sendEzApiRequest(this.sendLoansAPIEndpoint, "POST", {
-            dateStart : beginDate.toString(),
+            dateStart : moment(beginDate).add('1', 'days').format('YYYY-MM-DD'),
             dateEnd : endDate.toString(),
             toolId : this.props.tool.id
         }).then(
             (response) => {
-                if(response.status === 403 || response.status === 404 ) {
-                    alert("Erreur dans l'envoi de la requete : " + response.status);
-                }else{
-                    alert("Requete envoyée!" + response.status)
-                }
+                alert("Requete envoyée!" + response.status)
+
+            }, (error)=>{
+                alert("Erreur dans l'envoi de la requete : " + error.errorCode);
+
+                /*if(error.errorCode === 403 || error.errorCode === 404 ) {
+                    alert("Erreur dans l'envoi de la requete : " + error.errorCode);
+                } else{
+                    alert("Erreur dans l'envoi de la requete : " + error.errorCode);
+                }*/
             })
     }
     onChange(date){
@@ -61,7 +67,6 @@ class BorrowPanel extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
                     <p>
                         <h4>Outil : {this.props.tool.name} </h4>
 

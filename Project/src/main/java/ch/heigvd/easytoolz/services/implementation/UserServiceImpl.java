@@ -10,10 +10,17 @@ import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AddressService;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
+import ch.heigvd.easytoolz.specifications.UserSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,28 +55,25 @@ public class UserServiceImpl implements UserService {
         if (!authenticationService.isTheCurrentUserAdmin())
             throw new AccessDeniedNotAdminException();
 
-        firstName = transformLike(firstName);
-        lastName = transformLike(lastName);
-        userName = transformLike(userName);
-        email = transformLike(email);
+        Specification<User> specs = UserSpecs.getAll();
 
         if (firstName != null) {
-            if (lastName != null) {
-                return userRepository.findByFirstNameLikeAndLastNameLike(firstName, lastName);
-            } else {
-                return userRepository.findByFirstNameLike(firstName);
-            }
-        } else {
-            if (lastName != null) {
-                return userRepository.findByLastNameLike(lastName);
-            } else if (userName != null) {
-                return userRepository.findByUserNameLike(userName);
-            } else if (email != null) {
-                return userRepository.findByEmailLike(email);
-            } else {
-                return userRepository.findAll();
-            }
+            specs = specs.and(UserSpecs.getFirstname(firstName));
         }
+
+        if(lastName != null) {
+            specs = specs.and(UserSpecs.getLastname(lastName));
+        }
+
+        if(userName != null) {
+            specs = specs.and(UserSpecs.getUsername(userName));
+        }
+
+        if(email != null) {
+            specs = specs.and(UserSpecs.getEmail(email));
+        }
+
+        return userRepository.findAll(specs);
     }
 
     @Override

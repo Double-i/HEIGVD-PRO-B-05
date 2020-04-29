@@ -3,6 +3,7 @@ package ch.heigvd.easytoolz.services.implementation;
 import ch.heigvd.easytoolz.exceptions.address.AddressFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.address.AddressNotFoundException;
 import ch.heigvd.easytoolz.models.Address;
+import ch.heigvd.easytoolz.models.City;
 import ch.heigvd.easytoolz.repositories.AddressRepository;
 import ch.heigvd.easytoolz.services.interfaces.AddressService;
 import ch.heigvd.easytoolz.services.interfaces.CityService;
@@ -20,8 +21,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address storeAddress(Address address) {
-        if(address.getId() == 0)
-            cityService.storeCity(address.getCity());
+        City city = cityService.loadByName(address.getCity().getCity());
+        if(city == null)
+            city = cityService.storeCity(address.getCity());
+        address.setCity(city);
         Address addressStored = addressRepository.save(address);
         if (addressRepository.findById(address.getId()).isEmpty()) {
             throw new AddressFailedStoreException();

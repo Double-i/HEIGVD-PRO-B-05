@@ -164,12 +164,12 @@ class Conversation extends React.Component
     {
         let rec = this.props.participants.get(this.props.currentUser);
         let send = this.props.participants.get(rec)
-        console.log(this.styles.get(this.props.currentUser))
-        console.log(rec +" === " + this.props.currentUser )
-        let messages = this.state.messageList
+
+
+        let messages = null
         if(output.sender === send)
         {
-            messages.push(
+            messages = (
 
                 <li className="list-group-item text-right" style={this.senderStyle}>
                     {send}
@@ -179,7 +179,7 @@ class Conversation extends React.Component
         }
         else
         {
-            messages.push(
+            messages = (
 
                 <li className="list-group-item text-left" style={this.recipientStyle}>
                     {rec}

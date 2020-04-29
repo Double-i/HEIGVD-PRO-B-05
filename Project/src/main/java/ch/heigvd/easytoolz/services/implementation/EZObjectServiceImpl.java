@@ -125,19 +125,23 @@ public class EZObjectServiceImpl implements EZObjectService {
         User owner = authenticationService.getTheDetailsOfCurrentUser();
 
         newObject.setOwner(owner);
-        List<EZObjectImage>images = new ArrayList<>();
+
+
+        if(files != null)
+        {
+            List<EZObjectImage>images = new ArrayList<>();
+            for(int i = 0; i < files.size(); i++)
+            {
+                EZObjectImage  img_path = new EZObjectImage();
+                img_path.setObject(newObject);
+
+                storageService.store(files.get(i),newObject, img_path);
+                images.add(img_path);
+                imagesRepository.save(img_path);
+            }
+        }
 
         ezObjectRepository.save(newObject);
-
-        for(int i = 0; i < files.size(); i++)
-        {
-            EZObjectImage  img_path = new EZObjectImage();
-            img_path.setObject(newObject);
-
-            storageService.store(files.get(i),newObject, img_path);
-            images.add(img_path);
-            imagesRepository.save(img_path);
-        }
 
     }
 
@@ -151,6 +155,22 @@ public class EZObjectServiceImpl implements EZObjectService {
         updated.setName(o.getName());
         updated.setImages(o.getImages());
         updated.setObjectTags(o.getObjectTags());
+
+        if(files != null)
+        {
+            List<EZObjectImage>images = updated.getImages();
+            if(images == null)
+                images = new ArrayList<>();
+
+            for(int i = 0; i < files.size(); i++)
+            {
+                EZObjectImage  img_path = new EZObjectImage();
+                img_path.setObject(updated);
+                storageService.store(files.get(i),updated, img_path);
+                images.add(img_path);
+                imagesRepository.save(img_path);
+            }
+        }
 
 
         ezObjectRepository.save(updated);

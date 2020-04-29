@@ -6,18 +6,20 @@ import {SessionContext} from "../../common/SessionHelper";
 import {sendEzApiRequest} from "../../common/ApiHelper";
 import {Link} from 'react-router-dom'
 import PasswordForm from "./PasswordForm";
+
 const USER_ENDPOINT = '/users/'
 
 
 function EditProfilForm(props) {
-    const [showEditProfil,setShowEditProfil] = useState(true)
+    const [showEditProfil, setShowEditProfil] = useState(true)
     const session = useContext(SessionContext);
     const username = session.session.getUserName();
     const editProfilEndpoint = USER_ENDPOINT + username;
     const [userInfo, setUserInfo] = useState({
-        userFirstname: 'tamere',
+        userFirstname: '',
         userLastname: '',
         userEmail: '',
+        userAddressId: '',
         userAddress: '',
         userNpa: '',
         userDistrict: '',
@@ -26,7 +28,6 @@ function EditProfilForm(props) {
     })
 
     const updateSession = (info) => {
-        // TODO mettre à jour présent dans la session pour être cohérent avec les modifications.
         console.log("EDIT PROFIL INFO ", info)
         session.session.update(info)
     }
@@ -38,6 +39,7 @@ function EditProfilForm(props) {
                 userFirstname: result.firstName,
                 userLastname: result.lastName,
                 userEmail: result.email,
+                userAddressId: result.address.id,
                 userAddress: result.address.address,
                 userNpa: result.address.postalCode,
                 userDistrict: result.address.district,
@@ -52,20 +54,21 @@ function EditProfilForm(props) {
 
 
     return <>
-        <br />
-        <Button variant={"outline-primary"} onClick={() => setShowEditProfil(!showEditProfil) }>{showEditProfil ? "Editer mot de passe": "Retour"}  </Button>
-        <br />
-        <br />
+        <br/>
+        <Button variant={"outline-primary"}
+                onClick={() => setShowEditProfil(!showEditProfil)}>{showEditProfil ? "Editer mot de passe" : "Retour"}  </Button>
+        <br/>
+        <br/>
         {showEditProfil ?
             <>
                 <h4>Edition du profil</h4>
                 <ProfilForm editProfil={true} initialValues={userInfo} endpoint={editProfilEndpoint}
                             afterEditCb={updateSession}/>
-                </>
-                        :
+            </>
+            :
             <>
                 <h4>Modifier votre mot de passe</h4>
-                <PasswordForm />
+                <PasswordForm/>
             </>
         }
 

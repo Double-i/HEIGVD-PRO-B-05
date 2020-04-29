@@ -6,6 +6,8 @@ import * as yup from 'yup'
 import regex from '../../common/regex'
 import {checkAddress} from '../../common/GoogleApiHelper'
 import {sendEzApiRequest, sendRequest} from '../../common/ApiHelper'
+import {VALIDATION_MSG} from "../../common/ValidationMessages";
+import {formatString} from "../../common/Utils";
 
 // TODO use it when signup
 /*{
@@ -23,12 +25,15 @@ import {sendEzApiRequest, sendRequest} from '../../common/ApiHelper'
 }*/
 function ProfilForm(props) {
 
-    const [isSigningUp, setIsSigningUp] = useState(false)
+    const [isSendingForm, setIsSendingForm] = useState(false)
     const [hasConnectionProblem, setHasConnectionProblem] = useState(false)
-    const [hasBeenSignedUp, setHasBeenSignedUp] = useState(false)
+    const [hasBeenSaved, setHasBeenSaved] = useState(false)
     const [isValidAddress, setIsValidAddress] = useState(true)
 
     const attemptSignUp = values => {
+        setIsValidAddress(true)
+        setHasBeenSaved(false)
+        setHasConnectionProblem(false)
         checkAddress({
             address: values.userAddress,
             npa: values.userNpa,
@@ -62,7 +67,11 @@ function ProfilForm(props) {
                     verb = "POST"
                     profilData.password = values.userPassword
                     profilData.userName = values.userName
+                }else{
+                    // if we edit the profil we need the address'id
+                    profilData.address.id = props.initialValues.userAddressId
                 }
+                setIsValidAddress(true)
 
                 sendEzApiRequest(props.endpoint, verb, profilData).then(
                     result => {
@@ -70,19 +79,20 @@ function ProfilForm(props) {
                         console.log('Connection ok et réponse du serveur, ' + values)
 
                         props.afterEditCb(values)
-
-                        setIsSigningUp(false)
-                        setHasBeenSignedUp(true)
+                        setIsSendingForm(false)
+                        setHasBeenSaved(true)
                     },
                     error => {
                         console.log(error);
                         // en principe requete à problemes ici => code http 400 & 500 ou pas de co au serveur
+                        setIsSendingForm(false)
                         setHasConnectionProblem(true)
-                        setIsSigningUp(false)
+
                     }
                 );
             } else {
-                setIsValidAddress(false);
+                setIsSendingForm(false)
+                setIsValidAddress(false)
             }
         });
     }
@@ -90,44 +100,44 @@ function ProfilForm(props) {
 
         userEmail: yup
             .string()
-            .required('Requis')
-            .email(),
+            .required(VALIDATION_MSG.requis)
+            .email(VALIDATION_MSG.email),
         userFirstname: yup
             .string()
-            .required('Requis')
-            .min(2)
-            .max(20)
-            .matches(regex.validName),
+            .required(VALIDATION_MSG.requis)
+            .min(2, formatString(VALIDATION_MSG.min, 2))
+            .max(20, formatString(VALIDATION_MSG.max, 20))
+            .matches(regex.validName, VALIDATION_MSG.usernameRegex ),
         userLastname: yup
             .string()
-            .required('Requis')
-            .min(2)
+            .required(VALIDATION_MSG.requis)
+            .min(2, formatString(VALIDATION_MSG.min, 2))
             .max(20)
             .matches(regex.validName),
 
         userAddress: yup
             .string()
-            .required('Requis')
-            .min(2)
+            .required(VALIDATION_MSG.requis)
+            .min(2, formatString(VALIDATION_MSG.min, 2))
             .max(50),
         userNpa: yup
             .string()
-            .required('Requis')
-            .min(2)
-            .max(20),
+            .required(VALIDATION_MSG.requis)
+            .min(2, formatString(VALIDATION_MSG.min, 2))
+            .max(20, formatString(VALIDATION_MSG.max, 20)),
         userDistrict: yup
             .string()
-            .required('Requis'),
+            .required(VALIDATION_MSG.requis),
         userCity: yup
             .string()
-            .required('Requis')
-            .min(2)
-            .max(50),
+            .required(VALIDATION_MSG.requis)
+            .min(2, formatString(VALIDATION_MSG.min, 2))
+            .max(50, formatString(VALIDATION_MSG.max, 20)),
         userCountry: yup
             .string()
-            .required('Requis')
-            .min(2)
-            .max(50),
+            .required(VALIDATION_MSG.requis)
+            .min(2, formatString(VALIDATION_MSG.min, 2))
+            .max(50, formatString(VALIDATION_MSG.max, 20)),
     }
     // If the form is used for signup we add spec for username and password
     // which are not needed for editing profil
@@ -135,20 +145,20 @@ function ProfilForm(props) {
 
         schemaSpec.userName = yup
             .string()
-            .required('Requis')
+            .required(VALIDATION_MSG.requis)
 
         schemaSpec.userPassword = yup
             .string()
-            .required('Requis')
-            .min(8)
-            .max(32)
+            .required(VALIDATION_MSG.requis)
+            .min(8, formatString(VALIDATION_MSG.min, 8))
+            .max(32, formatString(VALIDATION_MSG.max, 32))
 
         schemaSpec.userPasswordRepeat = yup
             .string()
-            .required('Requis')
+            .required(VALIDATION_MSG.requis)
             .oneOf(
                 [yup.ref('userPassword'), null],
-                'Les mots de passe doivent être identiques'
+                formatString(VALIDATION_MSG.same, "mot de passe")
             )
     }
 
@@ -157,7 +167,7 @@ function ProfilForm(props) {
 
     return (
         <>
-            <Alert variant="success" hidden={!hasBeenSignedUp}>
+            <Alert variant="success" hidden={!hasBeenSaved}>
                 Edition du profil enregistrée
             </Alert>
             <Alert variant="danger" hidden={!hasConnectionProblem}>
@@ -169,7 +179,7 @@ function ProfilForm(props) {
             <Formik
                 validationSchema={schema}
                 onSubmit={(values, {setSubmitting}) => {
-                    setIsSigningUp(!isSigningUp)
+                    setIsSendingForm(!isSendingForm)
                     attemptSignUp(values)
                 }}
                 enableReinitialize
@@ -182,7 +192,7 @@ function ProfilForm(props) {
                       touched,
                       isValid,
                       values,
-                      errors,}) => (
+                      errors}) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     {props.editProfil === false &&
                     <Form.Group controlId="formUsername">
@@ -194,9 +204,10 @@ function ProfilForm(props) {
                             value={values.userName}
                             onChange={handleChange}
                             isValid={touched.userName && !errors.userName}
+                            isInvalid={errors.userName}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userName}</Form.Control.Feedback>
                     </Form.Group>
-
                     }
 
                     <Form.Group controlId="formEmail">
@@ -208,7 +219,9 @@ function ProfilForm(props) {
                             value={values.userEmail}
                             onChange={handleChange}
                             isValid={touched.userEmail && !errors.userEmail}
+                            isInvalid={errors.userEmail}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userEmail}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="formFirstname">
                         <Form.Label>Prénom</Form.Label>
@@ -222,7 +235,9 @@ function ProfilForm(props) {
                                 touched.userFirstname &&
                                 !errors.userFirstname
                             }
+                            isInvalid={errors.userFirstname}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userFirstname}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="formLastname">
                         <Form.Label>Nom</Form.Label>
@@ -235,7 +250,9 @@ function ProfilForm(props) {
                             isValid={
                                 touched.userLastname && !errors.userLastname
                             }
+                            isInvalid={errors.userLastname}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userLastname}</Form.Control.Feedback>
                     </Form.Group>
                     {/*If we edit profil we don't need password and repeated password*/}
                     {props.editProfil === false &&
@@ -251,7 +268,9 @@ function ProfilForm(props) {
                             isValid={
                                 touched.userPassword && !errors.userPassword
                             }
+                            isInvalid={errors.userPassword}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userPassword}</Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group controlId="formPasswordRepeat">
@@ -268,7 +287,9 @@ function ProfilForm(props) {
                                 touched.userPasswordRepeat &&
                                 !errors.userPasswordRepeat
                             }
+                            isInvalid={errors.userPasswordRepeat}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userPasswordRepeat}</Form.Control.Feedback>
                     </Form.Group>
                     </>
                     }
@@ -283,7 +304,9 @@ function ProfilForm(props) {
                             isValid={
                                 touched.userAddress && !errors.userAddress
                             }
+                            isInvalid={errors.userAddress}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userAddress}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="formNpa">
                         <Form.Label>Code postal</Form.Label>
@@ -294,7 +317,9 @@ function ProfilForm(props) {
                             value={values.userNpa}
                             onChange={handleChange}
                             isValid={touched.userNpa && !errors.userNpa}
+                            isInvalid={errors.userNpa}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userNpa}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="formDistrict">
                         <Form.Label>District</Form.Label>
@@ -305,7 +330,9 @@ function ProfilForm(props) {
                             value={values.userDistrict}
                             onChange={handleChange}
                             isValid={touched.userDistrict && !errors.userDistrict}
+                            isInvalid={errors.userDistrict}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userDistrict}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="formCity">
                         <Form.Label>Ville/village</Form.Label>
@@ -316,7 +343,9 @@ function ProfilForm(props) {
                             value={values.userCity}
                             onChange={handleChange}
                             isValid={touched.userCity && !errors.userCity}
+                            isInvalid={errors.userCity}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userCity}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group controlId="formCountry">
                         <Form.Label>Pays</Form.Label>
@@ -329,7 +358,9 @@ function ProfilForm(props) {
                             isValid={
                                 touched.userCountry && !errors.userCountry
                             }
+                            isInvalid={errors.userCountry}
                         />
+                        <Form.Control.Feedback type="invalid">{errors.userCountry}</Form.Control.Feedback>
                     </Form.Group>
 
                     <Button
@@ -337,7 +368,7 @@ function ProfilForm(props) {
                         type="submit"
                         size="lg"
                         block
-                        disabled={isSigningUp}
+                        disabled={isSendingForm}
                     >
                         {props.editProfil ? "Modifier" :"S'inscrire"}
                         <Spinner
@@ -346,7 +377,7 @@ function ProfilForm(props) {
                             size="sm"
                             role="status"
                             aria-hidden="true"
-                            hidden={!isSigningUp}
+                            hidden={!isSendingForm}
                         />
                     </Button>
                 </Form>)}

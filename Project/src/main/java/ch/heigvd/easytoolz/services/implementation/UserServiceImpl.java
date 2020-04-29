@@ -18,15 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
-import static ch.heigvd.easytoolz.util.ServiceUtils.transformLike;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -86,11 +79,9 @@ public class UserServiceImpl implements UserService {
         if(!connectedUser.getUserName().equals(username) )
             throw new AccessDeniedException();
 
-        // TODO à faire fonctionner, bien que les mots de passe soient identiques le encodage est différent...
-        // TODO se base probablement sur le temps ou quelque chose d'externe... peut etre que passwordEncoder.matches n'est pas la bonne
-        // TODO méthode à utiliser
-        /*if (! passwordEncoder.matches(connectedUser.getPassword(), passwordEncoder.encode(editPasswordRequest.getCurrentPassword())))
-            throw new AccessDeniedException();*/
+
+        if (! passwordEncoder.matches(editPasswordRequest.getCurrentPassword(), connectedUser.getPassword()))
+            throw new AccessDeniedException();
 
         // We encode the new password and save it
         connectedUser.setPassword(passwordEncoder.encode(editPasswordRequest.getNewPassword()));
@@ -124,10 +115,18 @@ public class UserServiceImpl implements UserService {
             .map(oldUser -> {
                 if (newUser.getFirstName() != null) oldUser.setFirstName(newUser.getFirstName());
                 if (newUser.getLastName() != null) oldUser.setLastName(newUser.getLastName());
-                if (oldUser.isAdmin() != newUser.isAdmin()) oldUser.setAdmin(newUser.isAdmin());
+                // if the admin flag is different we check the user is admin otherwise throw access denied exception
+                if(oldUser.isAdmin() != newUser.isAdmin()){
+                    if(authenticationService.isTheCurrentUserAdmin()) {
+                        oldUser.setAdmin(newUser.isAdmin());
+                    }else{
+                        throw new AccessDeniedNotAdminException();
+                    }
+                }
                 if (newUser.getEmail() != null) oldUser.setEmail(newUser.getEmail());
                 if (newUser.getAddress() != null)
                     addressService.updateAddress(newUser.getAddress(), oldUser.getAddress().getId());
+
                 return userRepository.save(oldUser);
             })
             .orElseThrow(

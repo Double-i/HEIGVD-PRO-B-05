@@ -1,15 +1,12 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
-import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
-import com.sun.net.httpserver.Authenticator;
-import net.minidev.json.JSONObject;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
-import org.apache.coyote.Response;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

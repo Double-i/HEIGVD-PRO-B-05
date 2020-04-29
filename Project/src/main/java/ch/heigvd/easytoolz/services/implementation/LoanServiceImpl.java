@@ -9,10 +9,7 @@ import ch.heigvd.easytoolz.exceptions.loan.LoanStateCantBeUpdatedException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.models.DTO.LoanRequest;
 import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
-import ch.heigvd.easytoolz.repositories.EZObjectRepository;
-import ch.heigvd.easytoolz.repositories.LoanRepository;
-import ch.heigvd.easytoolz.repositories.PeriodRepository;
-import ch.heigvd.easytoolz.repositories.UserRepository;
+import ch.heigvd.easytoolz.repositories.*;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.LoanService;
 import ch.heigvd.easytoolz.specifications.LoanSpecs;
@@ -32,6 +29,9 @@ import java.util.List;
 public class LoanServiceImpl implements LoanService {
     @Autowired
     LoanRepository loanRepository;
+
+    @Autowired
+    ConversationRepository conversationRepository;
 
     @Autowired
     EZObjectRepository ezObjectRepository;
@@ -100,6 +100,10 @@ public class LoanServiceImpl implements LoanService {
 
         switch (newState) {
             case accepted:
+                Conversation conv   = new Conversation(loan.getOwner(),loan.getBorrower().getUserName(),loan.getPkLoan());
+                conversationRepository.save(conv);
+                done = updateLoanStateByOwner(loan, newState);
+                break;
             case refused:
                 done = updateLoanStateByOwner(loan, newState);
                 break;
@@ -276,6 +280,22 @@ public class LoanServiceImpl implements LoanService {
         return loanRepository.findAll(specs);
     }
 
+    @Override
+    public List<Loan> getLoansRelatedTo(String username)
+    {
+        Specification<Loan> byUser = null;
+
+        byUser = LoanSpecs.getLoanByOwner(username);
+        byUser = byUser.or(LoanSpecs.getLoanByBorrower(username));
+
+        Specification<Loan> byState = null;
+        byState = LoanSpecs.getState(State.accepted.getState());
+
+        Specification<Loan> finalSpec = byUser.and(byState);
+        return loanRepository.findAll(finalSpec);
+
+    }
+
     /**
      * Update the status to accept or refused of the given loan
      *
@@ -351,6 +371,8 @@ public class LoanServiceImpl implements LoanService {
         }
         return creator;
     }
+
+
 
 }
 

@@ -15,7 +15,7 @@ public class ChatMessage {
     private String recipient;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_conversation", referencedColumnName = "ID")
     private Conversation fkConversation;
 
@@ -49,4 +49,6 @@ public class ChatMessage {
     public void setRecipient(String recipient) {
         this.recipient = recipient;
     }
+
+    public void setFkConversation(Conversation fkConversation){this.fkConversation = fkConversation;}
 }

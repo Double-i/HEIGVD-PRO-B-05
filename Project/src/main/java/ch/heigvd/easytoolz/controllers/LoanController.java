@@ -6,6 +6,8 @@ import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.models.DTO.LoanRequest;
 import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
 import ch.heigvd.easytoolz.models.DTO.StateRequest;
+import ch.heigvd.easytoolz.repositories.ChatRepository;
+import ch.heigvd.easytoolz.repositories.ConversationRepository;
 import ch.heigvd.easytoolz.repositories.LoanRepository;
 import ch.heigvd.easytoolz.services.interfaces.LoanService;
 
@@ -14,12 +16,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/loans")
 public class LoanController {
+
+    @Autowired
+    ConversationRepository conversationRepository;
+
+    @Autowired
+    ChatRepository chatRepository;
+
     @Autowired
     LoanRepository loanRepository;
 
@@ -108,5 +118,25 @@ public class LoanController {
         State state = State.valueOf(stateRequest.getState());
         return loanService.updatePeriodState(loanId, periodId, state);
     }
+
+
+    @GetMapping("/{username}")
+    public List<Loan> getAllRelatedTo(@PathVariable String username)
+    {
+        return loanService.getLoansRelatedTo(username);
+    }
+
+    @GetMapping("/conversations/{username}")
+    public List<Conversation> getConversation(@PathVariable String username)
+    {
+        return conversationRepository.findByOwnerOrBorrower(username,username);
+    }
+
+    @GetMapping("/conversations/{conv}/{loan}/messages/")
+    public List<ChatMessage> getMessages( @PathVariable int conv, @PathVariable int loan)
+    {
+        return chatRepository.findByFkConversation_IDAndFkConversation_Loan(conv,loan);
+    }
+
 
 }

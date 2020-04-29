@@ -36,7 +36,8 @@ class ConversationList  extends React.Component {
                 currentUser: props.currentConnected.userInfo.username,
                 opened: false,
                 dataLoaded : false,
-                currentConversation: [],
+                ongoingConversations: [],
+                currentConversation : null,
             };
     }
 
@@ -51,11 +52,11 @@ class ConversationList  extends React.Component {
         //fetch
         if(this.state.dataLoaded === false)
         {
-            let url = "/loans/find/user/"+this.state.currentUser
+            let url = "/loans/conversations/"+this.state.currentUser
             sendEzApiRequest(url,"GET",{},{borrower:false}).then(
                 (result) => {
                     this.setState({
-                        currentConversation:result,
+                        ongoingConversations:result,
                         dataLoaded:true
                     })
 
@@ -66,52 +67,62 @@ class ConversationList  extends React.Component {
             )
         }
         return (
-            <div class = "container bg-secondary" style={this.style}>
-                <p class >My conversations</p>
-                <div class = "row">
+            <div className = "container bg-secondary" style={this.style}>
+                <p>My conversations</p>
+                <div className = "row">
                     <div className="col-sm-4">
-                        {this.displayConversations()}
+                        {this.displayConversationsList()}
                     </div>
                     <div className="col-sm-8 bg-primary ">
-                        {console.log(this.state.currentConversation[0])}
-
                         {
-                            this.state.currentConversation.length > 0 ?
-                                (
-                                    this.displayConversationContent(this.state.currentUser,this.state.currentConversation[0].borrower.userName)
-
-                                ):(
-                                    <></>
-                                )
+                                this.state.currentConversation
                         }
-
                     </div>
                 </div>
             </div>
         )
     }
 
-    displayConversations()
+    displayConversationsList()
     {
             return(
                 <>
-                    <nav class="navbar  bg-dark navbar-dark">
+                    <nav className="navbar  bg-dark navbar-dark">
                         <ul className="navbar-nav">
                             {
-                                this.state.currentConversation.map((value, idx) => (
-                                <li className="nav-item">
-                                    <a className="nav-link"
-                                        onClick=
+                                this.state.ongoingConversations.map((conversation, idx)  =>
+                                this.state.currentUser === conversation.participants[0] ?
+                                    (
+                                    <li className="nav-item" key={idx}>
+                                        <a className="nav-link"
+                                            onClick=
                                             {
                                                 ()=>
                                                 {
                                                     //TODO display message of current conversation
+                                                    this.displayConversationContent(conversation)
                                                 }
                                             }>
-                                        {value.borrower.userName}
+                                        {conversation.participants[1]}
+                                        </a>
+                                    </li>
+                                ):
+                                (
+                                <li className="nav-item" key={idx}>
+                                    <a className="nav-link"
+                                        onClick=
+                                        {
+                                            ()=>
+                                            {
+                                                //TODO display message of current conversation
+                                                this.displayConversationContent(conversation)
+                                            }
+                                        }>
+                                        {conversation.participants[0]}
                                     </a>
                                 </li>
-                            ))}
+                                ))
+                            }
                         </ul>
                     </nav>
 
@@ -119,9 +130,13 @@ class ConversationList  extends React.Component {
             )
     }
 
-    displayConversationContent(sender,recipient) {
+    displayConversationContent(conv) {
 
-        return   (<Conversation sender={sender }recipient ={ recipient}/>)
+        let test = new Map();
+        test.set(conv.participants[0],conv.participants[1]);
+        test.set(conv.participants[1],conv.participants[0]);
+
+        this.setState( {currentConversation: <Conversation conversation = {conv} participants={test} currentUser={this.state.currentUser}/>})
     }
     render()
     {

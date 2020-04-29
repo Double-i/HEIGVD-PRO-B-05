@@ -1,21 +1,19 @@
 import React from "react"
 import Message from "./Message";
 import Button from "react-bootstrap/Button";
+import {sendEzApiRequest} from "../common/ApiHelper";
 const SockJS = require("sockjs-client")
 const Stomp = require( "@stomp/stompjs")
 class Conversation extends React.Component
 {
-
-
     constructor(props) {
-        console.log(props)
         super(props);
-
         this.state = {
-            active:false,
-            sender: props.sender,
-            recipient: props.recipient,
-            messageList : []
+            sender: "",
+            recipient: "",
+            messageList : [],
+            currentUser : props.currentUser,
+            sessionId : ""
         }
 
         this.conversationStyle =
@@ -27,6 +25,7 @@ class Conversation extends React.Component
                 maxHeight :300,
                 padding:5
             }
+
         this.senderStyle =
             {
                 backgroundColor:"#A4EEFF",
@@ -45,6 +44,11 @@ class Conversation extends React.Component
                 right:0,
                 bottom:0
             }
+        this.styles = new Map();
+
+        this.styles.set(props.currentUser,this.senderStyle);
+        this.styles.set(props.conversation.participants[props.currentUser], this.recipientStyle)
+
         this.socket = null;
         this.client = null;
         this.sendMessage = this.sendMessage.bind(this)
@@ -58,98 +62,160 @@ class Conversation extends React.Component
         }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
+    connect()
+    {
+        this.socket = new SockJS("http://localhost:8080/secured/room");
+        this.client = Stomp.Stomp.over(this.socket);
 
-         this.socket = new SockJS("http://localhost:8080/chat");
-         this.client = Stomp.Stomp.over(this.socket);
-
-
-         //disconect before
+        //disconect before
         if(this.client !== null)
         {
             this.client.disconnect();
             console.log("disconnected");
         }
-
         this.client.connect({},(frame)=>{
 
-            console.log("connected " + frame)
-            this.client.subscribe('/topic/messages', (content) =>
+            var url = this.client.ws._transport.url;
+            console.log(url)
+            url = url.replace("ws://localhost:8080/secured/room/","");
+            console.log(url)
+            url = url.replace("/websocket","");
+            console.log(url);
+            url = url.replace(/^[0-9]+\//,"");
+            console.log(url);
+            this.setState({sessionId:url})
+
+            this.client.subscribe('/secured/user/queue/specific-user/'+this.props.conversation.id, (content) =>
             {
-                console.log(content.body)
                 this.showMessageOutput(JSON.parse(content.body))
             })
-
         })
+    }
 
-        console.log(nextProps)
-        let messages = [];
-        for(let i = 0; i < 10; i++)
+    componentDidMount() {
+        this.connect()
+        this.loadMessages()
+
+    }
+
+    loadMessages( )
+    {
+        let endpoint = "/loans/conversations/"+this.props.conversation.id+"/"+this.props.conversation.loan+"/messages/";
+        console.log(endpoint);
+        this.setState({messageList:[]})
+        sendEzApiRequest("/loans/conversations/"+this.props.conversation.id+"/"+this.props.conversation.loan+"/messages/").then( (result) =>
         {
-            i%2 ?
-                messages.push(
-                    <li className="list-group-item text-right" style={this.senderStyle}> {nextProps.sender}
-                        <Message content={"i send this"} date={"sometime"}/>
-                    </li>
-                ):
-                messages.push(
-                    <li className="list-group-item text-left" style={this.recipientStyle}> {nextProps.recipient}
-                        <Message content={"he send that"} date={"sometime"}/>
-                    </li>
-                )
-        }
-        this.setState({messageList:messages})
+            console.log()
+            let messages = []
+            let recipient = this.props.participants.get(this.props.currentUser);
+            let sender = this.props.participants.get(recipient);
 
+            console.log("recipient  => "+ recipient);
+            console.log("sender => "+sender)
+            for(let i  = 0; i < result.length; i++)
+            {
+                if(result[i].sender === sender)
+                {
+                    messages.push(
+
+                        <li className="list-group-item text-right" style={this.senderStyle}>
+                            {sender}
+                            <Message content={result[i].content} date={"sometime"}/>
+                        </li>
+                    )
+                }
+                else
+                {
+                    messages.push(
+
+                        <li className="list-group-item text-left" style={this.recipientStyle}>
+                            {recipient}
+                            <Message content={result[i].content} date={"sometime"}/>
+                        </li>
+                    )
+                }
+
+
+            }
+            this.setState({messageList:messages});
+        },
+            (error) =>
+            {
+                console.log(error)
+            })
+
+
+    }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+
+        //avoid infinite looping
+        if(this.props.conversation.participants !== prevProps.conversation.participants)
+        {
+            this.setState({
+                sender:this.props.participants[this.state.currentUser],
+                recipient:this.props.participants[this.state.sender]
+            })
+            this.connect();
+            this.loadMessages()
+        }
     }
 
     showMessageOutput(output)
     {
-        let message = (
-            <li className="list-group-item text-right" style={this.senderStyle}> {output.sender}
-                <Message content={output.content} date={"sometime"}/>
-            </li>)
-
-
-        this.setState({messageList:[...this.state.messageList,message]})
-    }
-    componentDidMount()
-    {
-        let messages = [];
-        for(let i = 0; i < 10; i++)
+        let rec = this.props.participants.get(this.props.currentUser);
+        let send = this.props.participants.get(rec)
+        console.log(this.styles.get(this.props.currentUser))
+        console.log(rec +" === " + this.props.currentUser )
+        let messages = this.state.messageList
+        if(output.sender === send)
         {
-            i%2 ?
             messages.push(
-                <li className="list-group-item text-right" style={this.senderStyle}> {this.state.sender}
-                    <Message content={"i send this"} date={"sometime"}/>
-                </li>
-            ):
-            messages.push(
-                <li className="list-group-item text-left" style={this.recipientStyle}> {this.state.recipient}
-                    <Message content={"he send that"} date={"sometime"}/>
+
+                <li className="list-group-item text-right" style={this.senderStyle}>
+                    {send}
+                    <Message content={output.content} date={"sometime"}/>
                 </li>
             )
         }
-        this.setState({messageList:messages})
+        else
+        {
+            messages.push(
 
+                <li className="list-group-item text-left" style={this.recipientStyle}>
+                    {rec}
+                    <Message content={output.content} date={"sometime"}/>
+                </li>
+            )
+        }
+
+        //append to messages
+        this.setState({messageList:[...this.state.messageList,messages]})
     }
 
     sendMessage(content_message)
     {
 
-        this.client.send("/app/chat",{},JSON.stringify(
-            {
-                content : content_message,
-                sender: this.state.sender,
-                recipient : this.state.recipient
-            }
-        ))
+        let rec = this.props.participants.get(this.props.currentUser);
+        let send = this.props.participants.get(rec)
+
+        console.log(this.props)
+        let message = {
+            content : content_message,
+            recipient :  rec,
+            sender: send,
+            fkConversation : this.props.conversation
+        }
+        console.log(JSON.stringify(message))
+        this.client.send('/secured/user/queue/specific-user/'+this.props.conversation.id,{},JSON.stringify(message))
     }
     displayConversation()
     {
         return (
             <div style={this.conversationStyle}>
                  <ul className="list-group overflow-auto " style={this.listGroup}>
-                     {this.state.messageList}
+                     {
+                         this.state.messageList
+                     }
                 </ul>
                 <div>
 

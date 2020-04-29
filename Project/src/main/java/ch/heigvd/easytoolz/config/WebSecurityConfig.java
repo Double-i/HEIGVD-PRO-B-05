@@ -2,8 +2,10 @@ package ch.heigvd.easytoolz.config;
 
 import ch.heigvd.easytoolz.components.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.filters.JwtRequestFilter;
+import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,11 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@ComponentScan("ch.heigvd.easytoolz")
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
-    private EasyAuthenticationProvider easyAuthenticationProvider;
+    public EasyAuthenticationProvider easyAuthenticationProvider;
     @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    public JwtRequestFilter jwtRequestFilter;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
@@ -43,5 +48,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
 
 }

@@ -16,9 +16,6 @@ function SignInForm(props) {
     const [hasWrongCredential, sethasWrongCredential] = useState(false)
 
     const attemptLogin = (username, password) => {
-        console.log('attempt login...')
-        console.log('email: ', username)
-        console.log('password: ', password)
 
         // reset error message
         setHasConnectionProblem(false)
@@ -30,27 +27,32 @@ function SignInForm(props) {
             password: password,
         }).then(
             result => {
-                if (result.status === 403) {
-                    console.log('Bad credential amigo')
-                    sethasWrongCredential(true)
-                } else {
-                    console.log('So far so good')
-                    setHasBeenLoggedIn(true)
-
-                    props.setLoggedUser({
-                        username: result.userName,
-                        admin: result.admin,
-                        lastname: result.lastName,
-                        firstname: result.firstName,
-                    })
-                
-                }
                 setIsLogging(false)
+
+                console.log('So far so good')
+                //todo voir si à supprimer car pour l'instant inutile car le modal se ferme tout seul après connexion
+                //setHasBeenLoggedIn(true)
+
+                props.setLoggedUser({
+                    username: result.userName,
+                    admin: result.admin,
+                    lastname: result.lastName,
+                    firstname: result.firstName,
+                })
+
+
             },
             error => {
-                console.log('Connection PAS ok', error)
-                setHasConnectionProblem(true)
                 setIsLogging(false)
+
+                if(error.errorCode === 403){
+                    console.log('Bad credential amigo')
+                    sethasWrongCredential(true)
+                }else{
+                    console.log('Connection PAS ok', error)
+                    setHasConnectionProblem(true)
+
+                }
             }
         )
     }
@@ -61,7 +63,7 @@ function SignInForm(props) {
             .string()
             .required('Requis')
             .min(3)
-            .max(10),
+            .max(50),
         userPassword: yup.string().required('Requis'),
     })
 
@@ -75,7 +77,7 @@ function SignInForm(props) {
                     props.setShowSignInForm(false)
                     setHasConnectionProblem(false)
                     sethasWrongCredential(false)
-                    setHasBeenLoggedIn(false)
+                    //setHasBeenLoggedIn(false)
                 }}
                 aria-labelledby="example-modal-sizes-title-lg"
             >

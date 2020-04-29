@@ -52,13 +52,16 @@ function SignUpForm(props) {
                     password:values.userPassword,
                     email:values.userEmail,
                     address: {
-                        address: values.userAddress,
+                        address: `${googleAddress.street} ${googleAddress.streetNumber}`,
                         district: values.userDistrict,
-                        postalCode: values.userNpa,
-                        lat: "46.019811",
-                        lng: "7.1333",
+                        postalCode: googleAddress.zipCode,
+                        lat: googleAddress.lat,
+                        lng: googleAddress.long,
                         city: {
-                            id: "1"
+                            city: googleAddress.city,
+                            country: {
+                                country: googleAddress.country
+                            }
                         }
                     }
                 }).then(
@@ -168,8 +171,8 @@ function SignUpForm(props) {
                 initialValues={{
                     userName: 'bloup',
                     userEmail: 'vanlong@gmail.com',
-                    userPassword: '12345678',
-                    userPasswordRepeat: '12345678',
+                    userPassword: 'password',
+                    userPasswordRepeat: 'password',
                     userFirstname: 'Bastien',
                     userLastname: 'Potet',
                     userAddress: 'Somlaproz 48',

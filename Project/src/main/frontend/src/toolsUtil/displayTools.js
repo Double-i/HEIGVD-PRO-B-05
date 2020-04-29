@@ -7,6 +7,7 @@ class DisplayTools extends React.Component {
 
     constructor(props){
         super(props);
+
     }
 
     render(){
@@ -15,7 +16,7 @@ class DisplayTools extends React.Component {
 
             <div className="content">
                 {/* Result */}
-                <div className="container">
+                <div className="container" style={{marginTop: '20px'}}>
                     <div className="row border-bottom header">
                         <div className="col-2">
                             <div>Nom de l'outil</div>
@@ -23,7 +24,7 @@ class DisplayTools extends React.Component {
                         <div className="col-4">
                             <div>Description</div>
                         </div>
-                        <div className="col-2">
+                        <div className="col-2" hidden={this.props.hideOwner}>
                             <div>Prêteur</div>
                         </div>
                         <div className="col-2">
@@ -31,13 +32,16 @@ class DisplayTools extends React.Component {
                         </div>
                     </div>
                     {this.props.data.map(item => (
-
                         <DisplayTool
                             id={item.id}
                             name={item.name}
                             description={item.description}
-                            ownerUserName={item.ownerUserName}
+                            ownerUserName={item.owner.userName}
                             objectTags={item.objectTags}
+                            hideOwner={this.props.hideOwner}
+                            hideBorrowButton={this.props.hideBorrowButton}
+                            hideEditButton={this.props.hideEditButton}
+                            hideDeleteButton={this.props.hideDeleteButton}
                         >
                         </DisplayTool>
                     ))}

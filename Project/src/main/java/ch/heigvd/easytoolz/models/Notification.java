@@ -29,12 +29,45 @@ public class Notification {
         this.recipient = recipient;
     }
 
+    public StateNotification getState() {
+        return state;
+    }
+
+    public void setState(StateNotification state) {
+        this.state = state;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public Notification() {}
+
+    public Notification(String message, StateNotification state, boolean read, User recipient){
+        this.message = message;
+        this.state = state;
+        this.read = read;
+        this.recipient = recipient;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;
 
     @NotNull
     private String message;
+
+    @NotNull
+    @Column(name = "state")
+    @Enumerated(EnumType.STRING)
+    private StateNotification state;
+
+    @NotNull
+    private boolean read;
 
     @JsonIgnore
     @ManyToOne(fetch=FetchType.EAGER, optional = false)

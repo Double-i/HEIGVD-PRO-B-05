@@ -24,9 +24,9 @@ public interface EZObjectService {
      * @param o
      * @return
      */
-    void updateObject(EZObject o);
+    void updateObject(EZObject o, List<MultipartFile> files) throws Exception;
 
-    void deleteObject(int id);
+    void deleteObject(int id) throws Exception;
 
     /**
      * Get the list of all the objects

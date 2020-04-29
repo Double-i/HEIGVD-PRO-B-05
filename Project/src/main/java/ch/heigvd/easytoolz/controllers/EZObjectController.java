@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
@@ -33,6 +34,9 @@ public class EZObjectController {
     @Autowired
     EZObjectService ezObjectService;
 
+    @Autowired
+    AuthenticationService authenticationService;
+
     @GetMapping
     public List<EZObjectView> index()
     {
@@ -45,6 +49,13 @@ public class EZObjectController {
         return ezObjectService.getObject(id);
     }
 
+
+    @GetMapping("/myObjects")
+    @ResponseBody
+    public List<EZObjectView> getMyBObjects()
+    {
+        return ezObjectService.getObjectByOwner(authenticationService.getTheDetailsOfCurrentUser().getUserName());
+    }
 
     @GetMapping("/owner/{username}")
     @ResponseBody
@@ -65,17 +76,25 @@ public class EZObjectController {
         return new ResponseEntity<>("Object has been saved", HttpStatus.OK);
     }
 
+    @PostMapping(value="/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> update(@RequestParam(name="object") String newObject,
+                                         @RequestParam(name="image")List<MultipartFile> files) throws Exception {
 
-    @PostMapping("/update")
+
+        EZObject obj = mapper.readValue(newObject,EZObject.class);
+        ezObjectService.updateObject(obj, files);
+        return new ResponseEntity<>("Object has been saved", HttpStatus.OK);
+    }
+    /*@PostMapping("/update")
     public ResponseEntity<String> update(@RequestBody EZObject o)
     {
+
         ezObjectService.updateObject(o);
         return new ResponseEntity<>("Object has been updated",HttpStatus.OK);
-    }
+    }*/
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable Integer id)
-    {
+    public ResponseEntity<String> delete(@PathVariable Integer id) throws Exception {
         ezObjectService.deleteObject(id);
         return new ResponseEntity<>("Object has been deleted",HttpStatus.OK);
     }

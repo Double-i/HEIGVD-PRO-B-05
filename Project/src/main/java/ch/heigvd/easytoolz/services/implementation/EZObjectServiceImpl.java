@@ -141,8 +141,8 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     }
 
-
-    public void updateObject(EZObject o) {
+    public void updateObject(EZObject o, List<MultipartFile> files) throws Exception
+    {
         EZObject updated = ezObjectRepository.findByID(o.getID());
         if (updated == null)
             throw new EZObjectNotFoundException("" + o.getID());
@@ -156,13 +156,13 @@ public class EZObjectServiceImpl implements EZObjectService {
         ezObjectRepository.save(updated);
     }
 
-    public void deleteObject(int id) {
+    public void deleteObject(int id) throws Exception {
         EZObject toDelete = ezObjectRepository.findByID(id);
         if (toDelete == null)
             throw new EZObjectNotFoundException("" + id);
 
         toDelete.setActive(false);
-        updateObject(toDelete);
+        updateObject(toDelete,null);
 
     }
 

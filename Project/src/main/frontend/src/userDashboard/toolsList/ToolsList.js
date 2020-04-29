@@ -9,7 +9,7 @@ import DisplayTools from "../../toolsUtil/displayTools";
 
 class ToolsList extends React.Component {
 
-    GET_TOOLS_URI = '/objects/owner/test';
+    GET_TOOLS_URI = '/objects/owner/heymanuel';
 
     constructor(props){
         super(props);

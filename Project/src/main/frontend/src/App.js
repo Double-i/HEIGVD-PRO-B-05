@@ -19,7 +19,8 @@ import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
 
-import { SessionContext, SessionHelper } from './common/SessionHelper';
+import {SessionContext, SessionHelper} from './common/SessionHelper'
+import EditProfilForm from "./userDashboard/editProfil/EditProfilForm";
 
 function App() {
     const userStorage = localStorage.getItem('user')
@@ -88,11 +89,24 @@ function App() {
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
                             </Route>
                             <Route exacte path="/dashboard/myloans/owner">
                                 {user.session.isUserLogin() ? (
                                     <OwnerLoans/>
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
+                            </Route>
+                            <Route exacte path="/dashboard/profil">
+                                {user.session.isUserLogin() ? (
+                                    <EditProfilForm />
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
+                            </Route>
+                            <Route exacte path="/dashboard/profil/password">
+                                {user.session.isUserLogin() ? (
+                                    <EditProfilForm />
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}

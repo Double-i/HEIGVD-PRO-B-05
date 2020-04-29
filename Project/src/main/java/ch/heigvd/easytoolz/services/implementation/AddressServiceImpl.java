@@ -39,12 +39,19 @@ public class AddressServiceImpl implements AddressService {
 
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
-        if (optionalAddress.isPresent())
+        if (!optionalAddress.isPresent())
             throw new AddressNotFoundException(id);
 
         Address oldAddress = optionalAddress.get();
 
-        if (address.getCity() != null) oldAddress.setCity(address.getCity());
+        // TODO : vérifier que c'est la bonne ville dans le monde (piste: se baser sur le pays également)
+        if (address.getCity() != null) {
+            City city = cityService.loadByName(address.getCity().getCity());
+            if(city == null)
+                city = cityService.storeCity(city);
+            oldAddress.setCity(city);
+        }
+
         if (!address.getDistrict().isEmpty()) oldAddress.setDistrict(address.getDistrict());
         if (address.getLat() != null) oldAddress.setLat(address.getLat());
         if (address.getLng() != null) oldAddress.setLng(address.getLng());

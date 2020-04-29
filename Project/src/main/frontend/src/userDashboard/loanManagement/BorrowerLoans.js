@@ -101,9 +101,6 @@ function BorrowerLoans(props) {
     const btnDisplayToolClicked = (loan) => {
         props.history.push(`/tools/${loan.ezobject.id}`)
     }
-    const btnShortenLoanClicked = (loanId) => {
-        console.log("Raccourcir la durée de l'emprunt id : ", loanId)
-    }
     const btnCancelLoanClicked = (loan) => {
 
         sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/state`, 'PATCH', {

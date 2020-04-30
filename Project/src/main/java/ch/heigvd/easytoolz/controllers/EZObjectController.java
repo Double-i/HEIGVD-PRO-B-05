@@ -37,12 +37,21 @@ public class EZObjectController {
     @Autowired
     EZObjectService ezObjectService;
 
+    @Autowired
+    AuthenticationService authenticationService;
+
+    
     @GetMapping
     public List<EZObjectView> index()
     {
         return ezObjectService.getAll();
     }
 
+    /**
+     * Returns all the objects in the database
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public EZObjectView get(@PathVariable int id)
     {

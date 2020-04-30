@@ -126,6 +126,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         newObject.setOwner(owner);
 
+        ezObjectRepository.save(newObject);
 
         if(files != null)
         {
@@ -141,7 +142,6 @@ public class EZObjectServiceImpl implements EZObjectService {
             }
         }
 
-        ezObjectRepository.save(newObject);
 
     }
 

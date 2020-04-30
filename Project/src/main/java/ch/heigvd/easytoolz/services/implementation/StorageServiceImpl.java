@@ -79,7 +79,7 @@ public class StorageServiceImpl implements StorageService {
                 throw new FileUploadException("Illegal file");
 
             Path target = this.storageLocation.resolve(obj.getID() + obj.getOwnerUserName() +filename );
-            img.setPathToImage(target.toString());
+            img.setPathToImage(target.getFileName().toString());
 
             Files.copy(file.getInputStream(),target,StandardCopyOption.REPLACE_EXISTING);
         }catch(IOException io)

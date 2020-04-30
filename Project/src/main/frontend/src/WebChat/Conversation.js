@@ -4,6 +4,18 @@ import Button from "react-bootstrap/Button";
 import {sendEzApiRequest} from "../common/ApiHelper";
 const SockJS = require("sockjs-client")
 const Stomp = require( "@stomp/stompjs")
+
+
+/**
+ * A conversation between two Users
+ * props contains
+ *  - Current user - taken from session
+ *  - a conversation object
+ *      - wich contains :
+ *          * a Map with two participants
+ *          * Id of the conversation
+ *          * Id of the loan that it concerns ( Subject of the conversation )
+ */
 class Conversation extends React.Component
 {
     constructor(props) {
@@ -11,141 +23,83 @@ class Conversation extends React.Component
         this.state = {
             sender: "",
             recipient: "",
-            messageList : [],
-            currentUser : props.currentUser,
-            sessionId : ""
-        }
+            messageList: [],
+            currentUser: props.currentUser,
+        };
 
         this.conversationStyle =
             {
-                padding : 5
-            }
-        this.listGroup =
-            {
-                maxHeight :300,
-                padding:5
-            }
+                padding: 5
+            };
 
+        //css for the message UL
+        this.listGroupStyle =
+            {
+                maxHeight: 300,
+                padding: 5
+            };
+
+        //Message styling for the sender
         this.senderStyle =
             {
-                backgroundColor:"#A4EEFF",
-                borderRadius:10,
-                margin:10
+                backgroundColor: "#A4EEFF",
+                borderRadius: 10,
+                margin: 10
             };
+
+        //Message Styling for the recipient
         this.recipientStyle =
             {
                 backgroundColor: "#527780",
-                borderRadius:10,
-                margin:10
-            }
+                borderRadius: 10,
+                margin: 10
+            };
+
+        //Styling for the send button
         this.sendButton =
             {
-                position:"absolute",
-                right:0,
-                bottom:0
+                position: "absolute",
+                right: 0,
+                bottom: 0
             }
-        this.styles = new Map();
-
-        this.styles.set(props.currentUser,this.senderStyle);
-        this.styles.set(props.conversation.participants[props.currentUser], this.recipientStyle)
 
         this.socket = null;
         this.client = null;
         this.sendMessage = this.sendMessage.bind(this)
+
+        this.messageRefs = []
     }
 
+    /**
+     * When the component will dismount ( switch discussion / close conversations )
+     * disconnect the socket
+     */
     componentWillUnmount() {
         if(this.client !== null)
         {
             this.client.disconnect();
-            console.log("disconnected");
+            this.client = null;
         }
+
+
     }
 
-    connect()
-    {
-        this.socket = new SockJS("http://localhost:8080/secured/room");
-        this.client = Stomp.Stomp.over(this.socket);
-
-        //disconect before
-        if(this.client !== null)
-        {
-            this.client.disconnect();
-            console.log("disconnected");
-        }
-        this.client.connect({},(frame)=>{
-
-            var url = this.client.ws._transport.url;
-            console.log(url)
-            url = url.replace("ws://localhost:8080/secured/room/","");
-            console.log(url)
-            url = url.replace("/websocket","");
-            console.log(url);
-            url = url.replace(/^[0-9]+\//,"");
-            console.log(url);
-            this.setState({sessionId:url})
-
-            this.client.subscribe('/secured/user/queue/specific-user/'+this.props.conversation.id, (content) =>
-            {
-                this.showMessageOutput(JSON.parse(content.body))
-            })
-        })
-    }
-
+    /**
+     * On first load of the conversation ( Opening conversations )
+     * Load the messages and connect the websocket
+     */
     componentDidMount() {
         this.connect()
         this.loadMessages()
 
     }
 
-    loadMessages( )
-    {
-        let endpoint = "/loans/conversations/"+this.props.conversation.id+"/"+this.props.conversation.loan+"/messages/";
-        console.log(endpoint);
-        this.setState({messageList:[]})
-        sendEzApiRequest("/loans/conversations/"+this.props.conversation.id+"/"+this.props.conversation.loan+"/messages/").then( (result) =>
-        {
-            console.log()
-            let messages = []
-            let recipient = this.props.participants.get(this.props.currentUser);
-            let sender = this.props.participants.get(recipient);
-
-            console.log("recipient  => "+ recipient);
-            console.log("sender => "+sender)
-            for(let i  = 0; i < result.length; i++)
-            {
-                if(result[i].sender === sender)
-                {
-                    messages.push(
-
-                        <li className="list-group-item text-right" style={this.senderStyle}>
-                            {sender}
-                            <Message content={result[i].content} date={"sometime"}/>
-                        </li>
-                    )
-                }
-                else
-                {
-                    messages.push(
-
-                        <li className="list-group-item text-left" style={this.recipientStyle}>
-                            {recipient}
-                            <Message content={result[i].content} date={"sometime"}/>
-                        </li>
-                    )
-                }
-
-
-            }
-            this.setState({messageList:messages});
-        },
-            (error) =>
-            {
-                console.log(error)
-            })
-
-
-    }
+    /**
+     *  The component is updated ( The user has switched between conversation )
+     * @param prevProps
+     * @param prevState
+     * @param snapshot
+     */
     componentDidUpdate(prevProps, prevState, snapshot) {
 
         //avoid infinite looping
@@ -160,19 +114,117 @@ class Conversation extends React.Component
         }
     }
 
+    /**
+     * Connect the web socket
+     */
+    connect()
+    {
+        //disconect before
+        if(this.client !== null )
+        {
+            this.client.disconnect();
+            this.client = null;
+        }
+        if(this.socket !== null)
+        {
+            this.socket.close();
+            this.socket = null;
+        }
+
+        //conenct to the websocket server
+        this.socket = new SockJS("http://localhost:8080/secured/room");
+        this.client = Stomp.Stomp.over(this.socket);
+
+
+        this.client.connect({},(frame)=>{
+
+            //subscribe the client to the specific conversation with the other user
+            //the other user will also be subscribed to this conversation if he opens the same conversation
+            this.client.subscribe('/secured/user/queue/specific-user/'+this.props.conversation.id, (content) =>
+            {
+                //each time a message is send  we must display it in the conversation
+                this.showMessageOutput(JSON.parse(content.body))
+            })
+        })
+    }
+
+    scroll()
+    {
+    }
+    /**
+     * Loads the all the messages from the current conversation
+     * //TODO pagination ?
+     */
+    loadMessages( )
+    {
+
+        //Where to look to get all messages related to the conversation
+        let endpoint = "/loans/conversations/"+this.props.conversation.id+"/"+this.props.conversation.loan+"/messages/";
+        this.setState({messageList:[]})
+
+        //send the request to the API
+        sendEzApiRequest(endpoint).then( (result) =>
+        {
+            let messages = []
+            let recipient = this.props.participants.get(this.props.currentUser);
+            let sender = this.props.participants.get(recipient);
+
+            let lastMsg = null;
+            // for each message returned format them properly
+            for(let i  = 0; i < result.length; i++)
+            {
+                if(i == result.length-1)
+                    lastMsg = this.lastMessageRef
+                if(result[i].sender === sender)
+                {
+                    messages.push(
+
+                        <li className="list-group-item text-right" style={this.senderStyle} ref={el => (this.messageRefs[i]) = el} key={i}>
+                            {sender}
+                            <Message content={result[i].content} date={"sometime"}/>
+                        </li>
+                    )
+                }
+                else
+                {
+                    messages.push(
+
+                        <li className="list-group-item text-left" style={this.recipientStyle} ref={el => (this.messageRefs[i]) = el}>
+                            {recipient}
+                            <Message content={result[i].content} date={"sometime"}/>
+                        </li>
+                    )
+                }
+
+            }
+            console.log(this.messageRefs.length)
+            this.setState({messageList:messages});
+        },
+            (error) =>
+            {
+                //TODO proper exception handling
+                console.log(error)
+            })
+
+
+    }
+
+    /**
+     * Display the message into the conversation
+     * @param output object of the message ( Message, Sender, Date )
+     */
     showMessageOutput(output)
     {
-        let rec = this.props.participants.get(this.props.currentUser);
-        let send = this.props.participants.get(rec)
-
-
+        let recipient = this.props.participants.get(this.props.currentUser);
+        let sender = this.props.participants.get(recipient)
         let messages = null
-        if(output.sender === send)
+
+        if(output.sender === sender)
         {
             messages = (
 
                 <li className="list-group-item text-right" style={this.senderStyle}>
-                    {send}
+                    {sender}
                     <Message content={output.content} date={"sometime"}/>
                 </li>
             )
@@ -182,7 +234,7 @@ class Conversation extends React.Component
             messages = (
 
                 <li className="list-group-item text-left" style={this.recipientStyle}>
-                    {rec}
+                    {recipient}
                     <Message content={output.content} date={"sometime"}/>
                 </li>
             )
@@ -192,40 +244,44 @@ class Conversation extends React.Component
         this.setState({messageList:[...this.state.messageList,messages]})
     }
 
+    /**
+     * Send the message via websocket to the correct destination
+     * @param content_message
+     */
     sendMessage(content_message)
     {
 
-        let rec = this.props.participants.get(this.props.currentUser);
-        let send = this.props.participants.get(rec)
+        let recipient = this.props.participants.get(this.props.currentUser);
+        let sender = this.props.participants.get(recipient)
 
-        console.log(this.props)
         let message = {
             content : content_message,
-            recipient :  rec,
-            sender: send,
+            recipient :  recipient,
+            sender: sender,
             fkConversation : this.props.conversation
         }
-        console.log(JSON.stringify(message))
         this.client.send('/secured/user/queue/specific-user/'+this.props.conversation.id,{},JSON.stringify(message))
     }
+
+
     displayConversation()
     {
         return (
             <div style={this.conversationStyle}>
-                 <ul className="list-group overflow-auto " style={this.listGroup}>
+                 <ul className="list-group overflow-auto " style={this.listGroupStyle}>
                      {
+                         //display the array of messages
                          this.state.messageList
                      }
                 </ul>
                 <div>
-
                     <input id = "message_content"type={"text"}/>
                     <span style={this.sendButton}
                           onClick=
                               { () =>
                                 {
-                                    this.sendMessage(document.getElementById("message_content").value)
-                                    document.getElementById("message_content").value = ""
+                                    this.sendMessage(document.getElementById("message_content").value)  //send the content of the textbox
+                                    document.getElementById("message_content").value = "";              //clear the content of the textbox
                                 }
                             }>
                         <img src="https://img.icons8.com/material-sharp/24/000000/filled-sent.png"/>
@@ -235,6 +291,7 @@ class Conversation extends React.Component
 
         )
     }
+
     render()
     {
         return (

@@ -12,11 +12,10 @@ class ConversationList  extends React.Component {
 
         this.openButtonStyle =
             {
-                width: 100,
-                height: 100,
-                position: "absolute",
-                bottom: 0,
-                right: 0,
+
+                position: "fixed",
+                bottom: 30,
+                right: 30,
                 borderRadius: 100,
 
             }
@@ -28,6 +27,8 @@ class ConversationList  extends React.Component {
                 bottom: 100,
                 right: 100,
                 position: "absolute",
+                width: 500,
+                maxHeight: 500,
                 maxWidth: 500
             };
 
@@ -142,14 +143,8 @@ class ConversationList  extends React.Component {
     {
         return (
             <div>
-                <span style={this.openButtonStyle} onClick =
-                    {
-                        () => {
-                            this.toggle()
-                        }
-                    }>
-                    <img src="https://img.icons8.com/carbon-copy/100/000000/chat.png"/>
-                </span>
+                <span style={this.openButtonStyle} >
+                    <img src="https://img.icons8.com/color/48/000000/speech-bubble-with-dots.png" onClick ={() => {this.toggle()}}/>
                     {
                         this.state.opened ?
                             (
@@ -163,6 +158,8 @@ class ConversationList  extends React.Component {
                                 </div>
                             )
                     }
+                </span>
+
             </div>
         )
 

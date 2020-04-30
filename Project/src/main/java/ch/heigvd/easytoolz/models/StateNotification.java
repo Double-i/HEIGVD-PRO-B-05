@@ -10,7 +10,6 @@ public enum StateNotification {
     ACCEPTATION_DEMANDE_RACOURCISSEMENT("acceptationDemandeRacourcissement"),
     REFUS_DEMANDE_RACOURCISSEMENT("refusDemandeRacourcissement");
 
-
     private final String state;
 
     StateNotification(String state) {

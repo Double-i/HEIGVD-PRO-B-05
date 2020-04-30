@@ -9,7 +9,6 @@ import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public class NotificationServiceImpl implements NotificationService {
@@ -42,8 +41,8 @@ public class NotificationServiceImpl implements NotificationService {
             if(newNotification.getState() != null){
                 oldNotification.setState(newNotification.getState());
             }
-            if(newNotification.isRead() != oldNotification.isRead())
-                oldNotification.setRead(newNotification.isRead());
+            if(newNotification.isIsRead() != oldNotification.isIsRead())
+                oldNotification.setIsRead(newNotification.isIsRead());
             return notificationRepository.save(oldNotification);
         }
     }

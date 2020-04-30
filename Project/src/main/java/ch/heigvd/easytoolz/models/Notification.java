@@ -37,20 +37,20 @@ public class Notification {
         this.state = state;
     }
 
-    public void setRead(boolean read) {
-        this.read = read;
+    public void setIsRead(boolean read) {
+        this.isRead = read;
     }
 
-    public boolean isRead() {
-        return read;
+    public boolean isIsRead() {
+        return isRead;
     }
 
     public Notification() {}
 
-    public Notification(String message, StateNotification state, boolean read, User recipient){
+    public Notification(String message, StateNotification state, boolean isRead, User recipient){
         this.message = message;
         this.state = state;
-        this.read = read;
+        this.isRead = isRead;
         this.recipient = recipient;
     }
 
@@ -67,7 +67,7 @@ public class Notification {
     private StateNotification state;
 
     @NotNull
-    private boolean read;
+    private boolean isRead;
 
     @JsonIgnore
     @ManyToOne(fetch=FetchType.EAGER, optional = false)

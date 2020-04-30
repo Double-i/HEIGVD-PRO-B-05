@@ -6,8 +6,6 @@ import ToolForm from "../../toolsUtil/toolForm";
 
 class EditToolPanel extends React.Component {
 
-    sendLoansAPIEndpoint = "/..."
-
     constructor(props){
         super(props);
         this.state = {

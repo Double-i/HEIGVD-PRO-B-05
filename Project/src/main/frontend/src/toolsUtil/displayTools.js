@@ -7,7 +7,6 @@ class DisplayTools extends React.Component {
 
     constructor(props){
         super(props);
-
     }
 
     render(){
@@ -19,9 +18,12 @@ class DisplayTools extends React.Component {
                 <div className="container" style={{marginTop: '20px'}}>
                     <div className="row border-bottom header">
                         <div className="col-2">
+                            <div>Image</div>
+                        </div>
+                        <div className="col-2">
                             <div>Nom de l'outil</div>
                         </div>
-                        <div className="col-4">
+                        <div className="col-2">
                             <div>Description</div>
                         </div>
                         <div className="col-2" hidden={this.props.hideOwner}>
@@ -38,6 +40,7 @@ class DisplayTools extends React.Component {
                             description={item.description}
                             ownerUserName={item.owner.userName}
                             objectTags={item.objectTags}
+                            images={item.images}
                             hideOwner={this.props.hideOwner}
                             hideBorrowButton={this.props.hideBorrowButton}
                             hideEditButton={this.props.hideEditButton}

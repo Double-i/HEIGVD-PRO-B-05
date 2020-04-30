@@ -16,7 +16,7 @@ import SignIn from './signIn/SignIn'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AdminPage from "./admin/AdminPage";
-import ToolsList from "./userDashboard/toolsList/ToolsList";
+import UserToolsList from "./userDashboard/userTools/UserToolsList";
 
 
 import {SessionContext, SessionHelper} from './common/SessionHelper'
@@ -94,7 +94,7 @@ function App() {
                             </Route>
                             <Route exacte path="/dashboard/toolList">
                                 {user.session.isUserLogin() ? (
-                                    <ToolsList/>
+                                    <UserToolsList/>
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}

@@ -1,14 +1,19 @@
 import DisplayTools from "../toolsUtil/displayTools";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {sendEzApiRequest} from "../common/ApiHelper";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import {Nav, NavItem} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import {SessionContext} from "../common/SessionHelper";
 
-
-//TODO : Si le user est pas log, on arrive pas a fetch les objets ?!
 class SearchTools extends React.Component{
+
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
+
+    static contextType = SessionContext
+
     constructor(props){
         super(props);
 
@@ -26,6 +31,7 @@ class SearchTools extends React.Component{
 
     //Au chargement, on affiche tout les tools
     componentDidMount() {
+
         sendEzApiRequest(this.SEARCH_URI)
             .then((response) =>{
                 this.setState({tools:response})
@@ -45,6 +51,7 @@ class SearchTools extends React.Component{
 
     //En cas de submit, on recherche la query dans
     handleSubmit(event){
+
         //Si le champ est vide, on affiche tout les objects
         let URL = this.SEARCH_URI;
 
@@ -133,12 +140,12 @@ class SearchTools extends React.Component{
                         Rechercher
                     </Button>
                 </Form>
-
                 <DisplayTools
                     data = {this.state.tools}
                     hideOwner={false}
-                    hideBorrowButton={false}
+                    hideBorrowButton={!this.context.session.isUserLogin()}
                     hideEditButton={true}
+                    hideDeleteButton={true}
                 />
             </div>
         )

@@ -8,6 +8,7 @@ import {sendEzApiRequest} from "../common/ApiHelper";
 class DisplayTool extends React.Component {
 
     DELETE_ITEM_URI = '/objects/delete/'
+    imgPath = ''
 
     constructor(props){
         super(props);
@@ -16,16 +17,31 @@ class DisplayTool extends React.Component {
             borrowModalShow : false,
             editModalShow : false
         }
+        if(props.images[0] != undefined){
+             this.imgPath = props.images[0].pathToImage.toString();
+        }
+        console.log(this.imgPath)
     }
 
+    /**
+     * Display the borrow pannel
+     * @param value
+     */
     setBorrowModalShow(value){
         this.setState({borrowModalShow : value});
     }
 
+    /**
+     * Display the edit pannel show
+     * @param value
+     */
     setEditModalShow(value){
         this.setState({editModalShow: value})
     }
 
+    /**
+     * Delete item, using the DELETE http request
+     */
     deleteItem(){
         if (window.confirm('Etes-vous sur de vouloir effacer cet outil ?')){
             sendEzApiRequest(this.DELETE_ITEM_URI + this.props.id, "DELETE")
@@ -38,10 +54,16 @@ class DisplayTool extends React.Component {
     render() {
         return (
             <div className="row border-bottom" style={{marginTop: '10px'}} key={"itemId" + this.props.id}>
+
+                <div className="col-2">
+                    <img
+                        src={this.imgPath}
+                    />
+                </div>
                 <div className="col-2">
                     <div>{this.props.name}</div>
                 </div>
-                <div className="col-4">
+                <div className="col-2">
                     <div>{this.props.description}</div>
                 </div>
                 <div className="col-2" hidden={this.props.hideOwner}>

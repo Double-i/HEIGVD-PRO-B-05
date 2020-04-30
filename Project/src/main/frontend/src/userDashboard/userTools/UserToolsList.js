@@ -7,9 +7,9 @@ import {sendEzApiRequest} from "../../common/ApiHelper";
 import DisplayTools from "../../toolsUtil/displayTools";
 
 
-class ToolsList extends React.Component {
+class UserToolsList extends React.Component {
 
-    GET_TOOLS_URI = '/objects/owner/heymanuel';
+    GET_TOOLS_URI = '/objects/myObjects';
 
     constructor(props){
         super(props);
@@ -48,4 +48,4 @@ class ToolsList extends React.Component {
     }
 }
 
-export default ToolsList;
+export default UserToolsList;

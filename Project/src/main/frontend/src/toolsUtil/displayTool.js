@@ -20,7 +20,8 @@ class DisplayTool extends React.Component {
         if(props.images[0] != undefined){
              this.imgPath = props.images[0].pathToImage.toString();
         }
-        console.log(this.imgPath)
+
+        //console.log(this.imgPath)
     }
 
     /**
@@ -57,7 +58,9 @@ class DisplayTool extends React.Component {
 
                 <div className="col-2">
                     <img
-                        src={this.imgPath}
+                        style={{width: '100px', height : '100px'}}
+                        //TODO : this.imgPath
+                        src={"https://www.emp-online.ch/dw/image/v2/BBQV_PRD/on/demandware.static/-/Sites-master-emp/default/dwfd43f85f/images/2/5/4/7/254719a.jpg?sfrm=png"}
                     />
                 </div>
                 <div className="col-2">

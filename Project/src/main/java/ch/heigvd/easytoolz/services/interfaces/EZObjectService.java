@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.services.interfaces;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,6 +82,8 @@ public interface EZObjectService {
                                            List<String> ownersList,
                                            List<String> descriptionList,
                                  List<Tag> tags);
+
+    List<EZObjectImage> getObjectImages(int id);
 
 
 }

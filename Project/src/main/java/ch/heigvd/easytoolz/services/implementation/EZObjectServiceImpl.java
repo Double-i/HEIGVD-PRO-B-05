@@ -126,6 +126,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         newObject.setOwner(owner);
 
+        ezObjectRepository.save(newObject);
 
         if(files != null)
         {
@@ -141,7 +142,6 @@ public class EZObjectServiceImpl implements EZObjectService {
             }
         }
 
-        ezObjectRepository.save(newObject);
 
     }
 
@@ -186,6 +186,10 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     }
 
+    public List<EZObjectImage> getObjectImages(int id)
+    {
+        return imagesRepository.findByEzObject_ID(id);
+    }
 
     public List<EZObjectView> getObjectByName(String objectName) {
         return ezObjectRepository.getAllByNameContaining(objectName);

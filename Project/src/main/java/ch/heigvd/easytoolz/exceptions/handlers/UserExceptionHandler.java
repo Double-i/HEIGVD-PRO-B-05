@@ -15,21 +15,19 @@ public class UserExceptionHandler extends DefaultExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> handleUserNotFoundException(EZObjectNotFoundException ex, WebRequest request)
     {
-        ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), Now(),getURI(request) );
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.NOT_FOUND);
+        return makeError(ex,request,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserAlreadyPresent.class)
     public ResponseEntity<ApiError> handleUserAlreadyPresentException(EZObjectNotFoundException ex, WebRequest request)
     {
-        ApiError error = new ApiError(HttpStatus.IM_USED, ex.getMessage(), Now(),getURI(request) );
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.IM_USED);
+        return makeError(ex,request,HttpStatus.IM_USED);
+
     }
 
     @ExceptionHandler(UserFailedStoreException.class)
     public ResponseEntity<ApiError> handleUserFailedStoreException(EZObjectNotFoundException ex, WebRequest request)
     {
-        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage(), Now(),getURI(request) );
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.NOT_FOUND);
+        return makeError(ex,request,HttpStatus.BAD_REQUEST);
     }
 }

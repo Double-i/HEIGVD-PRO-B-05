@@ -21,23 +21,13 @@ public class EZObjectExceptionHandler extends DefaultExceptionHandler {
     @ExceptionHandler({EZObjectNotFoundException.class})
     public ResponseEntity<ApiError> handleEZObjectNotFoundException(EZObjectNotFoundException ex, WebRequest request)
     {
-        ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), Now(),getURI(request) );
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.NOT_FOUND);
+        return makeError(ex,request,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({EZObjectFormatException.class})
     public ResponseEntity<ApiError> handleEZObjectFormatException(EZObjectFormatException ex, WebRequest request)
     {
-        ApiError error = new ApiError(HttpStatus.BAD_REQUEST,ex.getMessage(),Now(),getURI(request));
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.BAD_REQUEST);
+        return makeError(ex,request,HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler({UserNotFoundException.class})
-    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex, WebRequest request)
-    {
-        ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), Now(), getURI(request));
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.NOT_FOUND);
-    }
-
 
 }

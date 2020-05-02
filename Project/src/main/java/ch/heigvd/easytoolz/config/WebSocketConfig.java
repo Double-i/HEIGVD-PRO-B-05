@@ -1,5 +1,7 @@
 package ch.heigvd.easytoolz.config;
 
+import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -13,43 +15,39 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 import org.w3c.dom.Attr;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.Map;
+import java.util.UUID;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    @Autowired
+    AuthenticationService service;
+
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/secured/user/queue/specific-user/");
+        config.enableSimpleBroker("/secured/user/queue/loan-room");
+        config.setUserDestinationPrefix("/secured/user");
+
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/secured/room").setAllowedOrigins("*");
-        registry.addEndpoint("/secured/room").setAllowedOrigins("*").withSockJS();
 
+        class Handshake extends DefaultHandshakeHandler
+        {
+            @Override
+            protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
+                return new StompPrincipal(UUID.randomUUID().toString());
+            }
+        }
 
-        /*registry.addEndpoint("/chat")
-                .setAllowedOrigins("*")
-                .setHandshakeHandler(new DefaultHandshakeHandler()
-                {
-                    public boolean beforeHandshake(
-                            ServerHttpRequest request,
-                            ServerHttpResponse response,
-                            WebSocketHandler webSocketHandler,
-                            Map Attributes) throws Exception{
+        registry.addEndpoint("/EZStomp").setAllowedOrigins("*").setHandshakeHandler(new Handshake());
+        registry.addEndpoint("/EZStomp").setAllowedOrigins("*").setHandshakeHandler(new Handshake()).withSockJS();
 
-                        if(request instanceof ServletServerHttpRequest)
-                        {
-                            ServletServerHttpRequest serverHttpRequest = (ServletServerHttpRequest) request;
-
-                            HttpSession session = serverHttpRequest.getServletRequest().getSession();
-                            Attributes.put("sessionId",session.getId());
-                        }
-                        return true;
-                    }
-
-                }).withSockJS();*/
     }
 
 }

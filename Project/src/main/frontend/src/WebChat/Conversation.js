@@ -132,15 +132,20 @@ class Conversation extends React.Component
         }
 
         //conenct to the websocket server
-        this.socket = new SockJS("http://localhost:8080/secured/room");
+        this.socket = new SockJS("http://localhost:8080/EZStomp/");
         this.client = Stomp.Stomp.over(this.socket);
 
-
-        this.client.connect({},(frame)=>{
+        let headers = 
+            {
+                login:this.state.currentUser,
+                "user-name":this.state.currentUser
+            }
+            
+        this.client.connect(headers,(frame)=>{
 
             //subscribe the client to the specific conversation with the other user
             //the other user will also be subscribed to this conversation if he opens the same conversation
-            this.client.subscribe('/secured/user/queue/specific-user/'+this.props.conversation.id, (content) =>
+            this.client.subscribe('/secured/user/queue/loan-room/'+this.props.conversation.id, (content) =>
             {
                 //each time a message is send  we must display it in the conversation
                 this.showMessageOutput(JSON.parse(content.body))
@@ -197,7 +202,6 @@ class Conversation extends React.Component
                 }
 
             }
-            console.log(this.messageRefs.length)
             this.setState({messageList:messages});
         },
             (error) =>
@@ -260,7 +264,7 @@ class Conversation extends React.Component
             sender: sender,
             fkConversation : this.props.conversation
         }
-        this.client.send('/secured/user/queue/specific-user/'+this.props.conversation.id,{},JSON.stringify(message))
+        this.client.send('/EZChat/'+message.fkConversation.id+'/private',{},JSON.stringify(message))
     }
 
 

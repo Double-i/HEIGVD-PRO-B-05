@@ -42,16 +42,16 @@ public class EZObjectController {
     AuthenticationService authenticationService;
 
     
-    @GetMapping
-    public List<EZObjectView> index(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "nbItems", defaultValue = "10") int nbItems)
+    @GetMapping()
+    public List<EZObjectView> index( @RequestParam(value = "nbItems", defaultValue = "10") int nbItems, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
-        return ezObjectService.getAll(page,nbItems);
+        return ezObjectService.getAll(pageno,nbItems);
     }
 
     @GetMapping("/count")
-    public int getNbObjects()
+    public ResponseEntity<Integer> getNbObjects()
     {
-        return ezObjectService.getNbObjects();
+        return new ResponseEntity<Integer>((Integer)ezObjectService.getNbObjects(),HttpStatus.OK);
     }
 
     /**
@@ -60,7 +60,7 @@ public class EZObjectController {
      * @return
      */
     @GetMapping("/{id}")
-    public EZObjectView get(@PathVariable int id)
+    public EZObjectView get(@PathVariable int id, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
         return ezObjectService.getObject(id);
     }
@@ -68,14 +68,14 @@ public class EZObjectController {
 
     @GetMapping("/myObjects")
     @ResponseBody
-    public List<EZObjectView> getMyBObjects()
+    public List<EZObjectView> getMyBObjects(@RequestParam(name = "page", defaultValue="0") int pageno)
     {
         return ezObjectService.getObjectByOwner(authenticationService.getTheDetailsOfCurrentUser().getUserName());
     }
 
     @GetMapping("/owner/{username}")
     @ResponseBody
-    public List<EZObjectView> getByOwner(@PathVariable String username)
+    public List<EZObjectView> getByOwner(@PathVariable String username, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
         return ezObjectService.getObjectByOwner(username);
     }
@@ -83,8 +83,8 @@ public class EZObjectController {
     ObjectMapper mapper = new ObjectMapper();
 
     @PostMapping(value="/add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> add(@RequestParam(name="object") String newObject,
-                                      @RequestParam(name="image")List<MultipartFile> files) throws Exception {
+    public ResponseEntity<String> add(@RequestParam(name = "object") String newObject,
+                                      @RequestParam(name = "image") List<MultipartFile> files) throws Exception {
 
 
         EZObject obj = mapper.readValue(newObject,EZObject.class);
@@ -93,8 +93,8 @@ public class EZObjectController {
     }
 
     @PostMapping(value="/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> update(@RequestParam(name="object") String newObject,
-                                         @RequestParam(name="image")List<MultipartFile> files) throws Exception {
+    public ResponseEntity<String> update(@RequestParam(name = "object") String newObject,
+                                         @RequestParam(name = "image") List<MultipartFile> files) throws Exception {
 
 
         EZObject obj = mapper.readValue(newObject,EZObject.class);
@@ -117,7 +117,7 @@ public class EZObjectController {
 
     @GetMapping("find/name/{objectName}")
     @ResponseBody
-    public List<EZObjectView> getByName(@PathVariable String objectName)
+    public List<EZObjectView> getByName(@PathVariable String objectName, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
         return ezObjectService.getObjectByName(objectName);
     }
@@ -125,7 +125,7 @@ public class EZObjectController {
 
     @GetMapping("find/description/{content}")
     @ResponseBody
-    public List<EZObjectView> getByDescription(@PathVariable String content)
+    public List<EZObjectView> getByDescription(@PathVariable String content, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
         return ezObjectService.getObjectByDescription(content);
     }
@@ -133,28 +133,41 @@ public class EZObjectController {
 
     @GetMapping("find/localisation")
     @ResponseBody
-    public List<EZObjectView> getByLocalisation(@RequestParam(name="Latitude") BigDecimal lat, @RequestParam(name="Longitude") BigDecimal lng)
+    public List<EZObjectView> getByLocalisation(@RequestParam(name = "Latitude") BigDecimal lat, @RequestParam(name = "Longitude") BigDecimal lng, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
         return ezObjectService.getObjectsByLocalisation(lat,lng);
     }
 
     @GetMapping("find/tags")
     @ResponseBody
-    public List<EZObjectView> getByTags(@RequestBody List<Tag> tags)
+    public List<EZObjectView> getByTags(@RequestBody List<Tag> tags, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
         return ezObjectService.getObjectsByTag(tags);
     }
 
     @GetMapping("filter")
     public List<EZObject> findFiltered(
-            @RequestParam(name="names",required = false) List<String> names,
-            @RequestParam(name="owners",required = false) List<String> owners,
-            @RequestParam(name="description",required = false) List<String> description,
-            @RequestParam(name="tags", required  = false) List<Tag> tags)
+            @RequestParam(name = "names", required = false) List<String> names,
+            @RequestParam(name = "owners", required = false) List<String> owners,
+            @RequestParam(name = "description", required = false) List<String> description,
+            @RequestParam(name = "tags", required = false) List<Tag> tags, 
+            @RequestParam(name = "page", defaultValue="0") int pageno)
 
     {
 
-        return ezObjectService.getFiltered(names,owners,description,tags);
+        return ezObjectService.getFiltered(names,owners,description,tags, pageno);
+    }
+    @GetMapping("count/filter")
+    public int getFilteredCount(
+            @RequestParam(name = "names", required = false) List<String> names,
+            @RequestParam(name = "owners", required = false) List<String> owners,
+            @RequestParam(name = "description", required = false) List<String> description,
+            @RequestParam(name = "tags", required = false) List<Tag> tags,
+            @RequestParam(name = "page", defaultValue="0") int pageno)
+
+    {
+
+        return ezObjectService.getFilteredCount(names,owners,description,tags, pageno);
     }
 
     @GetMapping("/images/{id}")

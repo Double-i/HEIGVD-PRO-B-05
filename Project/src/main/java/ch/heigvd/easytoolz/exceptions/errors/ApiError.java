@@ -7,12 +7,12 @@ import java.sql.Date;
 
 public class ApiError {
 
-    public HttpStatus getCode() {
-        return code;
+    public HttpStatus getStatus() {
+        return status;
     }
 
-    public void setCode(HttpStatus code) {
-        this.code = code;
+    public void setStatus(HttpStatus code) {
+        this.status = code;
     }
 
     public String getMessage() {
@@ -41,7 +41,7 @@ public class ApiError {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyy@HH:mm:ss")
     Date date;
-    HttpStatus code;
+    HttpStatus status;
     String message;
 
     String url;
@@ -49,7 +49,7 @@ public class ApiError {
     public ApiError(HttpStatus code, String message,Date date,String url )
     {
         this.date = date;
-        this.code = code;
+        this.status = code;
         this.message  = message;
         this.url = url;
     }

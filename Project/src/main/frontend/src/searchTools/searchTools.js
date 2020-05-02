@@ -1,6 +1,6 @@
 import DisplayTools from "../toolsUtil/displayTools";
 import React, {useState} from "react";
-import {sendEzApiRequest, sendRequest, sendSimpleRequest} from "../common/ApiHelper";
+import {sendEzApiRequest, sendRequest, sendRequestSimple} from "../common/ApiHelper";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
@@ -19,7 +19,8 @@ class SearchTools extends React.Component{
             searchTags : [],
             nbTools : 0,
             currentURLFilter : "",
-            pages : []
+            pages : [],
+            currentPage : null
         };
 
         //Utilisé pour appelé this dans handleSubmit
@@ -29,19 +30,30 @@ class SearchTools extends React.Component{
 
     //Au chargement, on affiche tout les tools
     componentDidMount() {
-        sendSimpleRequest(this.SEARCH_URI+"/count")
-            .then(
-                (count) => {
-                    console.log(count)
-                    sendEzApiRequest(this.SEARCH_URI)
-                        .then((result) => {
-                            this.setState({tools : result, nbTools:count});
-                            this.handlePage();
-                        })
-                },
-                (error) => {
-                    console.log(error)
-                })
+
+        //all the objects
+        sendRequestSimple('/objects/count').then(
+            (result) =>
+            {
+                let pages = []
+                let nbPages = result/10;
+                for(let i = 0; i < nbPages; i++)
+                {
+                    console.log("page "+i)
+                    pages.push(
+                        <span onClick={() => {this.loadPage(i)}}>{i}</span>
+                    )
+                }
+
+                this.setState({nbTools:result,pages:pages})
+
+            }
+        )
+
+        sendEzApiRequest(this.SEARCH_URI)
+            .then((response) =>{
+                this.setState({tools:response})
+            })
 
 
         sendEzApiRequest(this.TAGS_URI)
@@ -55,6 +67,44 @@ class SearchTools extends React.Component{
                 })
     }
 
+    loadPage(page)
+    {
+        let URL = this.SEARCH_URI
+
+        URL+='?page='+page;
+
+        //Search by name
+        if(this.state.search !== ''){
+            URL += '&' + this.state.search;
+            if(this.state.searchTags.length !== 0)
+                URL += '&';
+        }
+
+        if(this.state.searchTags.length !== 0){
+            if(this.state.search === '')
+                URL += "/filter?"
+            URL += 'tags=';
+            for(let i = 0; i < this.state.searchTags.length; ++i){
+                if(i > 0)
+                    URL += ",";
+                URL += this.state.searchTags[i];
+            }
+        }
+
+        sendEzApiRequest(URL)
+            .then(
+                (result) => {
+                    if (result.status === 403) {
+                        console.log('No tools founded')
+                    } else {
+                        console.log('items founded')
+                        this.setState({tools : result});
+                    }
+                },
+                error => {
+                    console.log('Connection PAS ok', error)
+                })
+    }
     //En cas de submit, on recherche la query dans
     handleSubmit(event){
         //Si le champ est vide, on affiche tout les objects
@@ -77,60 +127,38 @@ class SearchTools extends React.Component{
                 URL += this.state.searchTags[i];
             }
         }
-        console.log("nbobject " )
 
         event.preventDefault();
-        sendSimpleRequest(this.SEARCH_URI+"/count")
-            .then(
-                (count) => {
-                    console.log("nbobject " + count)
-                    sendEzApiRequest(URL)
-                        .then(
-                            (result) => {
-                                if (result.status === 403) {
-                                    console.log('No tools founded')
-                                } else {
-                                    console.log('items founded')
-                                    this.setState({tools : result, currentURLFilter:URL, nbTools:count});
-                                }
-                            },
-                            error => {
-                                console.log('Connection PAS ok', error)
-                            })
-                }
-            )
-
-        //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
-
-    }
-    loadPage(i)
-    {
-        sendEzApiRequest(this.state.currentURLFilter+"&page="+i)
+        sendEzApiRequest(URL)
             .then(
                 (result) => {
+                    console.log(result)
                     if (result.status === 403) {
                         console.log('No tools founded')
                     } else {
                         console.log('items founded')
-                        this.setState({tools : result});
+                        let pages = []
+                        console.log(result)
+                        let nbPages = result/10;
+                        for(let i = 0; i < nbPages; i++)
+                        {
+                            console.log("page "+i)
+                            pages.push(
+                                <span onClick={() => {this.loadPage(i)}}>{i}</span>
+                            )
+                        }
+
+                        this.setState({tools : result,nbTools:result.length,pages:pages})
                     }
                 },
                 error => {
                     console.log('Connection PAS ok', error)
                 })
+
+        //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
+
     }
-    handlePage()
-    {
-        let pages = [];
-        for(let i = 0; i < this.state.nbTools; i++)
-        {
-            pages.push(
-                <span onClick={this.loadPage(i)}>{i}</span>
-            )
-        }
-        this.setState({pages:pages})
-        console.log(pages)
-    }
+
 
     //Dynaminc update of searched tags fields
     handleTagChange(e){

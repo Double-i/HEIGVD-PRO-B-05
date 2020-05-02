@@ -4,9 +4,11 @@ import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.Loan;
 import ch.heigvd.easytoolz.models.Tag;
 import ch.heigvd.easytoolz.views.EZObjectView;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import org.springframework.data.domain.Pageable;
 import java.util.Date;
 import java.math.BigDecimal;
 import java.util.List;
@@ -105,12 +107,14 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
 
     EZObjectView getEZObjectByID(int id);
 
-    List<EZObjectView> getAllByIsActive(boolean active);
+    Page<EZObjectView> getAllByIsActive(boolean active, Pageable page);
     List<EZObjectView> getByOwner_UserName(String username);
 
     List<EZObjectView> getAllByNameContaining(String name);
     List<EZObjectView> getAllByDescriptionContaining(String name);
     List<EZObjectView> getAllByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat,BigDecimal lng);
     List<EZObjectView> getAllByObjectTagsIn(List<Tag> tags);
+
+    int countAllByIsActive(boolean active);
 
 }

@@ -11,6 +11,8 @@ import ch.heigvd.easytoolz.util.ServiceUtils;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -107,8 +109,9 @@ public class EZObjectServiceImpl implements EZObjectService {
         return obj;
     }
 
-    public List<EZObjectView> getAll() {
-        return ezObjectRepository.getAllByIsActive(true);
+    public List<EZObjectView> getAll(int page, int pageLength) {
+        Pageable pageable =  PageRequest.of(page,pageLength);
+        return ezObjectRepository.getAllByIsActive(true, pageable).getContent();
     }
 
     public List<EZObjectView> getObjectByOwner(String username) {
@@ -207,6 +210,12 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     public List<EZObjectView> getObjectsByTag(List<Tag> tags) {
         return ezObjectRepository.getAllByObjectTagsIn(tags);
+    }
+
+
+    public int getNbObjects()
+    {
+        return ezObjectRepository.countAllByIsActive(true);
     }
 
 }

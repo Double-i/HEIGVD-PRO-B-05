@@ -1,6 +1,6 @@
 import DisplayTools from "../toolsUtil/displayTools";
 import React, {useState} from "react";
-import {sendEzApiRequest} from "../common/ApiHelper";
+import {sendEzApiRequest, sendRequest, sendSimpleRequest} from "../common/ApiHelper";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
@@ -16,7 +16,10 @@ class SearchTools extends React.Component{
             search : '',
             tools : [],
             tags : [],
-            searchTags : []
+            searchTags : [],
+            nbTools : 0,
+            currentURLFilter : "",
+            pages : []
         };
 
         //Utilisé pour appelé this dans handleSubmit
@@ -26,10 +29,19 @@ class SearchTools extends React.Component{
 
     //Au chargement, on affiche tout les tools
     componentDidMount() {
-        sendEzApiRequest(this.SEARCH_URI)
-            .then((response) =>{
-                this.setState({tools:response})
-            })
+        sendSimpleRequest(this.SEARCH_URI+"/count")
+            .then(
+                (count) => {
+                    console.log(count)
+                    sendEzApiRequest(this.SEARCH_URI)
+                        .then((result) => {
+                            this.setState({tools : result, nbTools:count});
+                            this.handlePage();
+                        })
+                },
+                (error) => {
+                    console.log(error)
+                })
 
 
         sendEzApiRequest(this.TAGS_URI)
@@ -65,10 +77,35 @@ class SearchTools extends React.Component{
                 URL += this.state.searchTags[i];
             }
         }
+        console.log("nbobject " )
+
+        event.preventDefault();
+        sendSimpleRequest(this.SEARCH_URI+"/count")
+            .then(
+                (count) => {
+                    console.log("nbobject " + count)
+                    sendEzApiRequest(URL)
+                        .then(
+                            (result) => {
+                                if (result.status === 403) {
+                                    console.log('No tools founded')
+                                } else {
+                                    console.log('items founded')
+                                    this.setState({tools : result, currentURLFilter:URL, nbTools:count});
+                                }
+                            },
+                            error => {
+                                console.log('Connection PAS ok', error)
+                            })
+                }
+            )
 
         //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
-        event.preventDefault();
-        sendEzApiRequest(URL)
+
+    }
+    loadPage(i)
+    {
+        sendEzApiRequest(this.state.currentURLFilter+"&page="+i)
             .then(
                 (result) => {
                     if (result.status === 403) {
@@ -81,6 +118,18 @@ class SearchTools extends React.Component{
                 error => {
                     console.log('Connection PAS ok', error)
                 })
+    }
+    handlePage()
+    {
+        let pages = [];
+        for(let i = 0; i < this.state.nbTools; i++)
+        {
+            pages.push(
+                <span onClick={this.loadPage(i)}>{i}</span>
+            )
+        }
+        this.setState({pages:pages})
+        console.log(pages)
     }
 
     //Dynaminc update of searched tags fields
@@ -140,6 +189,7 @@ class SearchTools extends React.Component{
                     hideBorrowButton={false}
                     hideEditButton={true}
                 />
+                {this.state.pages}
             </div>
         )
     }

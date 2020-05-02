@@ -34,7 +34,7 @@ public interface EZObjectService {
      *
      * @return
      */
-    List<EZObjectView> getAll();
+    List<EZObjectView> getAll(int page, int pageLength);
 
 
     /**
@@ -85,5 +85,7 @@ public interface EZObjectService {
 
     List<EZObjectImage> getObjectImages(int id);
 
+
+    int getNbObjects();
 
 }

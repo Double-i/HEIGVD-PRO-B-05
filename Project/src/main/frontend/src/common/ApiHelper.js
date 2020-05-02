@@ -48,6 +48,23 @@ export function sendRequest(url, verb = 'GET', data = {}) {
         }
     })
 }
+
+export function sendSimpleRequest(url, verb = 'GET', data = {}) {
+    const requestInfo = {
+        method: verb,
+        credentials: 'include',
+        mode: 'cors',
+    }
+
+    return fetch(url, requestInfo).then(response => {
+        if(response.status >= 200 && response.status <= 299){
+            return response
+        }else{
+            console. log("Resquest error : " + response.status)
+        }
+    })
+}
+
 /**
  * Send a request to EzTools API
  *

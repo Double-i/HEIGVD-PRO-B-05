@@ -13,11 +13,14 @@ import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
+
+import Map from './searchTools/map'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
 
 import {SessionContext, SessionHelper} from './common/SessionHelper'
+import EditProfilForm from "./userDashboard/editProfil/EditProfilForm";
 
 function App() {
     const userStorage = localStorage.getItem('user')
@@ -65,6 +68,10 @@ function App() {
                                     <SignUp/>
                                 )}
                             </Route>
+
+                            <Route exact path="/map">
+                                <Map />
+                            </Route>
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails/>
                             </Route>
@@ -82,7 +89,6 @@ function App() {
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
                             </Route>
                             <Route exacte path="/dashboard/myloans/owner">
                                 {user.session.isUserLogin() ? (
@@ -90,7 +96,20 @@ function App() {
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
+                            </Route>
+                            <Route exacte path="/dashboard/profil">
+                                {user.session.isUserLogin() ? (
+                                    <EditProfilForm />
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
+                            </Route>
+                            <Route exacte path="/dashboard/profil/password">
+                                {user.session.isUserLogin() ? (
+                                    <EditProfilForm />
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
                             </Route>
 
                             <Route component={UnkownPage}/>

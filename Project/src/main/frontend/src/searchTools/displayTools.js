@@ -14,7 +14,6 @@ class DisplayTools extends React.Component {
         return (
 
             <div className="content">
-                {/* Result */}
                 <div className="container" style={{marginTop: '20px'}}>
                     <div className="row border-bottom header">
                         <div className="col-2">
@@ -30,9 +29,10 @@ class DisplayTools extends React.Component {
                             <div>Tags</div>
                         </div>
                     </div>
-                    {this.props.data.map(item => (
+                    {this.props.data.map((item, idx) => (
 
                         <DisplayTool
+                            key={"search-item-"+idx}
                             id={item.id}
                             name={item.name}
                             description={item.description}

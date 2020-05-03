@@ -24,7 +24,7 @@ class DashBoard extends React.Component {
                             <Card.Text>
                                Modifier votre profil
                             </Card.Text>
-                            <Link to="/dashboard/<PROFIL>"><Button variant="primary">Consulter</Button></Link>
+                            <Link to="/dashboard/profil"><Button variant="primary">Consulter</Button></Link>
                         </Card.Body>
                     </Card>
                     <Card style={{width: '18rem'}}>
@@ -47,7 +47,6 @@ class DashBoard extends React.Component {
                             <Link to="/dashboard/myloans/owner"><Button variant="primary">Consulter</Button></Link>
                         </Card.Body>
                     </Card>
-
                     </CardDeck>
             </>
         );

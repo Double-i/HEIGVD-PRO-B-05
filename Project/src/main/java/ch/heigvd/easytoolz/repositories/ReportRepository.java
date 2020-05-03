@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public interface ReportRepository extends JpaRepository<Report,Integer>, JpaSpecificationExecutor<Report>{
-    List<Report> findByReportType(@NotNull ReportType reportType);
+public interface ReportRepository extends JpaRepository<Report,String>, JpaSpecificationExecutor<Report>{
+    List<Report> findReportByReportType_OrderByEZObject(@NotNull ReportType reportType);
+    List<Report> findReportByEZObject_Owner_UserName(String reporter);
+    List<Report> findReportByReporter_UserName(String reported);
 }
 

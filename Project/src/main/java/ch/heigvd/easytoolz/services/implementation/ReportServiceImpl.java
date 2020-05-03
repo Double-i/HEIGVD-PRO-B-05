@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReportServiceImpl implements ReportService {
     @Autowired
@@ -44,5 +46,18 @@ public class ReportServiceImpl implements ReportService {
 
         return new ResponseEntity<>(" {\"status\": \"ok\",\"msg\": \"The report has been stored\"}", HttpStatus.OK);
     }
+
+    @Override
+    public List<Report> getReport(String username, Boolean reported) {
+
+        if(reported) {
+            return reportRepository.findReportByEZObject_Owner_UserName(username);
+        }
+        else{
+            return reportRepository.findReportByReporter_UserName(username);
+        }
+
+    }
+
 
 }

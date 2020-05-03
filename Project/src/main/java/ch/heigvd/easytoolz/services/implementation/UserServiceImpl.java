@@ -1,6 +1,6 @@
 package ch.heigvd.easytoolz.services.implementation;
 
-import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedNotAdminException;
+import ch.heigvd.easytoolz.exceptions.authentication.UnauthorizedNotAdminException;
 import ch.heigvd.easytoolz.exceptions.user.UserAlreadyPresent;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedDeleteException;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
@@ -16,15 +16,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
-import static ch.heigvd.easytoolz.util.ServiceUtils.transformLike;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -42,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public User getUser(String username) throws UserNotFoundException {
         if (!authenticationService.isTheCurrentUserAdmin()) {
             if (!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
-                throw new AccessDeniedNotAdminException();
+                throw new UnauthorizedNotAdminException();
         }
         return userRepository
                 .findById(username)
@@ -53,7 +46,7 @@ public class UserServiceImpl implements UserService {
     public List<User> filters(String firstName, String lastName, String userName, String email) {
 
         if (!authenticationService.isTheCurrentUserAdmin())
-            throw new AccessDeniedNotAdminException();
+            throw new UnauthorizedNotAdminException();
 
         Specification<User> specs = UserSpecs.getAll();
 
@@ -95,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User newUser, String username) throws UserNotFoundException {
         if (!authenticationService.isTheCurrentUserAdmin()) {
             if (!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
-                throw new AccessDeniedNotAdminException();
+                throw new UnauthorizedNotAdminException();
         }
 
         return userRepository.findById(username)
@@ -117,7 +110,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String username) throws UserFailedDeleteException {
         if (!authenticationService.isTheCurrentUserAdmin()) {
             if (!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
-                throw new AccessDeniedNotAdminException();
+                throw new UnauthorizedNotAdminException();
         }
 
         Optional<User> user = userRepository.findById(username);

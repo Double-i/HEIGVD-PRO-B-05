@@ -1,11 +1,11 @@
 package ch.heigvd.easytoolz.services.implementation;
-
 import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedException;
 import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedNotAdminException;
 import ch.heigvd.easytoolz.exceptions.user.UserAlreadyPresent;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedDeleteException;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
+import ch.heigvd.easytoolz.models.Notification;
 import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -86,6 +85,11 @@ public class UserServiceImpl implements UserService {
         // We encode the new password and save it
         connectedUser.setPassword(passwordEncoder.encode(editPasswordRequest.getNewPassword()));
         userRepository.save(connectedUser);
+    }
+
+    @Override
+    public List<Notification> getNotifications(String username, boolean alreadyRead) {
+        return getUser(username).getNotifications(alreadyRead);
     }
 
     @Override

@@ -2,6 +2,8 @@ package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
 import ch.heigvd.easytoolz.models.User;
+import ch.heigvd.easytoolz.models.Notification;
+import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -30,6 +33,11 @@ public class UserController {
             @RequestParam(value = "email", required = false) String email
     ){
         return userService.filters(firstName, lastName, userName, email);
+    }
+
+    @GetMapping("/{username}/notifications")
+    public List<Notification> getNotifications(@PathVariable String username, @RequestParam(defaultValue="false")boolean alreadyRead) {
+        return userService.getNotifications(username, alreadyRead);
     }
 
     @GetMapping("/{username}")

@@ -100,7 +100,7 @@ public class EZObject {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner", referencedColumnName = "userName")
+    @JoinColumn(name = "owner", referencedColumnName = "userName", nullable = false)
     private User owner;
 
     //association class

@@ -8,9 +8,11 @@ import ch.heigvd.easytoolz.repositories.NotificationRepository;
 import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class NotificationServiceImpl implements NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;

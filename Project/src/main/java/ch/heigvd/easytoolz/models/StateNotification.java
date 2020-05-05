@@ -1,22 +1,28 @@
 package ch.heigvd.easytoolz.models;
 
 public enum StateNotification {
-    MESSAGE("message"),
-    SIGNALEMENT("signalement"),
-    RESERVATION("reservation"),
-    RACCOURCISSEMENT("raccourcissement"),
-    ACCEPTATION_DEMANDE_EMPRUNT("acceptationDemandeEmprunt"),
-    REFUS_DEMANDE_EMPRUNT("refusDemandeEmprunt"),
-    ACCEPTATION_DEMANDE_RACOURCISSEMENT("acceptationDemandeRacourcissement"),
-    REFUS_DEMANDE_RACOURCISSEMENT("refusDemandeRacourcissement");
+    MESSAGE("message", "Vous avez reçu un message de l'utilisateur '%s'"),
+    SIGNALEMENT("signalement", "Votre objet 'x' a été signalé par un utilisateur. Causes : %s"),
+    RESERVATION("reservation", "L'utilisateur '%s' souhaite vous emprunter l'outil '%s'"),
+    RACCOURCISSEMENT("raccourcissement", "Une demande de racourcissement a été faite sur l'outil '%s'"),
+    ACCEPTATION_DEMANDE_EMPRUNT("acceptationDemandeEmprunt", "Votre demande d'emprunt pour l'outil '%s' a été acceptée"),
+    REFUS_DEMANDE_EMPRUNT("refusDemandeEmprunt", "Votre demande d'emprunt pour l'outil '%s' a été refusée"),
+    ACCEPTATION_DEMANDE_RACOURCISSEMENT("acceptationDemandeRacourcissement", "Votre demande racourcissement pour l'outil '%s' a été acceptée"),
+    REFUS_DEMANDE_RACOURCISSEMENT("refusDemandeRacourcissement", "Votre demande racourcissement pour l'outil '%s' a été refusée");
 
-    private final String state;
+    private final String name;
+    private final String message;
 
-    StateNotification(String state) {
-        this.state = state;
+    StateNotification(String name, String message) {
+        this.name = name;
+        this.message = message;
     }
 
-    public String getState() {
-        return state;
+    public String getName() {
+        return name;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

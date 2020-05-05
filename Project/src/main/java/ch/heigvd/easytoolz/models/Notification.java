@@ -47,10 +47,10 @@ public class Notification {
 
     public Notification() {}
 
-    public Notification(String message, StateNotification state, boolean isRead, User recipient){
+    public Notification(String message, StateNotification state, User recipient){
         this.message = message;
         this.state = state;
-        this.isRead = isRead;
+        this.isRead = false;
         this.recipient = recipient;
     }
 

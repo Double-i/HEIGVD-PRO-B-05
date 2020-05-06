@@ -65,7 +65,7 @@ public class EZToolzTest {
 
 
     @BeforeAll
-    void Inituser()
+    void InitUser()
     {
         ArrayList<Country> countries = new ArrayList<>()
         {
@@ -125,6 +125,7 @@ public class EZToolzTest {
         Assert.isTrue(userRepository.findAll().size() == users.size(), "");
 
     }
+
     @Test
     public void injectedComponentsAreNotNull()
     {
@@ -133,7 +134,4 @@ public class EZToolzTest {
         Assert.notNull(entityManager,"");
         Assert.notNull(ezObjectRepository,"");
     }
-
-
-
 }

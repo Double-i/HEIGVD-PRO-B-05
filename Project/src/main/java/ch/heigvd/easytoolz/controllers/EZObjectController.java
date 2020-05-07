@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
@@ -148,6 +149,12 @@ public class EZObjectController {
     {
 
         return ezObjectService.getFiltered(names,owners,description,tags);
+    }
+
+    @GetMapping("find/report")
+    public List<EZObject> findReportedObject()
+    {
+        return ezObjectService.getReportedObject();
     }
 
     @GetMapping("/images/{id}")

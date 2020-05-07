@@ -59,8 +59,8 @@ public class EZObjectServiceImpl implements EZObjectService {
         List<Predicate> tagPredicates = new LinkedList<>();
 
         Predicate finalQuery;
-        Predicate queries;
-        Predicate tagQuery;
+        Predicate queries = criteriaBuilder.conjunction();
+        Predicate tagQuery = criteriaBuilder.conjunction();
         if(namesList != null) {
             for(String s : namesList) {
                 predicates.add(criteriaBuilder.like(root.get(EZObject_.NAME), ServiceUtils.transformLike(s)));
@@ -81,15 +81,17 @@ public class EZObjectServiceImpl implements EZObjectService {
         Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS,JoinType.INNER);
         if(tagList != null && tagList.size() > 0) {
             for(Tag t : tagList) {
-                predicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
+                tagPredicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
             }
         }
 
-
-        queries = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        tagQuery = criteriaBuilder.or(tagPredicates.toArray(new Predicate[0]));
+        if(predicates.size() > 0)
+            queries = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        if(tagPredicates.size() > 0)
+            tagQuery = criteriaBuilder.or(tagPredicates.toArray(new Predicate[0]));
 
         finalQuery = criteriaBuilder.and(queries,tagQuery);
+
         query.where(finalQuery).distinct(true);
 
         objects = entityManager.createQuery(query).getResultList();
@@ -207,6 +209,10 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     public List<EZObjectView> getObjectsByTag(List<Tag> tags) {
         return ezObjectRepository.getAllByObjectTagsIn(tags);
+    }
+
+    public List<EZObject> getReportedObject(){
+        return ezObjectRepository.getReportedObject();
     }
 
 }

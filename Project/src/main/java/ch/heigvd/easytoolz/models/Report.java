@@ -2,7 +2,6 @@ package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Entity
 @Table(name="report")
@@ -22,11 +21,7 @@ public class Report {
         return reporter;
     }
 
-    public Date getDateReport() {
-        return dateReport;
-    }
-
-    public boolean getAccepted() { return accepted; }
+    public boolean getValid() { return valid; }
 
     private void setReportType(ReportType reportType){
         this.reportType = reportType;
@@ -38,11 +33,8 @@ public class Report {
         this.reporter = reporter;
     }
 
-    public void setDateReport(Date dateReport) {
-        this.dateReport = dateReport;
-    }
+    public void setValid(boolean isValid){this.valid = isValid; }
 
-    public void setAccepted(boolean accepted) {this.accepted = accepted; }
 
     @Id
     @Column(name="pkreport")
@@ -64,21 +56,14 @@ public class Report {
     @JoinColumn(name="reporter", referencedColumnName = "username")
     private User reporter;
 
-    @Column(name="datereport")
-    private Date dateReport;
-
-    @Column(name="accepted")
-    private boolean accepted = false;
-
     @Column(name="valid")
     private boolean valid = false;
 
     public Report() {}
 
-    public Report(ReportType reportType, EZObject EZObject, User reporter, Date dateReport){
+    public Report(ReportType reportType, EZObject EZObject, User reporter){
         this.reportType = reportType;
         this.EZObject = EZObject;
         this.reporter = reporter;
-        this.dateReport = dateReport;
     }
 }

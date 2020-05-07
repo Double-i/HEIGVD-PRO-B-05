@@ -82,7 +82,6 @@ public interface EZObjectService {
                                            List<String> descriptionList,
                                  List<Tag> tags);
 
-    List<EZObject> getReportedObject();
-
+    List<EZObjectView> getReportedObject();
 
 }

@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 class AdminPage extends React.Component{
 
     //TODO : only reported tools
-    ALL_TOOLS_URI = '/objects'
+    ALL_TOOLS_URI = '/objects/find/report'
     ALL_USER_URI = '/users'
 
     constructor(props){

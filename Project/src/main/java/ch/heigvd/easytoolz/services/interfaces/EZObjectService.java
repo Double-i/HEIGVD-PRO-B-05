@@ -84,7 +84,6 @@ public interface EZObjectService {
                                  List<Tag> tags);
 
     List<EZObjectImage> getObjectImages(int id);
-    List<EZObject> getReportedObject();
-
+    List<EZObjectView> getReportedObject();
 
 }

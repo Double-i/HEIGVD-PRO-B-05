@@ -40,7 +40,7 @@ public class ReportServiceImpl implements ReportService {
         //TODO : Check report type exists
 
         // Save report
-        Report report = new Report(ReportType.valueOf(newReport.getReportType()),obj, authService.getTheDetailsOfCurrentUser(), newReport.getDateReport());
+        Report report = new Report(ReportType.valueOf(newReport.getReportType()),obj, authService.getTheDetailsOfCurrentUser());
 
         reportRepository.save(report);
 

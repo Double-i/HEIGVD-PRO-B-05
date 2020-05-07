@@ -114,8 +114,11 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
     List<EZObjectView> getAllByObjectTagsIn(List<Tag> tags);
 
 
-    @Query("SELECT e FROM EZObject e" +
+    @Query("SELECT e.ID FROM EZObject e" +
             " WHERE e.ID IN (SELECT r.EZObject FROM Report r)")
-    List<EZObject> getReportedObject();
+    List<Integer> getReportedObject();
+
+
+    List<EZObjectView> getAllByIDIn(List<Integer> ezObjectListID);
 
 }

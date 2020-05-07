@@ -152,7 +152,7 @@ public class EZObjectController {
     }
 
     @GetMapping("find/report")
-    public List<EZObject> findReportedObject()
+    public List<EZObjectView> findReportedObject()
     {
         return ezObjectService.getReportedObject();
     }

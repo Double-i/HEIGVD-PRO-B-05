@@ -211,8 +211,8 @@ public class EZObjectServiceImpl implements EZObjectService {
         return ezObjectRepository.getAllByObjectTagsIn(tags);
     }
 
-    public List<EZObject> getReportedObject(){
-        return ezObjectRepository.getReportedObject();
+    public List<EZObjectView> getReportedObject(){
+        return ezObjectRepository.getAllByIDIn(ezObjectRepository.getReportedObject());
     }
 
 }

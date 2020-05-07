@@ -123,7 +123,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         CriteriaQuery<EZObject> query = cb.createQuery(EZObject.class);
         Root<EZObject> root = query.from(EZObject.class);
 
-        query.where(buildPredicates(namesList,ownersList,descriptionList,tagList,cb,root));
+        query.where(buildPredicates(namesList,ownersList,descriptionList,tagList,cb,root)).distinct(true);
 
         objects = entityManager.createQuery(query).setFirstResult(page*10).setMaxResults(10).getResultList();
 

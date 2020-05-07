@@ -26,6 +26,8 @@ public class Report {
         return dateReport;
     }
 
+    public boolean getAccepted() { return accepted; }
+
     private void setReportType(ReportType reportType){
         this.reportType = reportType;
     }
@@ -39,6 +41,8 @@ public class Report {
     public void setDateReport(Date dateReport) {
         this.dateReport = dateReport;
     }
+
+    public void setAccepted(boolean accepted) {this.accepted = accepted; }
 
     @Id
     @Column(name="pkreport")
@@ -62,6 +66,12 @@ public class Report {
 
     @Column(name="datereport")
     private Date dateReport;
+
+    @Column(name="accepted")
+    private boolean accepted = false;
+
+    @Column(name="valid")
+    private boolean valid = false;
 
     public Report() {}
 

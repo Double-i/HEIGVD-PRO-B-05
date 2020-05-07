@@ -77,10 +77,12 @@ public interface EZObjectService {
 
     List<EZObjectView> getObjectsByTag(List<Tag> tags);
 
-     List<EZObject> getFiltered( List<String> namesList,
+    List<EZObject> getFiltered( List<String> namesList,
                                            List<String> ownersList,
                                            List<String> descriptionList,
                                  List<Tag> tags);
+
+    List<EZObject> getReportedObject();
 
 
 }

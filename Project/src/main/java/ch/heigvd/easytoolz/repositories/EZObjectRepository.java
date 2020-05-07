@@ -113,4 +113,9 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
     List<EZObjectView> getAllByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat,BigDecimal lng);
     List<EZObjectView> getAllByObjectTagsIn(List<Tag> tags);
 
+
+    @Query("SELECT EZObject FROM ezobject" +
+            " WHERE ezobject.id IN (SELECT report.ezobject FROM report)")
+    List<EZObject> getReportedObject();
+
 }

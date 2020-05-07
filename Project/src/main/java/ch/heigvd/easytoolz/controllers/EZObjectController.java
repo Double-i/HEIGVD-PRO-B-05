@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
@@ -32,6 +33,7 @@ public class EZObjectController {
 
     @Autowired
     EZObjectService ezObjectService;
+
 
     @GetMapping
     public List<EZObjectView> index()
@@ -121,6 +123,12 @@ public class EZObjectController {
     {
 
         return ezObjectService.getFiltered(names,owners,description,tags);
+    }
+
+    @GetMapping("find/report")
+    public List<EZObject> findReportedObject()
+    {
+        return ezObjectService.getReportedObject();
     }
 
 }

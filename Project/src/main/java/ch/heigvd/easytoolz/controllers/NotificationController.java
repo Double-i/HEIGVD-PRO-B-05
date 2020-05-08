@@ -4,33 +4,43 @@ import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedException;
 import ch.heigvd.easytoolz.models.Notification;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
+import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-
-// Base on : https://blog.itkonekt.com/2018/06/27/server-sent-events-in-spring/
-
-
-// TODO : à voir si on devrait déplacer le contenu des fonctions dans NotificationServiceImpl
 
 @RestController
 @RequestMapping("/notifications")
 public class NotificationController {
-
-    @Autowired
-    AuthenticationService authenticationService;
-
     // Use ConcurrentHashMap (thread-safe hashmap) to store the username with the corresponding emitter
     // to be able to notify only the right user
     private final ConcurrentHashMap<String, List<SseEmitter>> emitters = new ConcurrentHashMap<>();
+
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private AuthenticationService authService;
+
+    @PostMapping("/{id}/markRead")
+    public Notification markRead(@PathVariable int id){
+        Notification newNotif = new Notification();
+        newNotif.setIsRead(true);
+        return notificationService.updateNotification(newNotif, id);
+    }
+
+    @PostMapping("/{id}/markUnread")
+    public Notification markUnread(@PathVariable int id){
+       // authService.getTheDetailsOfCurrentUser();
+        Notification newNotif = new Notification();
+        newNotif.setIsRead(false);
+        return notificationService.updateNotification(newNotif, id);
+    }
+
+
 
 
     /**
@@ -41,21 +51,25 @@ public class NotificationController {
      * @param username the string of the user's username
      * @return SseEmitter the emitter which will be used by the tabs/web browser
      */
+
+
+    /*
     @GetMapping("/{username}")
     public String subscribeToNotifications(@PathVariable String username) {
         // TODO getTheDetailsOfCurrentUser ne fonctionne pas. L'erreur dit qu'on ne peut pas convertir string to user
         //  et si on affiche .primary() on a anonymous user ce qui est problablement la raison de l'erreur comme si aucune auth n'était fait jusqu ' à mtn
 
-        User user = authenticationService.getTheDetailsOfCurrentUser();
-        System.out.println("Logged in user : "+user);
-        if( user == null || !user.getUserName().equals(username))
+        User user = authService.getTheDetailsOfCurrentUser();
+        System.out.println("Logged in user : " + user);
+        if (user == null || !user.getUserName().equals(username))
             throw new AccessDeniedException();
 
         // Create a new emitter for the user
         SseEmitter emitter = new SseEmitter();
         return "test";
 
-/*
+
+
 
         // Get the user list of emitters - the user might have several emitter if he has opened several tabs in his
         // web browser
@@ -74,16 +88,16 @@ public class NotificationController {
             //this.emitters.remove(pair);
             this.emitters.get(username).remove(emitter);
         });
-*/
 
-       // return emitter;
+
+        // return emitter;
     }
-/*
-    *//**
+    /**
      * This method is used to send the notification to all the users who have been registered by subscribeToNotifications
      *
      * @param notification The notification to send to the user.
-     *//*
+     */
+        /*
     @EventListener
     public void onNotification(Notification notification) {
 

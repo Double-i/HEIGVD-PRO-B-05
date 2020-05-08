@@ -71,7 +71,7 @@ public class Notification {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "recipient", referencedColumnName = "userName")
+    @JoinColumn(name = "fk_user", referencedColumnName = "userName")
     private User recipient;
 
 

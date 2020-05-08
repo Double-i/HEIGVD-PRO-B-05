@@ -79,7 +79,7 @@ public class LoanServiceImpl implements LoanService {
         notificationService.storeNotification(
                 ServiceUtils.createNotification(
                     StateNotification.RESERVATION,
-                    currentUser,
+                    obj.getOwner(),
                     currentUser.getUserName(), obj.getName()));
 
         Period period = new Period(newLoan.getDateStart(), newLoan.getDateEnd(), State.accepted, Creator.borrower, loan);

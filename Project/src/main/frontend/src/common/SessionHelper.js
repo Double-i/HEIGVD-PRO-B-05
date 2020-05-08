@@ -69,13 +69,17 @@ export class SessionHelper {
         localStorage.setItem('user', JSON.stringify(user))
     }
     update = info => {
-        const newUserInfo = {...this.userSession}
+        // TODO Cause des problèmes sur edge, il semblerait que l'operator spread { ...JSobject } n'est pas supporté
+        // On dirait que c'est seulement le cas dans les function/object non react. Probalement que react doit transformer le code
+        // pour être compatible avec tous les navigateurs.
+        // Solutions possibles: utiliser ES5 ou faire en sorte que cette class soit un renderless component.
 
+        /*const newUserInfo = {...this.userSession}
         if(info.userFirstname !== 'undefined') newUserInfo.firstname =  info.userFirstname
         if(info.userLastname !== 'undefined') newUserInfo.lastname = info.userLastname
-        this.setUserSession(newUserInfo)
+        this.setUserSession(newUserInfo)*/
 
-        localStorage.setItem('user', JSON.stringify(newUserInfo))
+        //localStorage.setItem('user', JSON.stringify(newUserInfo))
     }
 }
 export const SessionContext = React.createContext({user:{}})

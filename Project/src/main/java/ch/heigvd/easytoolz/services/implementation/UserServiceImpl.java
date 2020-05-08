@@ -1,6 +1,8 @@
 package ch.heigvd.easytoolz.services.implementation;
 
-import ch.heigvd.easytoolz.exceptions.authentication.UnauthorizedNotAdminException;
+
+import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedException;
+import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedNotAdminException;
 import ch.heigvd.easytoolz.exceptions.user.UserAlreadyPresent;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedDeleteException;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public User getUser(String username) throws UserNotFoundException {
         if (!authenticationService.isTheCurrentUserAdmin()) {
             if (!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
-                throw new UnauthorizedNotAdminException();
+                throw new AccessDeniedNotAdminException();
         }
         return userRepository
                 .findById(username)
@@ -48,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public List<User> filters(String firstName, String lastName, String userName, String email) {
 
         if (!authenticationService.isTheCurrentUserAdmin())
-            throw new UnauthorizedNotAdminException();
+            throw new AccessDeniedNotAdminException();
 
         Specification<User> specs = UserSpecs.getAll();
 
@@ -112,7 +114,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User newUser, String username) throws UserNotFoundException {
         if (!authenticationService.isTheCurrentUserAdmin()) {
             if (!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
-                throw new UnauthorizedNotAdminException();
+                throw new AccessDeniedNotAdminException();
         }
         System.out.println(newUser);
 
@@ -143,7 +145,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String username) throws UserFailedDeleteException {
         if (!authenticationService.isTheCurrentUserAdmin()) {
             if (!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
-                throw new UnauthorizedNotAdminException();
+                throw new AccessDeniedNotAdminException();
         }
 
         Optional<User> user = userRepository.findById(username);

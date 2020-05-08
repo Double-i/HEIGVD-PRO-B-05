@@ -96,7 +96,6 @@ class MapContainer extends React.Component {
                              lat: tool.owner.address.lat,
                              lng: tool.owner.address.lng
                            }}/>
-
         })
     }
 

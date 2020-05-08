@@ -1,34 +1,93 @@
 import {Container, Row, Col, Media, NavDropdown, Button, Badge} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 import * as React from "react"
-import {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState, useRef} from 'react'
 import {FaCalendarCheck} from 'react-icons/fa'
-import {sendEzApiRequest} from "../ApiHelper";
+import {EZT_API, sendEzApiRequest} from "../ApiHelper";
 import {formatString} from "../Utils";
 import {SessionContext} from "../SessionHelper";
 import {notificationRedirectUrl} from "./NotificationObject";
-
+// Endpoint to get the notification
 const ENDPOINT_NOTIFICATION = "/users/{0}/notifications"
+
+// Endpoint to subscribe to the server to get in "realtime" notification
+const ENDPOINT_LIVE_NOTIFICATION = "/notifications/{0}"
 
 function NotificationDropdown(props) {
     const [showOldNotifications, setShowOldNotifications] = useState(false)
     const [showNotifcationsDropdown, setShowNotifcationsDropdown] = useState(false)
-    const [unreadNotifications, setUnreadNotifications] = useState([])
+    const [unreadNotifications, _setUnreadNotifications] = useState([])
     const [oldNotifications, setOldNotifications] = useState([])
+
+    // We have to use a ref to the state because it's used in a listener that is defined in useEffect
+    // based on : https://medium.com/geographit/accessing-react-state-in-event-listeners-with-usestate-and-useref-hooks-8cceee73c559
+    const unreadNotificationRef = React.useRef(unreadNotifications);
+    const setUnreadNotifications = data => {
+        unreadNotificationRef.current = data;
+        _setUnreadNotifications(data);
+    };
 
     const session = useContext(SessionContext)
     const username = session.session.getUserName()
 
+
+    // The EventSource is used to receive new notification in realtime. cf. addNotification
+    let eventSource;
+
+
+    /**
+     * This function is used to add a notification in realtime (by using EventSource - SSE).
+     * @param notification
+     */
+    const addNotification = (notification) =>   {
+
+        const newNotification = [...unreadNotificationRef.current]
+        newNotification.push(notification)
+        setUnreadNotifications(newNotification)
+    }
+
+    /**
+     * We load the unread/"new" notifications
+     */
+    useEffect(() => {
+        console.log("***** call *****")
+        sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION, username), 'GET')
+            .then(result => {
+                setUnreadNotifications(result)
+            }, error => {
+                console.log("Error while getting notifications : ", formatString(ENDPOINT_NOTIFICATION, username), error)
+            })
+        // TODO problème ici : si addNotification est déclarer ici impossible d'utiliser d'avoir les
+        eventSource = new EventSource( EZT_API + formatString(ENDPOINT_LIVE_NOTIFICATION, username))
+        eventSource.onmessage = e => addNotification(JSON.parse(e.data))
+        window.addEventListener("beforeunload", (ev) =>
+        {
+            eventSource.close()
+        });
+
+    }, [])
+
+
+
+    /**
+     * This function is used to redirect the user on a specific page (which is defined by the kind of notification he clicked on)
+     * @param notification
+     */
     const redirectToPage = (notification) => {
         const url = notificationRedirectUrl(notification)
-
         props.history.push(url)
     }
+
+    /**
+     * Function used has callback when the user clicked on a notification
+     * It's remove the notification from the list (of the dropdown) and marked it as read
+     *
+     * @param notification
+     */
     const notificationClicked = (notification) => {
         console.log("click notif id : ", notification)
 
         // TODO marquer comme lu
-
         const newNotification = [...unreadNotifications]
         const idxNotification = newNotification.indexOf(notification)
         if (idxNotification !== -1) {
@@ -46,19 +105,9 @@ function NotificationDropdown(props) {
         }
     }
 
-    useEffect(() => {
-        sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION, username), 'GET')
-            .then(result => {
-                console.log("Just get notifications : ",result)
-                setUnreadNotifications(result)
-            }, error => {
-                console.log("Error while getting notifications : ", formatString(ENDPOINT_NOTIFICATION, username), error)
-            })
-    }, [])
+
 
     return (
-
-
         <NavDropdown
             title={<span className={"nav-item"} onClick={() => {
                 setShowNotifcationsDropdown(!showNotifcationsDropdown)

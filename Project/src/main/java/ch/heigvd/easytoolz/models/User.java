@@ -66,6 +66,14 @@ public class User {
         this.email = email;
     }
 
+    public void setEzObject(List<EZObject> ezObject) {
+        this.ezObject = ezObject;
+    }
+
+    public List<EZObject> getEzObject() {
+        return ezObject;
+    }
+
     public List<Notification> getNotifications() {
         return notifications;
     }

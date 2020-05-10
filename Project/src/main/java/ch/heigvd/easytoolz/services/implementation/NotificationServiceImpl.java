@@ -54,8 +54,8 @@ public class NotificationServiceImpl implements NotificationService {
             if(newNotification.getState() != null){
                 oldNotification.setState(newNotification.getState());
             }
-            if(newNotification.isIsRead() != oldNotification.isIsRead())
-                oldNotification.setIsRead(newNotification.isIsRead());
+            if(newNotification.isRead() != oldNotification.isRead())
+                oldNotification.setIsRead(newNotification.isRead());
             return notificationRepository.save(oldNotification);
         }
     }

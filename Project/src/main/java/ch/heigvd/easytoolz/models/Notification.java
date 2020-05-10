@@ -41,7 +41,7 @@ public class Notification {
         this.isRead = read;
     }
 
-    public boolean isIsRead() {
+    public boolean isRead() {
         return isRead;
     }
 

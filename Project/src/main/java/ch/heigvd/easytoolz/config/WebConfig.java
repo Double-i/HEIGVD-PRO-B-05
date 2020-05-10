@@ -1,7 +1,9 @@
-package ch.heigvd.easytoolz;
+package ch.heigvd.easytoolz.config;
 
+import ch.heigvd.easytoolz.tasks.MailTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerTypePredicate;
 import org.springframework.web.servlet.config.annotation.*;

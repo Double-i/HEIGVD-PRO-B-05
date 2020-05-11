@@ -1,21 +1,21 @@
-import {sendEzApiRequest} from "../common/ApiHelper";
+import {sendEzApiRequest} from "../common/ApiHelper"
 import React from "react"
 
 class ToolDetails extends React.Component{
 
     SEARCH_URI = '/objects'
 
+    state = {
+        description: "",
+        name: "",
+        images: {},
+        objectTags: {},
+        owner: {}
+    }
+
     constructor(props)
     {
         super(props);
-
-        this.state = {
-            description: "",
-            name: "",
-            images: {},
-            objectTags: {},
-            owner: {}
-        }
 
     }
 
@@ -30,9 +30,10 @@ class ToolDetails extends React.Component{
 
     render()
     {
-        return <ToolDetails>
+        return <div>
             <h1>{this.state.name}</h1>
-        </ToolDetails>
+            <p>{this.state.description}</p>
+        </div>
     }
 }
 

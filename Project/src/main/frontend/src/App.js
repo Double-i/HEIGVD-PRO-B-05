@@ -71,7 +71,7 @@ function App() {
                                 )}
                             </Route>
                             <Route exact path="/map" component={Map}/>
-                            <Route exact path="/toolDetails" component = {ToolDetails}/>
+                            <Route exact path="/toolDetails/:id" component = {ToolDetails}/>
                             <Route exact path="/searchTools">
                                 <SearchTools/>
                             </Route>

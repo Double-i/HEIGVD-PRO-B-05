@@ -14,6 +14,8 @@ class ToolDetails extends React.Component{
         owner: {}
     }
 
+
+
     constructor(props)
     {
         super(props);
@@ -25,6 +27,12 @@ class ToolDetails extends React.Component{
             .then((response) => {
                 console.log(response);
                 this.setState(response);
+                this.images = this.state.images.map(image => (
+                    {
+                        thumbnail : image,
+                        original : image
+                    }
+                ));
             })
             .catch(err => alert(err));
     }
@@ -32,7 +40,7 @@ class ToolDetails extends React.Component{
     render()
     {
         return <div>
-            <h1>Nom : {this.state.name}</h1>
+            <h1>{this.state.name}</h1>
             <p>{this.state.description}</p>
             <h2>
                 Tags
@@ -47,6 +55,7 @@ class ToolDetails extends React.Component{
             <div>
                 <ImageGallery items = {this.state.images}/>
             </div>
+            <p>Propriétaire : {this.state.owner.userName}</p>
         </div>
     }
 }

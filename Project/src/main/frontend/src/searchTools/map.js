@@ -3,7 +3,7 @@ import React from "react"
 import {sendEzApiRequest} from "../common/ApiHelper";
 
 const mapStyles = {
-    width:  '80%'
+    width :  '80%'
 }
 
 class MapContainer extends React.Component {

@@ -4,9 +4,11 @@ import {sendEzApiRequest} from "../common/ApiHelper";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
+import Row from "react-bootstrap/Row";
 
 const mapStyles = {
-    width:  '80%'
+    width:  '80%',
+    height: '100%'
 }
 
 //TODO : Si le user est pas log, on arrive pas a fetch les objets ?!
@@ -159,7 +161,7 @@ class SearchTools extends React.Component{
     render(){
         return (
             <div className="container" style={{
-                marginTop: '10px'
+                marginTop: '10px',
             }}>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group controlId="formBasicEmail" >
@@ -194,21 +196,25 @@ class SearchTools extends React.Component{
                         Rechercher
                     </Button>
                 </Form>
+                <div style={{marginBottom: '80%', marginTop: '5%'}}>
+                    <Map
+                        key={0}
+                        google={this.props.google}
+                        zoom={10}
+                        style={mapStyles}
+                        initialCenter={{ lat: 46.5, lng: 6.5}}
+                        onClick={this.onMapClicked}
+                    >
+                        {this.getMarkers()}
+                        {this.getInfoWindow()}
+                    </Map>
+                </div>
+                <div>
+                    <DisplayTools
+                          data = {this.state.tools}
+                    />
+                </div>
 
-                <DisplayTools
-                    data = {this.state.tools}
-                />
-                <Map
-                    key={0}
-                    google={this.props.google}
-                    zoom={10}
-                    style={mapStyles}
-                    initialCenter={{ lat: 46.5, lng: 6.5}}
-                    onClick={this.onMapClicked}
-                >
-                    {this.getMarkers()}
-                    {this.getInfoWindow()}
-                </Map>
             </div>
         )
     }

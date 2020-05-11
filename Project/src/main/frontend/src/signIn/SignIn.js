@@ -30,17 +30,16 @@ function SignInForm(props) {
                 setIsLogging(false)
 
                 console.log('So far so good')
-                //todo voir si à supprimer car pour l'instant inutile car le modal se ferme tout seul après connexion
+                //TODO voir si à supprimer car pour l'instant inutile car le modal se ferme tout seul après connexion
                 //setHasBeenLoggedIn(true)
 
                 props.setLoggedUser({
-                    username: result.userName,
-                    admin: result.admin,
-                    lastname: result.lastName,
-                    firstname: result.firstName,
+                    tokenDuration: result.tokenDuration,
+                    username: result.user.userName,
+                    admin: result.user.admin,
+                    lastname: result.user.lastName,
+                    firstname: result.user.firstName,
                 })
-
-
             },
             error => {
                 setIsLogging(false)

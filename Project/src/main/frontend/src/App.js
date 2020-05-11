@@ -18,17 +18,43 @@ import Map from './searchTools/map'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
+import * as moment from 'moment'
 
-import {SessionContext, SessionHelper} from './common/SessionHelper'
+import {SESSION_DURATION, SessionContext, SessionHelper} from './common/SessionHelper'
 import EditProfilForm from "./userDashboard/editProfil/EditProfilForm";
-
+import {sendEzApiRequest} from "./common/ApiHelper";
+const SESSION_REFRESH_ENDPOINT = "/authrefresh"
 function App() {
     const userStorage = localStorage.getItem('user')
     const userObject = userStorage === null ? {} : JSON.parse(userStorage)
+
     const [showSignInForm, setShowSignInForm] = useState(false)
     const [userSession, setUserSession] = useState(userObject)
 
     const session = new SessionHelper(userSession, setUserSession)
+
+    // Log out the user if his session has expired
+    if(session.isUserLogin() && session.isExpired()){
+        session.logout()
+    }else{
+        const refreshMoment = moment(session.getExpirationDate()).subtract(180, "seconds")
+
+        const duration = moment.duration(refreshMoment.diff(moment()));
+
+        // If the session hasn't yet expired we add a timeout to refresh the token right before expiration
+        // If the user quit the page session won't refresh but if the user stay enough time it will
+        setTimeout(()=> {
+
+            const refreshTokenRequest = () => sendEzApiRequest(SESSION_REFRESH_ENDPOINT, 'GET').then(result => {
+                console.log("Refresh token response",result)
+                setTimeout(refreshTokenRequest, SESSION_DURATION)
+            },error => {
+                console.log("Refresh token error: ",error)
+            })
+            refreshTokenRequest()
+
+        }, duration.asMilliseconds())
+    }
 
     const user = {
         userInfo: userSession,

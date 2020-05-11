@@ -1,5 +1,14 @@
 import React from 'react'
+import * as moment from 'moment'
+import {sendEzApiRequest} from "./ApiHelper";
 
+
+// TODO: - checker si token toujours valide autrement suppression de la session
+//       - Si toujours valide mettre un refresh avant de l'expiration pour redemander un token
+
+
+// Session duration in miliseconds should be the same that the server
+export const SESSION_DURATION = 1000000
 /**
  * Class wrapping the managment of the user session
  */
@@ -12,6 +21,7 @@ export class SessionHelper {
     constructor(userSession, setUserSession) {
         this.userSession = userSession
         this.setUserSession = setUserSession
+
     }
     /**
      * check if the user is connect by checking if the userSession Object 
@@ -19,7 +29,7 @@ export class SessionHelper {
      */
     isUserLogin = () => {
         return (
-            (Object.keys(this.userSession).length > 0 &&
+            (!this.isExpired() && Object.keys(this.userSession).length > 0 &&
             this.userSession.constructor === Object)
         )
     }
@@ -57,6 +67,11 @@ export class SessionHelper {
      * Log the user out by calling the react dispatcher and by removing the session storage cookie
      */
     logout = () => {
+        sendEzApiRequest('/logout', 'GET').then( result=> {
+            console.log(result)
+        }, error => {
+            console.log(error)
+        })
         this.setUserSession({})
         localStorage.removeItem('user')
     }
@@ -64,18 +79,23 @@ export class SessionHelper {
      * Log the user in by calling the react dispatcher and by adding a session storage cookie ( for persistence after refresh) 
      */
     login = user => {
-        console.log("login",user)
         this.setUserSession(user)
         localStorage.setItem('user', JSON.stringify(user))
     }
     update = info => {
         const newUserInfo = {...this.userSession}
-
         if(info.userFirstname !== 'undefined') newUserInfo.firstname =  info.userFirstname
         if(info.userLastname !== 'undefined') newUserInfo.lastname = info.userLastname
         this.setUserSession(newUserInfo)
 
         localStorage.setItem('user', JSON.stringify(newUserInfo))
     }
+    isExpired = () => {
+        return !(moment(this.userSession.tokenDuration).isAfter(moment()))
+    }
+    getExpirationDate = ()=> {
+        return this.userSession.tokenDuration;
+    }
+
 }
 export const SessionContext = React.createContext({user:{}})

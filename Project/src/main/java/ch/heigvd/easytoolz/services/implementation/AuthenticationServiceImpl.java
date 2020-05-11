@@ -11,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.net.HttpCookie;
+import java.util.Date;
+
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -48,5 +51,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public User loadByUsername(String username) {
         return (User) userRepository.findById(username).get();
     }
+
 
 }

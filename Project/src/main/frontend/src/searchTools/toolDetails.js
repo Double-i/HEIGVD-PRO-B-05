@@ -1,5 +1,6 @@
 import {sendEzApiRequest} from "../common/ApiHelper"
 import React from "react"
+import ImageGallery from 'react-image-gallery'
 
 class ToolDetails extends React.Component{
 
@@ -8,8 +9,8 @@ class ToolDetails extends React.Component{
     state = {
         description: "",
         name: "",
-        images: {},
-        objectTags: {},
+        images: [],
+        objectTags: [],
         owner: {}
     }
 
@@ -31,8 +32,21 @@ class ToolDetails extends React.Component{
     render()
     {
         return <div>
-            <h1>{this.state.name}</h1>
+            <h1>Nom : {this.state.name}</h1>
             <p>{this.state.description}</p>
+            <h2>
+                Tags
+            </h2>
+            <ul>
+            {
+                this.state.objectTags.map(tag =>(
+                    <li key={tag.id}>{tag.name}</li>
+                ))
+            }
+            </ul>
+            <div>
+                <ImageGallery items = {this.state.images}/>
+            </div>
         </div>
     }
 }

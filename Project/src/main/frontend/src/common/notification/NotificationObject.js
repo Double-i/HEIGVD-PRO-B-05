@@ -2,11 +2,15 @@ export const NOTIFICATION_STATE = {
     MESSAGE: "MESSAGE",
     SIGNALEMENT: "SIGNALEMENT",
     RESERVATION: "RESERVATION",
-    RACCOURCISSEMENT: "RACCOURCISSEMENT",
+    RACCOURCISSEMENT_OWNER: "RACCOURCISSEMENT_OWNER",
+    RACCOURCISSEMENT_BORROWER: "RACCOURCISSEMENT_BORROWER",
     ACCEPTATION_DEMANDE_EMPRUNT: "ACCEPTATION_DEMANDE_EMPRUNT",
     REFUS_DEMANDE_EMPRUNT: "REFUS_DEMANDE_EMPRUNT",
-    ACCEPTATION_DEMANDE_RACOURCISSEMENT: "ACCEPTATION_DEMANDE_RACOURCISSEMENT",
-    REFUS_DEMANDE_RACOURCISSEMENT: "REFUS_DEMANDE_RACOURCISSEMENT"
+    ACCEPTATION_DEMANDE_RACOURCISSEMENT_OWNER: "ACCEPTATION_DEMANDE_RACOURCISSEMENT_OWNER",
+    ACCEPTATION_DEMANDE_RACOURCISSEMENT_BORROWER: "ACCEPTATION_DEMANDE_RACOURCISSEMENT_BORROWER",
+    REFUS_DEMANDE_RACOURCISSEMENT_OWNER: "REFUS_DEMANDE_RACOURCISSEMENT_OWNER",
+    REFUS_DEMANDE_RACOURCISSEMENT_BORROWER: "REFUS_DEMANDE_RACOURCISSEMENT_BORROWER",
+
 }
 export function notificationRedirectUrl(notification){
     let url;
@@ -14,30 +18,29 @@ export function notificationRedirectUrl(notification){
          case NOTIFICATION_STATE.MESSAGE:
              // TODO que faire ?
              url = "/home"
-             break
+             break;
          case NOTIFICATION_STATE.SIGNALEMENT:
              // TODO que faire ?
              url = "/home"
-             break
+             break;
          case NOTIFICATION_STATE.RESERVATION:
              url="/dashboard/myloans/owner"
-             break
-         case NOTIFICATION_STATE.RACCOURCISSEMENT:
-             // TODO owner ou borrower ??
+             break;
+         case NOTIFICATION_STATE.RACCOURCISSEMENT_OWNER:
+         case NOTIFICATION_STATE.ACCEPTATION_DEMANDE_RACOURCISSEMENT_OWNER:
+         case NOTIFICATION_STATE.REFUS_DEMANDE_RACOURCISSEMENT_OWNER:
              url="/dashboard/myloans/owner"
-             break
+             break;
          case NOTIFICATION_STATE.ACCEPTATION_DEMANDE_EMPRUNT:
          case NOTIFICATION_STATE.REFUS_DEMANDE_EMPRUNT:
+         case NOTIFICATION_STATE.RACCOURCISSEMENT_BORROWER:
+         case NOTIFICATION_STATE.REFUS_DEMANDE_RACOURCISSEMENT_BORROWER:
+         case NOTIFICATION_STATE.ACCEPTATION_DEMANDE_RACOURCISSEMENT_BORROWER:
              url="/dashboard/myloans/borrower"
-             break
-         case NOTIFICATION_STATE.ACCEPTATION_DEMANDE_RACOURCISSEMENT:
-             // TODO owner ou borrower ?
-             break
-         case NOTIFICATION_STATE.REFUS_DEMANDE_RACOURCISSEMENT:
-             break
+             break;
          default:
              url = "/home"
-             break
+             break;
      }
      return url
 }

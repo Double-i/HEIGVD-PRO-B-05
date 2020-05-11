@@ -37,6 +37,7 @@ function NavigationBar(props) {
                                         <NavDropdown
                                             title={session.getUserName()}
                                             id="basic-nav-dropdown"
+                                            alignRight
                                         >
                                             <Link
                                                 className="dropdown-item"

@@ -2,6 +2,7 @@ package ch.heigvd.easytoolz.services.interfaces;
 
 import ch.heigvd.easytoolz.models.User;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Service;
 
 public interface AuthenticationService {
     /**

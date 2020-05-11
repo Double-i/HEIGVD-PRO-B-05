@@ -7,11 +7,24 @@ import {EZT_API, sendEzApiRequest} from "../ApiHelper";
 import {formatString} from "../Utils";
 import {SessionContext} from "../SessionHelper";
 import {notificationRedirectUrl} from "./NotificationObject";
-// Endpoint to get the notification
+
+
+/**
+ * TODO:
+ * - Voir avec Manu comment ouvrir son chat.
+ * - Ajouter les anciennes notifications
+ */
+
+
+
+// Endpoint to get the notification - {0} = username
 const ENDPOINT_NOTIFICATION = "/users/{0}/notifications"
 
-// Endpoint to subscribe to the server to get in "realtime" notification
+// Endpoint to subscribe to the server to get in "realtime" notification - {0} = username
 const ENDPOINT_LIVE_NOTIFICATION = "/notifications/{0}"
+
+// Endpoint to mark a notification as read - {0} = id of the notification
+const ENDPOINT_NOTIFICATION_READ = "/notifications/{0}/markRead"
 
 function NotificationDropdown(props) {
     const [showOldNotifications, setShowOldNotifications] = useState(false)
@@ -34,7 +47,6 @@ function NotificationDropdown(props) {
     // The EventSource is used to receive new notification in realtime. cf. addNotification
     let eventSource;
 
-
     /**
      * This function is used to add a notification in realtime (by using EventSource - SSE).
      * @param notification
@@ -50,23 +62,24 @@ function NotificationDropdown(props) {
      * We load the unread/"new" notifications
      */
     useEffect(() => {
-        console.log("***** call *****")
         sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION, username), 'GET')
             .then(result => {
                 setUnreadNotifications(result)
             }, error => {
                 console.log("Error while getting notifications : ", formatString(ENDPOINT_NOTIFICATION, username), error)
             })
-        // TODO problème ici : si addNotification est déclarer ici impossible d'utiliser d'avoir les
-        eventSource = new EventSource( EZT_API + formatString(ENDPOINT_LIVE_NOTIFICATION, username))
+
+        // instanciate the EventSource to get live notifications.
+        eventSource = new EventSource( EZT_API + formatString(ENDPOINT_LIVE_NOTIFICATION, username),  { withCredentials: true })
         eventSource.onmessage = e => addNotification(JSON.parse(e.data))
+
+        // Use to close the EventSource on refresh/close tab/web browser
         window.addEventListener("beforeunload", (ev) =>
         {
             eventSource.close()
         });
 
     }, [])
-
 
 
     /**
@@ -100,13 +113,19 @@ function NotificationDropdown(props) {
             // We close the dropdown
             setShowNotifcationsDropdown(false)
 
-            // TODO se déplacer au bonne endroit en fonction de la notification
+            sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION_READ, notification.id),'POST').then(
+                result => {
+                    console.log("Notification marked read")
+                },
+                error => {
+                    console.log(error)
+                }
+            )
+
             redirectToPage(notification)
         }
     }
-
-
-
+    
     return (
         <NavDropdown
             title={<span className={"nav-item"} onClick={() => {
@@ -138,7 +157,8 @@ function NotificationDropdown(props) {
                         </ul>
                     </Col>
                 </Row>
-                <Row className={"notification-item-list"}>
+               {/* // TODO afficher les anciennes notifications*/}
+               {/* <Row className={"notification-item-list"}>
                     <Col className={"text-link"} onClick={(event) => {
                         setShowOldNotifications(!showOldNotifications)
                     }}>
@@ -168,7 +188,7 @@ function NotificationDropdown(props) {
                     </Col>
 
                 </Row>
-                }
+                }*/}
                 <Button variant="primary" size="lg" block
                         onClick={() => setShowNotifcationsDropdown(false)}>Fermer</Button>
             </Container>

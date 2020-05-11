@@ -6,10 +6,12 @@ import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,9 +23,9 @@ public class NotificationController {
     private final ConcurrentHashMap<String, List<SseEmitter>> emitters = new ConcurrentHashMap<>();
 
     @Autowired
-    private NotificationService notificationService;
+    public NotificationService notificationService;
     @Autowired
-    private AuthenticationService authService;
+    public AuthenticationService authService;
 
     @PostMapping("/{id}/markRead")
     public Notification markRead(@PathVariable int id){
@@ -34,31 +36,22 @@ public class NotificationController {
 
     @PostMapping("/{id}/markUnread")
     public Notification markUnread(@PathVariable int id){
-       // authService.getTheDetailsOfCurrentUser();
         Notification newNotif = new Notification();
         newNotif.setIsRead(false);
         return notificationService.updateNotification(newNotif, id);
     }
 
 
-
-
     /**
      * This method allows the user to subscribe to the notifications. Every user has a collection of emitters.
      * Every emitters will send the notification to instance of the frontend application. We use a collection of emitters
-     * to allow the user to be connected to several web tabs/web browsers (1 emitter = 1 browsers/tab in same time.
+     * to allow the user to be connected to several web tabs/web browsers (1 emitter = 1 browsers/tab).
      *
      * @param username the string of the user's username
      * @return SseEmitter the emitter which will be used by the tabs/web browser
      */
-
-
-    /*
     @GetMapping("/{username}")
-    public String subscribeToNotifications(@PathVariable String username) {
-        // TODO getTheDetailsOfCurrentUser ne fonctionne pas. L'erreur dit qu'on ne peut pas convertir string to user
-        //  et si on affiche .primary() on a anonymous user ce qui est problablement la raison de l'erreur comme si aucune auth n'était fait jusqu ' à mtn
-
+    public SseEmitter subscribeToNotifications(@PathVariable String username) {
         User user = authService.getTheDetailsOfCurrentUser();
         System.out.println("Logged in user : " + user);
         if (user == null || !user.getUserName().equals(username))
@@ -66,9 +59,6 @@ public class NotificationController {
 
         // Create a new emitter for the user
         SseEmitter emitter = new SseEmitter();
-        return "test";
-
-
 
 
         // Get the user list of emitters - the user might have several emitter if he has opened several tabs in his
@@ -89,15 +79,14 @@ public class NotificationController {
             this.emitters.get(username).remove(emitter);
         });
 
-
-        // return emitter;
+        return emitter;
     }
     /**
      * This method is used to send the notification to all the users who have been registered by subscribeToNotifications
      *
      * @param notification The notification to send to the user.
      */
-        /*
+
     @EventListener
     public void onNotification(Notification notification) {
 
@@ -130,5 +119,5 @@ public class NotificationController {
             }
 
         }
-    }*/
+    }
 }

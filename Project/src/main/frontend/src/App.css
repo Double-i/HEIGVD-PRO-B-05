@@ -41,7 +41,7 @@
   overflow: hidden;
 }
 .notification-item-list{
-  max-width: 460px;
+  max-width: 470px;
   width:100%;
 }
 .notification-item{
@@ -65,5 +65,6 @@
 }
 .notification-item-list{
   max-height: 260px;
+  min-width: 450px;
   overflow-y: auto;
 }

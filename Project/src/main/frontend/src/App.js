@@ -15,11 +15,14 @@ import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
 
 import Map from './searchTools/map'
+import ToolDetails from './searchTools/toolDetails'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
 
 import { SessionContext, SessionHelper } from './common/SessionHelper';
+import SearchTools from "./searchTools/searchTools";
+import DisplayTool from "./searchTools/displayTool";
 
 function App() {
     const userStorage = localStorage.getItem('user')
@@ -67,9 +70,10 @@ function App() {
                                     <SignUp/>
                                 )}
                             </Route>
-
-                            <Route exact path="/map">
-                                <Map />
+                            <Route exact path="/map" component={Map}/>
+                            <Route exact path="/toolDetails" component = {ToolDetails}/>
+                            <Route exact path="/searchTools">
+                                <SearchTools/>
                             </Route>
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails/>
@@ -80,7 +84,6 @@ function App() {
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
                             </Route>
                             <Route exacte path="/dashboard/addTool">
                                 {user.session.isUserLogin() ? (
@@ -88,7 +91,6 @@ function App() {
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
                             </Route>
                             <Route exacte path="/dashboard/myloans/owner">
                                 {user.session.isUserLogin() ? (
@@ -97,7 +99,6 @@ function App() {
                                     <NotRigthToBeHere/>
                                 )}
                             </Route>
-
                             <Route component={UnkownPage}/>
                         </Switch>
                     </Container>

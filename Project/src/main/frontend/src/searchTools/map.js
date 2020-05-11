@@ -34,12 +34,6 @@ class MapContainer extends React.Component {
         .catch(err => alert(err));
     }
 
-    /*onMarkerClick = (props, marker, e) => {
-            console.log(marker);
-            console.log(props);
-            marker.addChild(this.getInfoWindow(marker));
-    };*/
-
     onMarkerClick = (props, marker, e) => {
         console.log("Clicked on marker !");
         this.setState({
@@ -57,19 +51,6 @@ class MapContainer extends React.Component {
             })
         }
     };
-
-    /*getInfoWindow(props, marker)
-    {
-        let tool = this.state.tools.find(
-            element => (element.name === props.name));
-        console.log('Showing tool info for : '+props.name);
-        return <InfoWindow
-            marker = {marker}
-            visible = 'true'>
-            <h1>{tool.name}</h1>
-            <p>{tool.description}</p>
-        </InfoWindow>;
-    }*/
 
     getInfoWindow()
     {

@@ -66,4 +66,22 @@ class AuthenticationController {
         return ResponseEntity.ok().body(new SuccessResponse("The user has been stored"));
     }
 
+    @PostMapping(value = "/logout")
+    public  ResponseEntity<?> logOut(@RequestBody User user){
+
+        final String jwt = ""; // create a empty token
+
+        // store jwt into a http cookie to avoid cookie theft by XSS attack
+        HttpCookie cookie = ResponseCookie.from(accessTokenName, jwt)
+                .httpOnly(true)
+                .path("/")
+                .build();
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.ok().headers(responseHeaders).body(user);
+
+    }
+
 }

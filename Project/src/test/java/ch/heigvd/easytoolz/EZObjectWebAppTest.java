@@ -1,110 +1,102 @@
 package ch.heigvd.easytoolz;
 
-import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.config.WebSecurityConfig;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.views.EZObjectView;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = WebSecurityConfig.class)
+@WebAppConfiguration
 public class EZObjectWebAppTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    EZObjectService service;
+    private WebApplicationContext context;
 
-    List<EZObjectView> objects;
-    /*@Before
-    public void Init()
+    @Autowired
+    private EZObjectService service;
+
+    @Before
+    public void setUp()
     {
-        objects = service.getAll();
-    }
-    @Test
-    public void shouldReturnIndex() throws Exception
-    {
-
-        this.mockMvc.perform(get("http://localhost:8080/api/objects/")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$", hasSize(objects.size())));
-
-    }
-
-    @Test
-    public void shouldReturnObjectView() throws Exception
-    {
-        for(int i = 0; i < objects.size(); i++)
-        {
-            this.mockMvc.perform(get("http://localhost:8080/api/objects/"+(i+1))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$",hasEntry("objectName",objects.get(i).getObjectName())))
-                    .andExpect(jsonPath("$",hasEntry("objectDescription",objects.get(i).getObjectDescription())))
-                    .andExpect(jsonPath("$",hasEntry("objectOwner",objects.get(i).getObjectOwner())))
-                    .andExpect(jsonPath("$",hasEntry("ownerAddress",objects.get(i).getOwnerAddress())))
-                    .andExpect(jsonPath("$",hasEntry("ownerDistrict",objects.get(i).getOwnerDistrict())))
-                    .andExpect(jsonPath("$",hasEntry("ownerPostalCode",objects.get(i).getOwnerPostalCode())));
-        }
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
     }
 
     @Test
     public void filterByNameTest() throws Exception
     {
-        List<EZObjectView> filtered = service.getObjectByName("pelle");
 
-        this.mockMvc.perform(get("http://localhost:8080/api/objects/find/name/pelle")
+        List<EZObjectView> objects = service.getObjectByName("pelle");
+
+        ResultActions action = this.mockMvc
+                .perform(get("http://localhost:8080/api/objects/find/name/pelle").with(user("KEVIN"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]..objectName",hasItem(containsString("pelle"))));
+                .accept(MediaType.APPLICATION_JSON));
+
+        for( int i = 0; i < objects.size(); i++)
+        {
+            action.andExpect(status().isOk())
+                    .andExpect(jsonPath("$["+i+"]..name",hasItem(containsString("pelle"))));
+        }
+
     }
 
     @Test
-    public void filterByDescription() throws Exception
-    {
-        List<EZObjectView> filtered = service.getObjectByDescription("super");
+    public void filterByDescription() throws Exception {
 
-        this.mockMvc.perform(get("http://localhost:8080/api/objects/find/description/super")
+        List<EZObjectView> objects = service.getObjectByDescription("super");
+        ResultActions action = this.mockMvc.perform(get("http://localhost:8080/api/objects/find/description/super").with(user("JEAN"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]..objectDescription",hasItem(containsString("super"))));
+                .accept(MediaType.APPLICATION_JSON));
+
+        for (int i = 0; i < objects.size(); i++) {
+            action
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$["+i+"]..description", hasItem(containsString("super"))));
+        }
+
     }
 
     @Test
     public void filterByOwner() throws Exception
     {
-        List<EZObjectView> filtered = service.getObjectByOwner("fukuchimiste");
+        List<EZObjectView> objects = service.getObjectByOwner("fukuchimiste");
 
-        this.mockMvc.perform(get("http://localhost:8080/api/objects/owner/fukuchimiste")
+        ResultActions action = this.mockMvc.perform(get("http://localhost:8080/api/objects/owner/fukuchimiste").with(user("JEAN"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]..objectOwner",hasItem("fukuchimiste")));
-    }*/
+                .accept(MediaType.APPLICATION_JSON));
+
+        for (int i = 0; i < objects.size(); i++) {
+            action
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$["+i+"].owner.userName",is("fukuchimiste")));
+        }
+    }
 
 }

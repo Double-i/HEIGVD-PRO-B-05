@@ -61,8 +61,8 @@ public class EZObjectServiceImpl implements EZObjectService {
         List<Predicate> tagPredicates = new LinkedList<>();
 
         Predicate finalQuery;
-        Predicate queries;
-        Predicate tagQuery;
+        Predicate queries = criteriaBuilder.conjunction();
+        Predicate tagQuery = criteriaBuilder.conjunction();
         if(namesList != null) {
             for(String s : namesList) {
                 predicates.add(criteriaBuilder.like(root.get(EZObject_.NAME), ServiceUtils.transformLike(s)));
@@ -83,15 +83,17 @@ public class EZObjectServiceImpl implements EZObjectService {
         Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS,JoinType.INNER);
         if(tagList != null && tagList.size() > 0) {
             for(Tag t : tagList) {
-                predicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
+                tagPredicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
             }
         }
 
-
-        queries = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        tagQuery = criteriaBuilder.or(tagPredicates.toArray(new Predicate[0]));
+        if(predicates.size() > 0)
+            queries = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        if(tagPredicates.size() > 0)
+            tagQuery = criteriaBuilder.or(tagPredicates.toArray(new Predicate[0]));
 
         finalQuery = criteriaBuilder.and(queries,tagQuery);
+
         query.where(finalQuery).distinct(true);
 
         objects = entityManager.createQuery(query).getResultList();
@@ -127,24 +129,28 @@ public class EZObjectServiceImpl implements EZObjectService {
         User owner = authenticationService.getTheDetailsOfCurrentUser();
 
         newObject.setOwner(owner);
-        List<EZObjectImage>images = new ArrayList<>();
 
         ezObjectRepository.save(newObject);
 
-        for(int i = 0; i < files.size(); i++)
+        if(files != null)
         {
-            EZObjectImage  img_path = new EZObjectImage();
-            img_path.setObject(newObject);
+            List<EZObjectImage>images = new ArrayList<>();
+            for(int i = 0; i < files.size(); i++)
+            {
+                EZObjectImage  img_path = new EZObjectImage();
+                img_path.setObject(newObject);
 
-            storageService.store(files.get(i),newObject, img_path);
-            images.add(img_path);
-            imagesRepository.save(img_path);
+                storageService.store(files.get(i),newObject, img_path);
+                images.add(img_path);
+                imagesRepository.save(img_path);
+            }
         }
+
 
     }
 
-
-    public void updateObject(EZObject o) {
+    public void updateObject(EZObject o, List<MultipartFile> files) throws Exception
+    {
         EZObject updated = ezObjectRepository.findByID(o.getID());
         if (updated == null)
             throw new EZObjectNotFoundException("" + o.getID());
@@ -154,20 +160,40 @@ public class EZObjectServiceImpl implements EZObjectService {
         updated.setImages(o.getImages());
         updated.setObjectTags(o.getObjectTags());
 
+        if(files != null)
+        {
+            List<EZObjectImage>images = updated.getImages();
+            if(images == null)
+                images = new ArrayList<>();
+
+            for(int i = 0; i < files.size(); i++)
+            {
+                EZObjectImage  img_path = new EZObjectImage();
+                img_path.setObject(updated);
+                storageService.store(files.get(i),updated, img_path);
+                images.add(img_path);
+                imagesRepository.save(img_path);
+            }
+        }
+
 
         ezObjectRepository.save(updated);
     }
 
-    public void deleteObject(int id) {
+    public void deleteObject(int id) throws Exception {
         EZObject toDelete = ezObjectRepository.findByID(id);
         if (toDelete == null)
             throw new EZObjectNotFoundException("" + id);
 
         toDelete.setActive(false);
-        updateObject(toDelete);
+        updateObject(toDelete,null);
 
     }
 
+    public List<EZObjectImage> getObjectImages(int id)
+    {
+        return imagesRepository.findByEzObject_ID(id);
+    }
 
     public List<EZObjectView> getObjectByName(String objectName) {
         return ezObjectRepository.getAllByNameContaining(objectName);
@@ -185,6 +211,10 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     public List<EZObjectView> getObjectsByTag(List<Tag> tags) {
         return ezObjectRepository.getAllByObjectTagsIn(tags);
+    }
+
+    public List<EZObjectView> getReportedObject(){
+        return ezObjectRepository.getAllByIDIn(ezObjectRepository.getReportedObject());
     }
 
 }

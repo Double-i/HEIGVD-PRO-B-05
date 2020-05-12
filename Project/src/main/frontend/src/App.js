@@ -18,6 +18,8 @@ import Map from './searchTools/map'
 import ToolDetails from './searchTools/toolDetails'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
+import AdminPage from "./admin/AdminPage";
+import UserToolsList from "./userDashboard/userTools/UserToolsList";
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
 import * as moment from 'moment'
 
@@ -26,6 +28,9 @@ import EditProfilForm from "./userDashboard/editProfil/EditProfilForm";
 import {sendEzApiRequest} from "./common/ApiHelper";
 import SearchTools from "./searchTools/searchTools";
 import DisplayTool from "./searchTools/displayTool";
+
+import {SessionContext, SessionHelper} from './common/SessionHelper'
+import ToolForm from "./toolsUtil/toolForm";
 
 const SESSION_REFRESH_ENDPOINT = "/authrefresh"
 
@@ -121,10 +126,22 @@ function App() {
                             </Route>
                             <Route exacte path="/dashboard/addTool">
                                 {user.session.isUserLogin() ? (
-                                    <AddToolsForm/>
+                                    <ToolForm
+                                        tool = {null}
+                                        formTitle={"Ajouter"}
+                                        action={"add"}
+                                    />
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
+                            </Route>
+                            <Route exacte path="/dashboard/toolList">
+                                {user.session.isUserLogin() ? (
+                                    <UserToolsList/>
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
+
                             </Route>
                             <Route exacte path="/dashboard/myloans/owner">
                                 {user.session.isUserLogin() ? (
@@ -133,6 +150,12 @@ function App() {
                                     <NotRigthToBeHere/>
                                 )}
                             </Route>
+                            <Route exacte path="/AdminPage">
+                                {user.session.isUserAdmin() ? (
+                                    <AdminPage/>
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
                             <Route exacte path="/dashboard/profil">
                                 {user.session.isUserLogin() ? (
                                     <EditProfilForm />
@@ -148,6 +171,7 @@ function App() {
                                 )}
                             </Route>
 
+                            </Route>
                             <Route component={UnkownPage}/>
                         </Switch>
                     </Container>

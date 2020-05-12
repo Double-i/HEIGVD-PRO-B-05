@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.services.interfaces;
 
 import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,9 +25,9 @@ public interface EZObjectService {
      * @param o
      * @return
      */
-    void updateObject(EZObject o);
+    void updateObject(EZObject o, List<MultipartFile> files) throws Exception;
 
-    void deleteObject(int id);
+    void deleteObject(int id) throws Exception;
 
     /**
      * Get the list of all the objects
@@ -77,10 +78,12 @@ public interface EZObjectService {
 
     List<EZObjectView> getObjectsByTag(List<Tag> tags);
 
-     List<EZObject> getFiltered( List<String> namesList,
+    List<EZObject> getFiltered( List<String> namesList,
                                            List<String> ownersList,
                                            List<String> descriptionList,
                                  List<Tag> tags);
 
+    List<EZObjectImage> getObjectImages(int id);
+    List<EZObjectView> getReportedObject();
 
 }

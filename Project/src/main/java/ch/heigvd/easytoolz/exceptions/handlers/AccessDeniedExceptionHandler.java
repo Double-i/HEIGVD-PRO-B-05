@@ -13,7 +13,7 @@ public class AccessDeniedExceptionHandler extends DefaultExceptionHandler {
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<ApiError> handleEZObjectNotFoundException(AccessDeniedException ex, WebRequest request)
     {
-        ApiError error = new ApiError(HttpStatus.FORBIDDEN, ex.getMessage(), Now(),getURI(request) );
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.FORBIDDEN);
+        return makeError(ex,request,HttpStatus.FORBIDDEN);
+
     }
 }

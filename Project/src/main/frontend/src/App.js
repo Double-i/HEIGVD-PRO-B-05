@@ -21,6 +21,7 @@ import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AdminPage from "./admin/AdminPage";
 import UserToolsList from "./userDashboard/userTools/UserToolsList";
 
+import ConversationList from "./WebChat/ConversationList";
 import * as moment from 'moment'
 
 import {SESSION_DURATION, SessionContext, SessionHelper} from './common/SessionHelper'
@@ -43,7 +44,7 @@ function App() {
     const session = new SessionHelper(userSession, setUserSession)
 
     // Log out the user if his session has expired
-    if(session.isUserLogin() && session.isExpired()){
+   /* if(session.isUserLogin() && session.isExpired()){
         session.logout()
     }else{
         const refreshMoment = moment(session.getExpirationDate()).subtract(3, "minutes")
@@ -56,7 +57,7 @@ function App() {
                 console.log("Refresh token response",result)
                 session.login({
                     tokenDuration: result.tokenDuration,
-                        username: result.user.userName,
+                    username: result.user.userName,
                     admin: result.user.admin,
                     lastname: result.user.lastName,
                     firstname: result.user.firstName,
@@ -69,7 +70,7 @@ function App() {
 
         }, duration.asMilliseconds())
     }
-
+*/
     const user = {
         userInfo: userSession,
         session: session,
@@ -175,7 +176,10 @@ function App() {
                         </Switch>
                     </Container>
                 </div>
+
             </Router>
+
+            <ConversationList currentConnected ={user}/>
         </SessionContext.Provider>
     )
 }

@@ -28,10 +28,10 @@ import java.util.Random;
 @DataJpaTest
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=create-drop",
-        "spring.datasource.url=jdbc:mysql://localhost:3306/easytoolz?serverTimezone=UTC",
+        "spring.datasource.url=jdbc:mysql://localhost:3306/easytoolsTest?serverTimezone=UTC",
         "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver",
         "spring.datasource.username=root",
-        "spring.datasource.password=password",
+        "spring.datasource.password=Pa$$w0rd",
         "file.upload-dir=./images"
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -82,7 +82,7 @@ public class EZToolzTest {
         {
             countryRepository.save(c);
         }
-        Assert.isTrue(countryRepository.findAll().size() == countries.size(), "");
+        Assert.isTrue(countryRepository.findAll().size() == countries.size(), "ff");
 
         ArrayList<City> cities = new ArrayList<>()
         {

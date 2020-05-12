@@ -119,6 +119,7 @@ public class User {
     @JoinColumn(name = "fk_address", referencedColumnName = "id")
     private Address address;
 
+
     // Required for creating JSON parsing
     public User() {
     }

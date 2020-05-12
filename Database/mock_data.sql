@@ -46,15 +46,3 @@ insert into ezobject_tag(fk_tag,fk_ezobject) values("sport",4);
 insert into ezobject_tag(fk_tag,fk_ezobject) values("skateboard",4);
 insert into ezobject_tag(fk_tag,fk_ezobject) values("ete",1);
 insert into ezobject_tag(fk_tag,fk_ezobject) values("ete",8);
-
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-03-30","2020-04-10",null,"pending","vitorvaz",1);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-04-10","2020-05-1",null,"pending","heymanuel",11);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-04-20","2020-05-2",null,"pending","double-i",7);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-05-20","2020-06-1",null,"pending","robinr",9);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-03-27","2020-04-3",null,"pending","mauricel",10);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-08-10","2020-08-20",null,"pending","fukuchimiste",2);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-04-27","2020-05-7",null,"pending","heymanuel",3);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-10-2","2020-10-10",null,"pending","double-i",8);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-8-1","2020-8-13",null,"pending","vitorvaz",12);
-insert into loan(date_start, date_end,date_return, state,borrower, fk_ezobject) values("2020-9-5","2020-9-20",null,"pending","mauricel",5);
-© 2020 GitHub, Inc.

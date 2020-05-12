@@ -33,7 +33,10 @@ public class LoanServiceImpl implements LoanService {
     private LoanRepository loanRepository;
 
     @Autowired
-    private EZObjectRepository ezObjectRepository;
+    ConversationRepository conversationRepository;
+
+    @Autowired
+    EZObjectRepository ezObjectRepository;
 
     @Autowired
     private AuthenticationService authService;
@@ -112,11 +115,8 @@ public class LoanServiceImpl implements LoanService {
 
         switch (newState) {
             case accepted:
-                notificationService.storeNotification(ServiceUtils.createNotification(
-                        StateNotification.ACCEPTATION_DEMANDE_EMPRUNT,
-                        loan.getBorrower(),
-                        loan.getEZObject().getName()
-                ));
+                Conversation conv   = new Conversation(loan.getOwner(),loan.getBorrower().getUserName(),loan.getPkLoan());
+                conversationRepository.save(conv);
                 done = updateLoanStateByOwner(loan, newState);
                 break;
             case refused:
@@ -334,6 +334,22 @@ public class LoanServiceImpl implements LoanService {
         return loanRepository.findAll(specs);
     }
 
+    @Override
+    public List<Loan> getLoansRelatedTo(String username)
+    {
+        Specification<Loan> byUser = null;
+
+        byUser = LoanSpecs.getLoanByOwner(username);
+        byUser = byUser.or(LoanSpecs.getLoanByBorrower(username));
+
+        Specification<Loan> byState = null;
+        byState = LoanSpecs.getState(State.accepted.getState());
+
+        Specification<Loan> finalSpec = byUser.and(byState);
+        return loanRepository.findAll(finalSpec);
+
+    }
+
     /**
      * Update the status to accept or refused of the given loan
      *
@@ -408,6 +424,8 @@ public class LoanServiceImpl implements LoanService {
         }
         return creator;
     }
+
+
 
 }
 

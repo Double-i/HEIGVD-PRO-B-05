@@ -15,6 +15,7 @@ import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
 
 import Map from './searchTools/map'
+import ToolDetails from './searchTools/toolDetails'
 import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
 import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AddToolsForm from "./userDashboard/addTools/AddToolsForm";
@@ -23,7 +24,11 @@ import * as moment from 'moment'
 import {SESSION_DURATION, SessionContext, SessionHelper} from './common/SessionHelper'
 import EditProfilForm from "./userDashboard/editProfil/EditProfilForm";
 import {sendEzApiRequest} from "./common/ApiHelper";
+import SearchTools from "./searchTools/searchTools";
+import DisplayTool from "./searchTools/displayTool";
+
 const SESSION_REFRESH_ENDPOINT = "/authrefresh"
+
 function App() {
     const userStorage = localStorage.getItem('user')
     const userObject = userStorage === null ? {} : JSON.parse(userStorage)
@@ -99,9 +104,10 @@ function App() {
                                     <SignUp/>
                                 )}
                             </Route>
-
-                            <Route exact path="/map">
-                                <Map />
+                            <Route exact path="/map" component={Map}/>
+                            <Route exact path="/toolDetails/:id" component = {ToolDetails}/>
+                            <Route exact path="/searchTools">
+                                <SearchTools/>
                             </Route>
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails/>
@@ -112,7 +118,6 @@ function App() {
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
                             </Route>
                             <Route exacte path="/dashboard/addTool">
                                 {user.session.isUserLogin() ? (

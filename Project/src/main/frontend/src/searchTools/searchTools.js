@@ -3,7 +3,13 @@ import React, {useState} from "react";
 import {sendEzApiRequest} from "../common/ApiHelper";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
+import Row from "react-bootstrap/Row";
 
+const mapStyles = {
+    width:  '80%',
+    height: '100%'
+}
 
 //TODO : Si le user est pas log, on arrive pas a fetch les objets ?!
 class SearchTools extends React.Component{
@@ -16,10 +22,21 @@ class SearchTools extends React.Component{
             search : '',
             tools : [],
             tags : [],
-            searchTags : []
-        };
+            searchTags : [],
+            showingInfoWindow: false,
+            activeMarker: {},
+            selectedTool: {}
+        }
 
-        //Utilisé pour appelé this dans handleSubmit
+        sendEzApiRequest(this.SEARCH_URI)
+            .then((response) =>{
+                console.log(response);
+                this.setState({tools:response});
+                console.log(this.state.tools);
+            })
+            .catch(err => alert(err));
+
+        //Utilisé pour appeler this dans handleSubmit
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleTagChange = this.handleTagChange.bind(this)
     }
@@ -99,10 +116,56 @@ class SearchTools extends React.Component{
         this.setState({searchTags: value});
     }
 
+    onMarkerClick = (props, marker, e) => {
+        console.log("Clicked on marker !");
+        this.setState({
+            selectedTool: this.state.tools.find(tool => tool.name ===props.name),
+            activeMarker: marker,
+            showingInfoWindow: true
+        });
+    }
+
+    onMapClicked = (props) => {
+        if (this.state.showingInfoWindow) {
+            this.setState({
+                showingInfoWindow: false,
+                activeMarker: null
+            })
+        }
+    };
+
+    getInfoWindow()
+    {
+        return <InfoWindow
+            marker = {this.state.activeMarker}
+            visible = {this.state.showingInfoWindow}>
+            <div>
+                <h1>{this.state.selectedTool === undefined ? "" : this.state.selectedTool.name}</h1>
+                <p>
+                    {this.state.selectedTool === undefined ? "" : this.state.selectedTool.description}
+                </p>
+            </div>
+        </InfoWindow>;
+    }
+
+    getMarkers()
+    {
+        return this.state.tools.map(tool => {
+            console.log('getting tool : '+tool.name+' at '+tool.owner.address);
+            return <Marker onClick = {this.onMarkerClick}
+                           key = {tool.name}
+                           name = {tool.name}
+                           position={{
+                               lat: tool.owner.address.lat,
+                               lng: tool.owner.address.lng
+                           }}/>
+        })
+    }
+
     render(){
         return (
             <div className="container" style={{
-                marginTop: '10px'
+                marginTop: '10px',
             }}>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group controlId="formBasicEmail" >
@@ -137,13 +200,30 @@ class SearchTools extends React.Component{
                         Rechercher
                     </Button>
                 </Form>
+                <div style={{marginBottom: '80%', marginTop: '5%'}}>
+                    <Map
+                        key={0}
+                        google={this.props.google}
+                        zoom={10}
+                        style={mapStyles}
+                        initialCenter={{ lat: 46.5, lng: 6.5}}
+                        onClick={this.onMapClicked}
+                    >
+                        {this.getMarkers()}
+                        {this.getInfoWindow()}
+                    </Map>
+                </div>
+                <div>
+                    <DisplayTools
+                          data = {this.state.tools}
+                    />
+                </div>
 
-                <DisplayTools
-                    data = {this.state.tools}
-                />
             </div>
         )
     }
 }
 
-export default SearchTools;
+export default GoogleApiWrapper({
+    apiKey: 'AIzaSyCwmIS0mKIfWPvmZke7plXkeR1uZ6ahwcU'
+})(SearchTools);

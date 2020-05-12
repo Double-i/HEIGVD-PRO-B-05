@@ -1,16 +1,17 @@
 import DisplayTools from "../toolsUtil/displayTools";
-import React, {useContext, useState} from "react";
-import {sendEzApiRequest} from "../common/ApiHelper";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import React from "react";
+import {SessionContext} from "../common/SessionHelper";
+import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
+import {Form, Button} from "react-bootstrap";
 import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
-import Row from "react-bootstrap/Row";
+
 
 const mapStyles = {
     width:  '80%',
     height: '100%'
 }
 
+class SearchTools extends React.Component{
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
 
@@ -20,13 +21,17 @@ const mapStyles = {
         super(props);
 
         this.state = {
-            search : '',
-            tools : [],
-            tags : [],
-            searchTags : [],
-            showingInfoWindow: false,
+            search: '',
+            tools: [],
+            tags: [],
             activeMarker: {},
-            selectedTool: {}
+            searchTags: [],
+            nbTools: 0,
+            pages: [],
+            currentPage: null,
+            currentURLFilter: "",
+            selectedTool: {},
+            showingInfoWindow: false,
         }
 
         sendEzApiRequest(this.SEARCH_URI)
@@ -44,6 +49,25 @@ const mapStyles = {
 
     //Au chargement, on affiche tout les tools
     componentDidMount() {
+
+        //all the objects
+        sendRequestSimple('/objects/count').then(
+            (result) =>
+            {
+                let pages = []
+                let nbPages = result/10;
+                for(let i = 0; i < nbPages; i++)
+                {
+                    console.log("page "+i)
+                    pages.push(
+                        <span onClick={() => {this.loadPage(i)}}>{i}</span>
+                    )
+                }
+
+                this.setState({nbTools:result,pages:pages})
+
+            }
+        )
 
         sendEzApiRequest(this.SEARCH_URI)
             .then((response) =>{
@@ -66,6 +90,44 @@ const mapStyles = {
                 })
     }
 
+    loadPage(page)
+    {
+        let URL = this.SEARCH_URI
+
+        URL+='?page='+page;
+
+        //Search by name
+        if(this.state.search !== ''){
+            URL += '&' + this.state.search;
+            if(this.state.searchTags.length !== 0)
+                URL += '&';
+        }
+
+        if(this.state.searchTags.length !== 0){
+            if(this.state.search === '')
+                URL += "/filter?"
+            URL += 'tags=';
+            for(let i = 0; i < this.state.searchTags.length; ++i){
+                if(i > 0)
+                    URL += ",";
+                URL += this.state.searchTags[i];
+            }
+        }
+
+        sendEzApiRequest(URL)
+            .then(
+                (result) => {
+                    if (result.status === 403) {
+                        console.log('No tools founded')
+                    } else {
+                        console.log('items founded')
+                        this.setState({tools : result});
+                    }
+                },
+                error => {
+                    console.log('Connection PAS ok', error)
+                })
+    }
     //En cas de submit, on recherche la query dans
     handleSubmit(event){
 
@@ -90,22 +152,37 @@ const mapStyles = {
             }
         }
 
-        //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
         event.preventDefault();
         sendEzApiRequest(URL)
             .then(
                 (result) => {
+                    console.log(result)
                     if (result.status === 403) {
                         console.log('No tools founded')
                     } else {
                         console.log('items founded')
-                        this.setState({tools : result});
+                        let pages = []
+                        console.log(result)
+                        let nbPages = result/10;
+                        for(let i = 0; i < nbPages; i++)
+                        {
+                            console.log("page "+i)
+                            pages.push(
+                                <span onClick={() => {this.loadPage(i)}}>{i}</span>
+                            )
+                        }
+
+                        this.setState({tools : result,nbTools:result.length,pages:pages})
                     }
                 },
                 error => {
                     console.log('Connection PAS ok', error)
                 })
+
+        //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
+
     }
+
 
     //Dynaminc update of searched tags fields
     handleTagChange(e){
@@ -224,6 +301,7 @@ const mapStyles = {
                     hideEditButton={true}
                     hideDeleteButton={true}
                 />
+                {this.state.pages}
             </div>
         )
     }

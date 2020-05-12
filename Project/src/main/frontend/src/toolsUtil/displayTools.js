@@ -33,12 +33,14 @@ class DisplayTools extends React.Component {
                             <div>Tags</div>
                         </div>
                     </div>
-                    {this.props.data.map(item => (
+                    {
+                        this.props.data.length > 0 ?(
+                        this.props.data.map(item => (
                         <DisplayTool
                             id={item.id}
                             name={item.name}
                             description={item.description}
-                            ownerUserName={item.owner.userName}
+                            ownerUserName={item.ownerUserName}
                             objectTags={item.objectTags}
                             images={item.images}
                             hideOwner={this.props.hideOwner}
@@ -47,7 +49,8 @@ class DisplayTools extends React.Component {
                             hideDeleteButton={this.props.hideDeleteButton}
                         >
                         </DisplayTool>
-                    ))}
+                        )
+                    )) : (<></>)}
                 </div>
             </div>
         )

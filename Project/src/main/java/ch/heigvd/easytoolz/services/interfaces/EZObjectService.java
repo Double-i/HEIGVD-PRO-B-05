@@ -4,6 +4,7 @@ import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.models.Tag;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -34,7 +35,7 @@ public interface EZObjectService {
      *
      * @return
      */
-    List<EZObjectView> getAll();
+    List<EZObjectView> getAll(int page, int pageLength);
 
 
     /**
@@ -78,12 +79,21 @@ public interface EZObjectService {
 
     List<EZObjectView> getObjectsByTag(List<Tag> tags);
 
-    List<EZObject> getFiltered( List<String> namesList,
-                                           List<String> ownersList,
-                                           List<String> descriptionList,
-                                 List<Tag> tags);
+
+    int getFilteredCount(List<String> namesList,
+                         List<String> ownersList,
+                         List<String> descriptionList,
+                         List<Tag> tags ,int page);
+
+     List<EZObject> getFiltered(List<String> namesList,
+                                List<String> ownersList,
+                                List<String> descriptionList,
+                                List<Tag> tags ,int page);
 
     List<EZObjectImage> getObjectImages(int id);
     List<EZObjectView> getReportedObject();
+
+
+    int getNbObjects();
 
 }

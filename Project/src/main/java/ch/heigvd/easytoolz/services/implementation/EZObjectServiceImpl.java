@@ -11,6 +11,8 @@ import ch.heigvd.easytoolz.util.ServiceUtils;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,58 +48,87 @@ public class EZObjectServiceImpl implements EZObjectService {
     @PersistenceContext
     EntityManager entityManager;
 
-    public List<EZObject> getFiltered( List<String> namesList,
-                                           List<String> ownersList,
-                                           List<String> descriptionList,
-                                       List<Tag>   tagList)
+    public Predicate buildPredicates(List<String> namesList,
+                                     List<String> ownersList,
+                                     List<String> descriptionList,
+                                     List<Tag>   tagList,
+                                     CriteriaBuilder cb ,
+                                     Root<EZObject> root)
     {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        List<EZObject> objects;
-
-        CriteriaQuery<EZObject> query = criteriaBuilder.createQuery(EZObject.class);
-        Root<EZObject> root = query.from(EZObject.class);
 
         List<Predicate> predicates = new LinkedList<>();
         List<Predicate> tagPredicates = new LinkedList<>();
 
         Predicate finalQuery;
-        Predicate queries = criteriaBuilder.conjunction();
-        Predicate tagQuery = criteriaBuilder.conjunction();
+        Predicate queries = cb.conjunction();
+        Predicate tagQuery =  cb.conjunction();
+
         if(namesList != null) {
             for(String s : namesList) {
-                predicates.add(criteriaBuilder.like(root.get(EZObject_.NAME), ServiceUtils.transformLike(s)));
+                predicates.add( cb.like(root.get(EZObject_.NAME), ServiceUtils.transformLike(s)));
             }
         }
 
         if(ownersList !=null) {
             for(String s : ownersList) {
-                predicates.add(criteriaBuilder.equal(root.get(EZObject_.OWNER).get("userName"),s));
+                predicates.add( cb.equal(root.get(EZObject_.OWNER).get("userName"),s));
             }
 
         }
         if(descriptionList != null) {
             for(String s : descriptionList) {
-                predicates.add(criteriaBuilder.like(root.get(EZObject_.DESCRIPTION),ServiceUtils.transformLike(s)));
+                predicates.add( cb.like(root.get(EZObject_.DESCRIPTION),ServiceUtils.transformLike(s)));
             }
         }
-        Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS,JoinType.INNER);
+        Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS);
         if(tagList != null && tagList.size() > 0) {
             for(Tag t : tagList) {
-                tagPredicates.add(criteriaBuilder.equal(objectJoin.get("name").as(String.class),t.getName()));
+                tagPredicates.add( cb.equal(objectJoin.get("name").as(String.class),t.getName()));
             }
         }
 
         if(predicates.size() > 0)
-            queries = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            queries =  cb.and(predicates.toArray(new Predicate[0]));
         if(tagPredicates.size() > 0)
-            tagQuery = criteriaBuilder.or(tagPredicates.toArray(new Predicate[0]));
+            tagQuery =  cb.or(tagPredicates.toArray(new Predicate[0]));
 
-        finalQuery = criteriaBuilder.and(queries,tagQuery);
+        finalQuery =  cb.and(queries,tagQuery);
 
-        query.where(finalQuery).distinct(true);
+        return finalQuery;
+    }
 
-        objects = entityManager.createQuery(query).getResultList();
-        
+    public int getFilteredCount( List<String> namesList,
+                                       List<String> ownersList,
+                                       List<String> descriptionList,
+                                       List<Tag>   tagList,int  page)
+    {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<EZObject> countRoot = countQuery.from(EZObject.class);
+        countQuery.select(cb.count(countRoot)).where(buildPredicates(namesList,ownersList,descriptionList,tagList,cb,countRoot));
+        Long count =  entityManager.createQuery(countQuery).getSingleResult();
+
+        return count.intValue();
+    }
+
+    public List<EZObject> getFiltered( List<String> namesList,
+                                           List<String> ownersList,
+                                           List<String> descriptionList,
+                                       List<Tag>   tagList,int  page)
+    {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        List<EZObject> objects;
+
+        CriteriaQuery<EZObject> query = cb.createQuery(EZObject.class);
+        Root<EZObject> root = query.from(EZObject.class);
+
+        query.where(buildPredicates(namesList,ownersList,descriptionList,tagList,cb,root)).distinct(true);
+
+        objects = entityManager.createQuery(query).setFirstResult(page*10).setMaxResults(10).getResultList();
+
         return objects;
     }
     public boolean exists(EZObject obj) {
@@ -111,8 +142,9 @@ public class EZObjectServiceImpl implements EZObjectService {
         return obj;
     }
 
-    public List<EZObjectView> getAll() {
-        return ezObjectRepository.getAllByIsActive(true);
+    public List<EZObjectView> getAll(int page, int pageLength) {
+        Pageable pageable =  PageRequest.of(page,pageLength);
+        return ezObjectRepository.getAllByIsActive(true, pageable).getContent();
     }
 
     public List<EZObjectView> getObjectByOwner(String username) {
@@ -211,6 +243,14 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     public List<EZObjectView> getObjectsByTag(List<Tag> tags) {
         return ezObjectRepository.getAllByObjectTagsIn(tags);
+    }
+
+
+
+
+    public int getNbObjects()
+    {
+        return ezObjectRepository.countAllByIsActive(true);
     }
 
     public List<EZObjectView> getReportedObject(){

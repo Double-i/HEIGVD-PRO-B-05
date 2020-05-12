@@ -2,15 +2,17 @@ import DisplayTools from "../toolsUtil/displayTools";
 import React from "react";
 import {SessionContext} from "../common/SessionHelper";
 import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
-import {Form, Button, Container} from "react-bootstrap";
+import {Form, Button, Container, Row, Col} from "react-bootstrap";
 import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 
 
-const mapStyles = {
-    width:  '80%',
+
+const containerStyle = {
+    position: 'relative',
+
+    width: '100%',
     height: '100%'
 }
-
 class SearchTools extends React.Component{
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
@@ -244,69 +246,78 @@ class SearchTools extends React.Component{
 
     render(){
         return (
-            <div className="container" style={{
+            <Container style={{
                 marginTop: '10px',
             }}>
-                <Form onSubmit={this.handleSubmit}>
-                    <Form.Group controlId="formBasicEmail" >
-                        <Form.Control
-                            type="text"
-                            placeholder="Rechercher"
-                            onChange={event => this.setState({search : event.target.value})}
-                        />
-                    </Form.Group>
+                <Row>
+                    <Col>
+                        <Form onSubmit={this.handleSubmit}>
+                            <Form.Group controlId="formBasicEmail" >
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Rechercher"
+                                    onChange={event => this.setState({search : event.target.value})}
+                                />
+                            </Form.Group>
 
-                    <Form.Group controlId={'formToolTags'}>
-                        Tags (ctrl + click pour choisir plusieurs tags)
-                        <select
-                            multiple="multiple"
-                            className="form-control"
-                            name="toolTags"
-                            onChange={this.handleTagChange}
-                            style={{ display: 'block' }}
-                        >
-                            {this.state.tags.map((value, idx) => (
-                                <option
-                                    key={`tag-${idx}`}
-                                    value={value}
+                            <Form.Group controlId={'formToolTags'}>
+                                Tags (ctrl + click pour choisir plusieurs tags)
+                                <select
+                                    multiple="multiple"
+                                    className="form-control"
+                                    name="toolTags"
+                                    onChange={this.handleTagChange}
+                                    style={{ display: 'block' }}
                                 >
-                                    {value}
-                                </option>
-                            ))}
-                        </select>
-                    </Form.Group>
+                                    {this.state.tags.map((value, idx) => (
+                                        <option
+                                            key={`tag-${idx}`}
+                                            value={value}
+                                        >
+                                            {value}
+                                        </option>
+                                    ))}
+                                </select>
+                            </Form.Group>
 
-                    <Button variant="primary" type="submit">
-                        Rechercher
-                    </Button>
-                </Form>
-                <Container>
-                    <Map
-                        key={0}
-                        google={this.props.google}
-                        zoom={10}
-                        style={mapStyles}
-                        initialCenter={{ lat: 46.5, lng: 6.5}}
-                        onClick={this.onMapClicked}
-                    >
-                        {this.getMarkers()}
-                        {this.getInfoWindow()}
-                    </Map>
-                </Container>
+                            <Button variant="primary" type="submit">
+                                Rechercher
+                            </Button>
+                        </Form>
+                    </Col>
+                    <Col>
+                        <Map
+                            key={0}
+                            google={this.props.google}
+                            zoom={10}
+                            containerStyle={containerStyle}
+                            initialCenter={{ lat: 46.5, lng: 6.5}}
+                            onClick={this.onMapClicked}
+                        >
+                            {this.getMarkers()}
+                            {this.getInfoWindow()}
+                        </Map>
+                    </Col>
+                </Row>
+                <Row>
+                    <DisplayTools
+                        data = {this.state.tools}
+                        hideOwner={false}
+                        hideBorrowButton={!this.context.session.isUserLogin()}
+                        hideEditButton={true}
+                        hideDeleteButton={true}
+                    />
+                </Row>
+
            {/*     <div style={{marginBottom: '80%', marginTop: '5%'}}>
 
                 </div>*/}
 
-                <DisplayTools
-                    data = {this.state.tools}
-                    hideOwner={false}
-                    hideBorrowButton={!this.context.session.isUserLogin()}
-                    hideEditButton={true}
-                    hideDeleteButton={true}
-                />
+
                 {this.state.pages}
-            </div>
-        )
+    </Container>
+
+    )
     }
 }
 

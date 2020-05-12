@@ -44,7 +44,7 @@ function App() {
     const session = new SessionHelper(userSession, setUserSession)
 
     // Log out the user if his session has expired
-   /* if(session.isUserLogin() && session.isExpired()){
+   if(session.isUserLogin() && session.isExpired()){
         session.logout()
     }else{
         const refreshMoment = moment(session.getExpirationDate()).subtract(3, "minutes")
@@ -70,7 +70,7 @@ function App() {
 
         }, duration.asMilliseconds())
     }
-*/
+
     const user = {
         userInfo: userSession,
         session: session,

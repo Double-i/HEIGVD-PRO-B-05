@@ -5,6 +5,7 @@ import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,8 +42,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User getTheDetailsOfCurrentUser() {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if (currentAuthentication != null)
-            return (User) currentAuthentication.getPrincipal();
+        if (currentAuthentication != null) {
+            if(currentAuthentication instanceof AnonymousAuthenticationToken)
+                return null;
+            else
+                return (User) currentAuthentication.getPrincipal();
+        }
         else
             return null;
     }

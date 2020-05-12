@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { Navbar, Nav, NavDropdown, NavItem } from 'react-bootstrap'
+import {Navbar, Nav, NavDropdown, NavItem, Container, Media} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { SessionContext } from './SessionHelper'
+import NotificationDropdown from "./notification/NotificationDropdown";
 
 function NavigationBar(props) {
     return (
@@ -15,13 +16,15 @@ function NavigationBar(props) {
                     {({ session }) => {
                         if (session.isUserLogin()) {
                             return (
+                                <>
                                 <Nav className="mr-auto">
                                     <Link to="/DashBoard" className="nav-link">
                                         <NavItem>DashBoard</NavItem>
                                     </Link>
+                                    <NotificationDropdown />
                                 </Nav>
+                                </>
                             )
-                        } else {
                         }
                     }}
                 </SessionContext.Consumer>
@@ -34,6 +37,7 @@ function NavigationBar(props) {
                                         <NavDropdown
                                             title={session.getUserName()}
                                             id="basic-nav-dropdown"
+                                            alignRight
                                         >
                                             <Link
                                                 className="dropdown-item"

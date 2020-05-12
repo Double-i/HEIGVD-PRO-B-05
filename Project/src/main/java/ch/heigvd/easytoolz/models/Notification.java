@@ -70,7 +70,7 @@ public class Notification {
     private boolean isRead;
 
     @JsonIgnore
-    @ManyToOne(fetch=FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_user", referencedColumnName = "userName")
     private User recipient;
 

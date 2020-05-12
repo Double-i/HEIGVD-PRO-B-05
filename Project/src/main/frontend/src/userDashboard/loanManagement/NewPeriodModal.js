@@ -1,5 +1,5 @@
-import React, {Component, useState} from 'react'
-import {Button, Container, Modal} from 'react-bootstrap'
+import React, {useState} from 'react'
+import {Button, Modal} from 'react-bootstrap'
 import * as moment from 'moment'
 import DatePicker from 'react-date-picker'
 

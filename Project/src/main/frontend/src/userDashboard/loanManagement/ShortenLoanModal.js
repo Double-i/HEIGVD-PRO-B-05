@@ -1,10 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react'
-import {Button, Container, Modal, Table} from 'react-bootstrap'
-import LoansList from './LoansList'
+import React from 'react'
+import {Button, Modal, Table} from 'react-bootstrap'
 import * as moment from "moment";
-import {sendEzApiRequest} from "../../common/ApiHelper";
 import {STATE, transformState} from "../../common/State";
-import {ROLE, oppositeRole} from "../../common/Role";
+import {oppositeRole} from "../../common/Role";
 
 function ShortenLoanModal(props) {
     return (

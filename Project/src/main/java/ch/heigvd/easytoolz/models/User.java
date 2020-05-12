@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class User {
         this.email = email;
     }
 
+    @JsonIgnore
     public void setEzObject(List<EZObject> ezObject) {
         this.ezObject = ezObject;
     }
@@ -77,8 +79,19 @@ public class User {
     public List<Notification> getNotifications() {
         return notifications;
     }
+    @JsonIgnore
+    public List<Notification> getNotifications(boolean alreadyRead) {
+        List<Notification> notifications = new ArrayList<>();
+        for (Notification currentNotif : this.notifications) {
+            if (currentNotif.isRead() == alreadyRead) {
+                notifications.add(currentNotif);
+            }
+        }
+        return notifications;
+    }
 
-    public void setNotifications(List<Notification> notifications) {
+
+   public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
     }
 

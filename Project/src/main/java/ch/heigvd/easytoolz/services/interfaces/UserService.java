@@ -4,8 +4,11 @@ import ch.heigvd.easytoolz.exceptions.user.UserAlreadyPresent;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedDeleteException;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
+import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
+import ch.heigvd.easytoolz.models.Notification;
 import ch.heigvd.easytoolz.models.User;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 public interface UserService {
@@ -55,4 +58,21 @@ public interface UserService {
      * @return
      */
     List<User> filters(String firstName, String lastName, String userName, String email);
+
+    /**
+     * Change the user's password. The current password should be send with the request and is check before changing the password
+     *
+     * @param username
+     * @param editPasswordRequest
+     */
+    void editPassword(String username, EditPasswordRequest editPasswordRequest);
+
+    /**
+     * Get the notifications for a user with the given username. It checks that the given username matches the current
+     * logged in user.
+     * @param username
+     * @param alreadyRead used to get only un-read notifications
+     * @return
+     */
+    List<Notification> getNotifications(String username, boolean alreadyRead);
 }

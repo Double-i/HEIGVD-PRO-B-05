@@ -70,8 +70,10 @@ class AuthenticationController {
     @GetMapping("/authrefresh")
     public ResponseEntity<?> refreshToken(){
         // TODO refactor avec la méthode au-dessus
-        final User userDetails = authenticationService.getTheDetailsOfCurrentUser();
+        User userDetails = authenticationService.getTheDetailsOfCurrentUser();
         if(userDetails != null){
+
+            userDetails = authenticationService.loadByUsername(userDetails.getUserName());
 
             final String jwt = jwtTokenUtil.generateToken(userDetails);
 

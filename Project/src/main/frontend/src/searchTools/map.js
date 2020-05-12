@@ -68,7 +68,7 @@ class MapContainer extends React.Component {
 
     getMarkers()
     {
-        return this.state.tools.map(tool => {
+        return this.props.tools.map(tool => {
             console.log('getting tool : '+tool.name+' at '+tool.owner.address);
             return <Marker onClick = {this.onMarkerClick}
                            key = {tool.name}

@@ -117,14 +117,14 @@ function App() {
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails/>
                             </Route>
-                            <Route exacte path="/dashboard/myloans/borrower">
+                            <Route exact path="/dashboard/myloans/borrower">
                                 {user.session.isUserLogin() ? (
                                     <BorrowerLoans/>
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
                             </Route>
-                            <Route exacte path="/dashboard/addTool">
+                            <Route exact path="/dashboard/addTool">
                                 {user.session.isUserLogin() ? (
                                     <ToolForm
                                         tool = {null}
@@ -135,35 +135,40 @@ function App() {
                                     <NotRigthToBeHere/>
                                 )}
                             </Route>
-                            <Route exacte path="/dashboard/toolList">
+                            <Route exact path="/dashboard/toolList">
                                 {user.session.isUserLogin() ? (
                                     <UserToolsList/>
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-
                             </Route>
-                            <Route exacte path="/dashboard/myloans/owner">
+
+
+                            <Route exact path="/dashboard/profil">
+                                {user.session.isUserLogin() ? (
+                                    <EditProfilForm />
+                                ) : (
+                                    <NotRigthToBeHere/>
+                                )}
+                            </Route>
+
+
+                            <Route exact path="/dashboard/myloans/owner">
                                 {user.session.isUserLogin() ? (
                                     <OwnerLoans/>
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
                             </Route>
-                            <Route exacte path="/AdminPage">
+                            <Route exact path="/AdminPage">
                                 {user.session.isUserAdmin() ? (
                                     <AdminPage/>
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
-                            <Route exacte path="/dashboard/profil">
-                                {user.session.isUserLogin() ? (
-                                    <EditProfilForm />
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
                             </Route>
-                            <Route exacte path="/dashboard/profil/password">
+
+                            <Route exact path="/dashboard/profil/password">
                                 {user.session.isUserLogin() ? (
                                     <EditProfilForm />
                                 ) : (
@@ -171,8 +176,7 @@ function App() {
                                 )}
                             </Route>
 
-                            </Route>
-                            <Route component={UnkownPage}/>
+                            <Route component={UnkownPage} />
                         </Switch>
                     </Container>
                 </div>

@@ -2,7 +2,7 @@ import DisplayTools from "../toolsUtil/displayTools";
 import React from "react";
 import {SessionContext} from "../common/SessionHelper";
 import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
-import {Form, Button} from "react-bootstrap";
+import {Form, Button, Container} from "react-bootstrap";
 import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 
 
@@ -280,7 +280,7 @@ class SearchTools extends React.Component{
                         Rechercher
                     </Button>
                 </Form>
-                <div style={{marginBottom: '80%', marginTop: '5%'}}>
+                <Container>
                     <Map
                         key={0}
                         google={this.props.google}
@@ -292,7 +292,10 @@ class SearchTools extends React.Component{
                         {this.getMarkers()}
                         {this.getInfoWindow()}
                     </Map>
-                </div>
+                </Container>
+           {/*     <div style={{marginBottom: '80%', marginTop: '5%'}}>
+
+                </div>*/}
 
                 <DisplayTools
                     data = {this.state.tools}

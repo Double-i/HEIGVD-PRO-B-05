@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -67,7 +68,7 @@ public class EZObject {
      * Returns a list of tags related to the current object
      * @return List<Tag>
      */
-    public List<Tag> getObjectTags() {
+    public Set<Tag> getObjectTags() {
         return objectTags;
     }
 
@@ -125,7 +126,7 @@ public class EZObject {
      * Set the current object's tags
      * @param objectTags
      */
-    public void setObjectTags(List<Tag> objectTags) {
+    public void setObjectTags(Set<Tag> objectTags) {
         this.objectTags = objectTags;
     }
 
@@ -192,7 +193,7 @@ public class EZObject {
             joinColumns = @JoinColumn(name = "fk_ezobject"),
             inverseJoinColumns = @JoinColumn(name = "fk_tag")
     )
-    List<Tag> objectTags;
+    Set<Tag> objectTags;
 
     /**
      * default constructor
@@ -200,7 +201,7 @@ public class EZObject {
     public EZObject() {
     }
 
-    public EZObject(String name, String description, List<Tag> tags, List<EZObjectImage> images) {
+    public EZObject(String name, String description, Set<Tag> tags, List<EZObjectImage> images) {
         this.name = name;
         this.description = description;
         this.objectTags = tags;

@@ -1,14 +1,14 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.models.EZObject;
+import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
-import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
+import ch.heigvd.easytoolz.views.AddressView;
 import ch.heigvd.easytoolz.views.EZObjectView;
-import ch.heigvd.easytoolz.models.Tag;
+import ch.heigvd.easytoolz.views.UserView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
@@ -147,7 +147,7 @@ public class EZObjectController {
     }
 
     @GetMapping("filter")
-    public List<EZObject> findFiltered(
+    public List<EZObjectView> findFiltered(
             @RequestParam(name = "names", required = false) List<String> names,
             @RequestParam(name = "owners", required = false) List<String> owners,
             @RequestParam(name = "description", required = false) List<String> description,
@@ -155,8 +155,10 @@ public class EZObjectController {
             @RequestParam(name = "page", defaultValue="0") int pageno)
 
     {
+        List<EZObject> objects = ezObjectService.getFiltered(names,owners,description,tags, pageno);
 
-        return ezObjectService.getFiltered(names,owners,description,tags, pageno);
+
+        return objects.stream().map(obj -> convertToView(obj)).collect(Collectors.toList());
     }
     @GetMapping("count/filter")
     public int getFilteredCount(
@@ -184,4 +186,79 @@ public class EZObjectController {
         return ezObjectService.getObjectImages(id);
     }
 
+
+    public EZObjectView convertToView(EZObject obj)
+    {
+        User owner  = obj.getOwner();
+        Address address = owner.getAddress();
+
+        EZObjectView view = new EZObjectView() {
+            @Override
+            public int getID() {
+                return obj.getID();
+            }
+
+            @Override
+            public Set<Tag> getObjectTags() {
+                return obj.getObjectTags();
+            }
+
+            @Override
+            public String getName() {
+                return obj.getName();
+            }
+
+            @Override
+            public String getDescription() {
+                return obj.getDescription();
+            }
+
+            @Override
+            public List<EZObjectImage> getImages() {
+                return obj.getImages();
+            }
+
+            @Override
+            public UserView getOwner() {
+                return new UserView() {
+                    @Override
+                    public String getUserName() {
+                        return owner.getUserName();
+                    }
+
+                    @Override
+                    public String getEmail() {
+                        return owner.getEmail();
+                    }
+
+                    @Override
+                    public AddressView getAddress() {
+                        return new AddressView() {
+                            @Override
+                            public String getAddress() {
+                                return address.getAddress();
+                            }
+
+                            @Override
+                            public String getPostalCode() {
+                                return address.getPostalCode();
+                            }
+
+                            @Override
+                            public BigDecimal getLat() {
+                                return address.getLat();
+                            }
+
+                            @Override
+                            public BigDecimal getLng() {
+                                return address.getLng();
+                            }
+                        };
+                    }
+                };
+            }
+        };
+
+        return view;
+    }
 }

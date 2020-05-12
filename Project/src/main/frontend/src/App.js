@@ -37,16 +37,21 @@ function App() {
     if(session.isUserLogin() && session.isExpired()){
         session.logout()
     }else{
-        const refreshMoment = moment(session.getExpirationDate()).subtract(180, "seconds")
-
+        const refreshMoment = moment(session.getExpirationDate()).subtract(3, "minutes")
         const duration = moment.duration(refreshMoment.diff(moment()));
 
         // If the session hasn't yet expired we add a timeout to refresh the token right before expiration
         // If the user quit the page session won't refresh but if the user stay enough time it will
         setTimeout(()=> {
-
             const refreshTokenRequest = () => sendEzApiRequest(SESSION_REFRESH_ENDPOINT, 'GET').then(result => {
                 console.log("Refresh token response",result)
+                session.login({
+                    tokenDuration: result.tokenDuration,
+                        username: result.user.userName,
+                    admin: result.user.admin,
+                    lastname: result.user.lastName,
+                    firstname: result.user.firstName,
+                })
                 setTimeout(refreshTokenRequest, SESSION_DURATION)
             },error => {
                 console.log("Refresh token error: ",error)

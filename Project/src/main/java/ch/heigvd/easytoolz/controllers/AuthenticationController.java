@@ -104,8 +104,8 @@ class AuthenticationController {
         return ResponseEntity.ok().body(new SuccessResponse("The user has been stored"));
     }
 
-    @PostMapping(value = "/logout")
-    public  ResponseEntity<?> logOut(@RequestBody User user){
+    @GetMapping(value = "/logout")
+    public  ResponseEntity<?> logOut(){
 
         final String jwt = ""; // create a empty token
 
@@ -118,7 +118,7 @@ class AuthenticationController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        return ResponseEntity.ok().headers(responseHeaders).body(user);
+        return ResponseEntity.ok().headers(responseHeaders).body("ok");
 
     }
 

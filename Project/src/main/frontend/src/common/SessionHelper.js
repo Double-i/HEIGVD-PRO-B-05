@@ -86,9 +86,9 @@ export class SessionHelper {
         const newUserInfo = {...this.userSession}
         if(info.userFirstname !== 'undefined') newUserInfo.firstname =  info.userFirstname
         if(info.userLastname !== 'undefined') newUserInfo.lastname = info.userLastname
-        this.setUserSession(newUserInfo)
+        this.setUserSession(newUserInfo)*/
 
-        localStorage.setItem('user', JSON.stringify(newUserInfo))
+        //localStorage.setItem('user', JSON.stringify(newUserInfo))
     }
     isExpired = () => {
         return !(moment(this.userSession.tokenDuration).isAfter(moment()))

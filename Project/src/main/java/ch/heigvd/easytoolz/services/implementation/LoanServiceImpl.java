@@ -9,41 +9,43 @@ import ch.heigvd.easytoolz.exceptions.loan.LoanStateCantBeUpdatedException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.models.DTO.LoanRequest;
 import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
-import ch.heigvd.easytoolz.repositories.EZObjectRepository;
-import ch.heigvd.easytoolz.repositories.LoanRepository;
-import ch.heigvd.easytoolz.repositories.PeriodRepository;
-import ch.heigvd.easytoolz.repositories.UserRepository;
+import ch.heigvd.easytoolz.repositories.*;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.LoanService;
+import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import ch.heigvd.easytoolz.specifications.LoanSpecs;
+import ch.heigvd.easytoolz.util.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Predicate;
 import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
 
 
 @Service
 public class LoanServiceImpl implements LoanService {
     @Autowired
-    LoanRepository loanRepository;
+    private LoanRepository loanRepository;
 
     @Autowired
-    EZObjectRepository ezObjectRepository;
+    private EZObjectRepository ezObjectRepository;
 
     @Autowired
-    AuthenticationService authService;
+    private AuthenticationService authService;
 
     @Autowired
-    PeriodRepository periodRepository;
+    private NotificationService notificationService;
 
     @Autowired
-    UserRepository user;
+    private PeriodRepository periodRepository;
+
+    @Autowired
+    private UserRepository user;
 
     @Override
     public ResponseEntity<String> store(LoanRequest newLoan) {
@@ -64,9 +66,19 @@ public class LoanServiceImpl implements LoanService {
 
 
         // Save loan
+
+        User currentUser = authService.getTheDetailsOfCurrentUser();
+
         Loan loan = new Loan(null, State.pending
-                , authService.getTheDetailsOfCurrentUser(), obj);
+                , currentUser, obj);
         loanRepository.save(loan);
+
+        // The owner is notified that someone wants borrow his object
+        notificationService.storeNotification(
+                ServiceUtils.createNotification(
+                    StateNotification.RESERVATION,
+                    obj.getOwner(),
+                    currentUser.getUserName(), obj.getName()));
 
         Period period = new Period(newLoan.getDateStart(), newLoan.getDateEnd(), State.accepted, Creator.borrower, loan);
 
@@ -100,11 +112,22 @@ public class LoanServiceImpl implements LoanService {
 
         switch (newState) {
             case accepted:
+                notificationService.storeNotification(ServiceUtils.createNotification(
+                        StateNotification.ACCEPTATION_DEMANDE_EMPRUNT,
+                        loan.getBorrower(),
+                        loan.getEZObject().getName()
+                ));
+                done = updateLoanStateByOwner(loan, newState);
+                break;
             case refused:
+                notificationService.storeNotification(ServiceUtils.createNotification(
+                        StateNotification.REFUS_DEMANDE_EMPRUNT,
+                        loan.getBorrower(),
+                        loan.getEZObject().getName()
+                ));
                 done = updateLoanStateByOwner(loan, newState);
                 break;
             case cancel:
-                System.out.println("testteststest");
                 done = cancelLoan(loan);
                 break;
         }
@@ -141,9 +164,6 @@ public class LoanServiceImpl implements LoanService {
         if (!loan.getValidPeriod().getDateEnd().after(now)
                 || !periodRequest.getDateEnd().before(loan.getValidPeriod().getDateEnd())
                 || !periodRequest.getDateEnd().after(now)) {
-            System.out.println(!loan.getValidPeriod().getDateEnd().after(now));
-            System.out.println(!periodRequest.getDateEnd().before(loan.getValidPeriod().getDateEnd()));
-            System.out.println(!periodRequest.getDateEnd().after(now));
             throw new LoanInvalidParameterException("Cannot update this loan");
         }
 
@@ -154,10 +174,26 @@ public class LoanServiceImpl implements LoanService {
                 periodRepository.save(period);
             }
         }
+        StateNotification stateNotification;
+        User recipient;
+        EZObject obj = loan.getEZObject();
+        if(creator.equals(Creator.borrower)){
+            recipient = obj.getOwner();
+            stateNotification = StateNotification.RACCOURCISSEMENT_OWNER;
+        }else{
+            recipient = loan.getBorrower();
+            stateNotification = StateNotification.RACCOURCISSEMENT_BORROWER;
+
+        }
+        notificationService.storeNotification(
+                ServiceUtils.createNotification(
+                        stateNotification,
+                        recipient, obj.getName()));
 
         // Save
         Period newPeriod = new Period(periodRequest.getDateStart(), periodRequest.getDateEnd(), State.pending, creator, loan);
         periodRepository.save(newPeriod);
+
         return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Period added\", \"id\": "+newPeriod.getId()+"}", HttpStatus.OK);
     }
 
@@ -180,16 +216,16 @@ public class LoanServiceImpl implements LoanService {
 
 
         if (!toUpdatePeriod.getState().equals(State.pending)) {
-            System.out.println("test " + toUpdatePeriod);
             throw new LoanInvalidParameterException("Period cannot be update");
-
         }
 
         // Check that the period has been created by the opposite Role and the new period isn't passed
         if (!toUpdatePeriod.getDateEnd().after(new Date()))
             throw new LoanPeriodAlreadyPassedException("Loan : period already passed");
 
+
         Creator creator = getRole(loan);
+
         // Check the user has the appropriate right to update the state
         if (newState.equals(State.cancel)) {
             if (!toUpdatePeriod.getCreator().equals(creator))
@@ -204,9 +240,31 @@ public class LoanServiceImpl implements LoanService {
                     period.setState(State.refused);
                     periodRepository.save(period);
                 }
-
-
             }
+            EZObject obj = loan.getEZObject();
+            User recipient;
+            StateNotification stateNotification;
+
+            if(isBorrower(loan)){
+                recipient = obj.getOwner();
+                if(newState.equals(State.accepted)){
+                    stateNotification = StateNotification.ACCEPTATION_DEMANDE_RACOURCISSEMENT_OWNER;
+                }else{
+                    stateNotification = StateNotification.REFUS_DEMANDE_RACOURCISSEMENT_OWNER;
+                }
+            }else{
+                recipient = loan.getBorrower();
+                if(newState.equals(State.accepted)){
+                    stateNotification = StateNotification.ACCEPTATION_DEMANDE_RACOURCISSEMENT_BORROWER;
+                }else{
+                    stateNotification = StateNotification.REFUS_DEMANDE_RACOURCISSEMENT_BORROWER;
+                }
+            }
+
+            notificationService.storeNotification(
+                    ServiceUtils.createNotification(
+                            stateNotification,
+                            recipient, obj.getName()));
         }
         toUpdatePeriod.setState(newState);
         periodRepository.save(toUpdatePeriod);
@@ -302,7 +360,6 @@ public class LoanServiceImpl implements LoanService {
      * @return return true if the loan has been cancel
      */
     private boolean cancelLoan(Loan loan) {
-        System.out.println("juqu'ic itout va vien");
         boolean updated = false;
         if (isBorrower(loan)) {
             loan.setState(State.cancel);

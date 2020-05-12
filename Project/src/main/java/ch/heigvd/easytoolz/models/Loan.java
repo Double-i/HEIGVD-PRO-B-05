@@ -113,7 +113,4 @@ public class Loan {
         this.EZObject = EZObject;
 
     }
-
-
-
 }

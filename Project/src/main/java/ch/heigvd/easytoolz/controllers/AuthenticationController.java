@@ -45,9 +45,9 @@ class AuthenticationController {
         if(!authenticationService.authenticateUser(authenticationRequest.getUserName(), authenticationRequest.getPassword()))
             throw new BadCredentialsException("Incorrect username or password");
 
-        final User userDetails = authenticationService.loadByUsername(authenticationRequest.getUserName());
+        final User loggedUser = authenticationService.loadByUsername(authenticationRequest.getUserName());
 
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
+        final String jwt = jwtTokenUtil.generateToken(loggedUser);
 
         // store jwt into a http cookie to avoid cookie theft by XSS attack
         HttpCookie cookie = ResponseCookie.from(accessTokenName, jwt)

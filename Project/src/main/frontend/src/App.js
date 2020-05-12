@@ -1,7 +1,7 @@
 import React from 'react'
 import {useState} from 'react'
 import './App.css'
-import {Container} from 'react-bootstrap'
+import {Col, Container, NavDropdown, Row} from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
 import {
     BrowserRouter as Router,

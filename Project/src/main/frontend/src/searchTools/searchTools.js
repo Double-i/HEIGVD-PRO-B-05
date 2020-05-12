@@ -62,7 +62,11 @@ class SearchTools extends React.Component{
                 {
                     console.log("page "+i)
                     pages.push(
-                        <span onClick={() => {this.loadPage(i)}}>{i}</span>
+                        <li class="page-item" onClick={() => {this.loadPage(i)}}>
+                        <a class = "page-link">
+                            {i}
+                        </a>
+                        </li>
                     )
                 }
 
@@ -308,13 +312,14 @@ class SearchTools extends React.Component{
                         hideDeleteButton={true}
                     />
                 </Row>
+                <Row className={"justify-content-md-center"}>
+                    <nav>
+                        <ul className={"pagination"}>
+                            {this.state.pages}
+                        </ul>
+                    </nav>
+                </Row>
 
-           {/*     <div style={{marginBottom: '80%', marginTop: '5%'}}>
-
-                </div>*/}
-
-
-                {this.state.pages}
     </Container>
 
     )

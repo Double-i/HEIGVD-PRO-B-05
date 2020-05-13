@@ -80,6 +80,7 @@ export function sendForm(
 )
 {
     const requestInfo = {
+        contentType:"multipart/form-data",
         method: verb,
         credentials: 'include',
         mode: 'cors',

@@ -38,9 +38,7 @@ class SearchTools extends React.Component{
 
         sendEzApiRequest(this.SEARCH_URI)
             .then((response) =>{
-                console.log(response);
                 this.setState({tools:response});
-                console.log(this.state.tools);
             })
             .catch(err => alert(err));
 
@@ -60,9 +58,8 @@ class SearchTools extends React.Component{
                 let nbPages = result/10;
                 for(let i = 0; i < nbPages; i++)
                 {
-                    console.log("page "+i)
                     pages.push(
-                        <li class="page-item" onClick={() => {this.loadPage(i)}}>
+                        <li class="page-item" key={i} onClick={() => {this.loadPage(i)}}>
                         <a class = "page-link">
                             {i}
                         </a>
@@ -162,13 +159,11 @@ class SearchTools extends React.Component{
         sendEzApiRequest(URL)
             .then(
                 (result) => {
-                    console.log(result)
                     if (result.status === 403) {
                         console.log('No tools founded')
                     } else {
                         console.log('items founded')
                         let pages = []
-                        console.log(result)
                         let nbPages = result/10;
                         for(let i = 0; i < nbPages; i++)
                         {
@@ -203,7 +198,6 @@ class SearchTools extends React.Component{
     }
 
     onMarkerClick = (props, marker, e) => {
-        console.log("Clicked on marker !");
         this.setState({
             selectedTool: this.state.tools.find(tool => tool.name ===props.name),
             activeMarker: marker,
@@ -237,7 +231,6 @@ class SearchTools extends React.Component{
     getMarkers()
     {
         return this.state.tools.map(tool => {
-            console.log('getting tool : '+tool.name+' at '+tool.owner.address);
             return <Marker onClick = {this.onMarkerClick}
                            key = {tool.name}
                            name = {tool.name}

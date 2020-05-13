@@ -7,19 +7,35 @@ import {sendEzApiRequest} from "../common/ApiHelper";
 class DisplayTool extends React.Component {
 
     DELETE_ITEM_URI = '/objects/delete/'
-    imgPath = ''
+    thumbnail = 'default.png'
     constructor(props){
         super(props);
         this.state = {
             isBorrowable : true,
             borrowModalShow : false,
-            editModalShow : false
+            editModalShow : false,
+
         }
-        if(props.images[0] != undefined){
-             this.imgPath = props.images[0].pathToImage.toString();
-        }else{
-            this.imgPath = "default.png"
+        if(this.props.images.length > 0 )
+        {
+            console.log(this.props.images);
+            this.thumbnail = this.props.images[0].pathToImage.toString();
         }
+        else
+            this.thumbnail = "default.png";
+    }
+
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        console.log(nextProps)
+            if(nextProps.images.length > 0 )
+            {
+                console.log(nextProps.images);
+                this.thumbnail = nextProps.images[0].pathToImage.toString();
+            }
+
+            else
+                this.thumbnail = "default.png";
     }
 
     /**
@@ -58,7 +74,7 @@ class DisplayTool extends React.Component {
                     <img
                         style={{width: '100px', height : '100px'}}
                         //TODO :
-                        src={"/api/image/"+this.imgPath}
+                        src={"http://localhost:8080/api/image/"+this.thumbnail}
                     />
                 </div>
                 <div className="col-2">

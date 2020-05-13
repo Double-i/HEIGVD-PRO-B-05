@@ -3,6 +3,7 @@ import {Formik} from "formik";
 import {Button, Form} from "react-bootstrap";
 import {sendEzApiRequest, sendForm} from "../common/ApiHelper";
 import * as yup from "yup";
+import {Col,Row,Container} from "react-bootstrap";
 
 
 class ToolForm extends React.Component {
@@ -19,6 +20,7 @@ class ToolForm extends React.Component {
                 toolDescription: '',
                 toolTags: '',
                 toolImage: '',
+                displayImages : [],
                 tags: [],
                 ApiRequest : '/objects/add'
             };
@@ -29,6 +31,7 @@ class ToolForm extends React.Component {
                 toolDescription: this.props.tool.description,
                 toolTags: this.props.tool.objectTags,
                 toolImage: this.props.tool.toolImage,
+                displayImages : [],
                 tags: [],
                 ApiRequest : '/objects/update'
             };
@@ -54,7 +57,9 @@ class ToolForm extends React.Component {
 
         const formData = new FormData();
         formData.append('object', JSON.stringify(data));
-        formData.append('image', values.toolImage);
+        for (let i = 0; i < values.toolImage.length; i++) {
+            formData.append(`image`, values.toolImage[i])
+        }
 
         for (let p of formData.entries()){
             console.log(p)
@@ -106,6 +111,28 @@ class ToolForm extends React.Component {
             .min(1, 'Minimum 1 catégorie!'),
     })
 
+
+    displayGrid()
+    {
+
+        return (
+            <Container>
+                <Row>
+                    {
+                        this.state.displayImages.length > 0 ? (
+                                this.state.displayImages.map(image =>
+                                    <img src={image}  style={{height:"100px",width:"100px"}}/>
+                                )
+                            ):
+                            (
+                                console.log("no images")
+                            )
+                    }
+                </Row>
+
+            </Container>
+        )
+    }
     render() {
         return(
             <>
@@ -216,13 +243,23 @@ class ToolForm extends React.Component {
                                     type="file"
                                     placeholder="Photo de l'outil"
                                     onChange={(event) => {
+                                        let paths = [];
+                                        for( let i = 0; i < event.target.files.length; i++)
+                                        {
+                                            paths.push(URL.createObjectURL(event.target.files[i]));
+                                        }
+                                        this.setState({displayImages : paths});
                                         setFieldValue(
                                             'toolImage',
-                                            event.currentTarget.files[0]
+                                            event.currentTarget.files
                                         )
                                     }}
+                                    multiple
                                 />
                             </Form.Group>
+
+                            {this.displayGrid()}
+
                             <Button
                                 variant="primary"
                                 type="submit"
@@ -234,6 +271,7 @@ class ToolForm extends React.Component {
                         </Form>
                     )}
                 </Formik>
+
             </>
         )
     }

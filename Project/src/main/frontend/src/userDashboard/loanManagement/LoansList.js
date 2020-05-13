@@ -9,10 +9,23 @@ import {
 import * as moment from 'moment'
 import {transformState} from "../../common/State";
 
+/**
+ * This method is used to display the adresse properly - Street, city (district - country)
+ * @param address the address with the format used by the backend
+ * @returns {string} the address string eg: Rue de la boulangerie 13 Concise (Vaud - Suisse)
+ */
 function formatAdress(address){
     return `${address.address} ${address.city.city} (${address.district} - ${address.city.country.country})`
 }
 
+/**
+ * List of loans used in loans management (borrower and owner)
+ * @param props are :
+ *                  1) props.loansData: loans data
+ *                  2) props.isOwner: a boolean to know if it should disaply a owner or a borrower version
+ *                  3) props.actionButtons: the list of buttons for a loan.
+ * @returns {*}
+ */
 function LoansList(props) {
     return (
         <Fragment>

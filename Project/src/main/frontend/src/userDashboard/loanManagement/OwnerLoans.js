@@ -37,63 +37,71 @@ function OwnerLoans(props) {
         // Request for pending loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: false,
-            state: "pending",
-            startGT: moment().format('YYYY-MM-DD')
+            state: STATE.pending,
+            startGT: moment().add("1", "days").format('YYYY-MM-DD')
         }).then((result) => {
             setPendingLoans(result);
         }, (error) => {
             console.log(error)
-        });
+        })
 
         // Request for incoming loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: false,
-            state: "accepted",
-            startGT: moment().format('YYYY-MM-DD')
+            state: STATE.accepted,
+            startGT: moment().add("1", "days").format('YYYY-MM-DD')
         }).then((result) => {
             setInComingLoans(result);
         }, (error) => {
             console.log(error)
-        });
+        })
 
         // Request for ongoing loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: false,
-            state: "accepted",
+            state: STATE.accepted,
             startLT: moment().format('YYYY-MM-DD'),
             endGT: moment().format('YYYY-MM-DD')
         }).then((result) => {
             setOnGoingLoans(result)
         }, (error) => {
             console.log(error)
-        });
+        })
 
         // Request for passed loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: false,
-            state: "accepted",
+            state: STATE.accepted,
             endLT: moment().format('YYYY-MM-DD')
         }).then((result) => {
-
             setPassedLoans(result)
         }, (error) => {
             console.log(error)
-        });
+        })
 
         // Request for refused loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: false,
-            state: "refused",
+            state: STATE.refused,
         }).then((result) => {
-            setRefusedLoans(result)
+
+            sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
+                borrower: false,
+                state: STATE.pending,
+                startLT: moment().add(1,"days").format('YYYY-MM-DD')
+            }).then((resultPassedPending) => {
+                setRefusedLoans(result.concat(resultPassedPending))
+
+            }, (error) => {
+                console.log(error)
+            })
         }, (error) => {
             console.log(error)
         })
     }, []); // the array is to avoid infinite loop https://stackoverflow.com/a/54923969
 
     const btnDisplayToolClicked = (loan) => {
-        console.log("DISPLAY TOOL", loan)
-        props.history.push(`/tools/${loan.ezobject.id}`)
+        props.history.push(`/tooldetails/${loan.ezobject.id}`)
     }
 
     const updateLoanState = (loan, state) => {
@@ -111,6 +119,23 @@ function OwnerLoans(props) {
             console.log(error)
         })
     };
+    /**
+     * Return a true if the rLoan and rLoan periods overlapped
+     *
+     * @param lLoan
+     * @param rLoan
+     */
+    const overlapPeriod = (lLoan, rLoan) => {
+        const startDateLLoan = moment(lLoan.validPeriod.dateStart)
+        const endDateLLoan = moment(lLoan.validPeriod.dateEnd)
+
+        const startDateRLoan = moment(rLoan.validPeriod.dateStart)
+        const endDateRLoan = moment(rLoan.validPeriod.dateEnd)
+
+        return (startDateLLoan.isBetween(startDateRLoan, endDateRLoan,  null, '[]')
+            || endDateLLoan.isBetween(startDateRLoan, endDateRLoan, null, '[]')
+            || startDateRLoan.isBetween( startDateLLoan, endDateRLoan, null, '[]'))
+    }
 
     const btnAcceptedClicked = (loan) => {
         updateLoanState(loan, STATE.accepted).then((result) => {
@@ -118,6 +143,29 @@ function OwnerLoans(props) {
             loan.state = STATE.accepted
             newInComingLoans.push(loan)
             setInComingLoans(newInComingLoans)
+
+            const newPendingLoans = [...pendingLoans]; // make a separate copy of the array
+            const newRefusedLoans = [...refusedLoans];
+
+            const index = newPendingLoans.indexOf(loan)
+            if (index !== -1) {
+                newPendingLoans.splice(index, 1)
+            }
+
+            for(let i = 0 ; i < pendingLoans.length; ++i){
+                if(pendingLoans[i].ezobject.id === loan.ezobject.id && pendingLoans[i].pkLoan !== loan.pkLoan){
+                    if(overlapPeriod(pendingLoans[i], loan)){
+                        const index = newPendingLoans.indexOf(pendingLoans[i])
+                        if (index !== -1) {
+                            pendingLoans[i].state = STATE.refused
+                            newRefusedLoans.push(pendingLoans[i])
+                            newPendingLoans.splice(index, 1)
+                        }
+                    }
+                }
+            }
+            setPendingLoans(newPendingLoans)
+            setRefusedLoans(newRefusedLoans)
 
         }, (error) => {
             console.log(error)
@@ -148,7 +196,6 @@ function OwnerLoans(props) {
     };
 
     const updatePeriodState = (loan, period, state) => {
-        console.log("UPDATE", loan, period, state)
         return sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/periods/${period.id}/state`, 'PATCH', {
             state: state
         }).then(result => {
@@ -188,7 +235,6 @@ function OwnerLoans(props) {
                 creator: "owner",
                 state: STATE.pending
             })
-            console.log("PROJET: ", newContainerToUpdate)
             containerMethodtoUpdate(newContainerToUpdate)
 
         }, error => {

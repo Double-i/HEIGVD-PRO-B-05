@@ -45,8 +45,6 @@ function App() {
 
     // Log out the user if his session has expired
     if(session.isUserLogin()) {
-
-
         if (session.isExpired()) {
             session.logout()
         } else {

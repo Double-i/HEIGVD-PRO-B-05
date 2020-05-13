@@ -10,6 +10,7 @@ import {STATE} from "../../common/State";
 import NewPeriodModal from "./NewPeriodModal";
 import ShortenLoanModal from "./ShortenLoanModal";
 import {ROLE} from "../../common/Role";
+import {formatString} from "../../common/Utils";
 
 const LOANS_REQUEST = "/loans/find/user/"
 const LOANS_UPDATE_STATE_REQUEST = "/loans/"
@@ -43,7 +44,7 @@ function BorrowerLoans(props) {
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: true,
             state: STATE.pending,
-            startGT: moment().format('YYYY-MM-DD')
+            startGT: moment().add("1", "days").format('YYYY-MM-DD')
         }).then((result) => {
             setPendingLoans(result);
         }, (error) => {
@@ -54,7 +55,7 @@ function BorrowerLoans(props) {
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: true,
             state: STATE.accepted,
-            startGT: moment().format('YYYY-MM-DD')
+            startGT: moment().add("1", "days").format('YYYY-MM-DD')
         }).then((result) => {
             setInComingLoans(result);
         }, (error) => {
@@ -65,32 +66,42 @@ function BorrowerLoans(props) {
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: true,
             state: STATE.accepted,
-            startLT: moment().format('YYYY-MM-DD'),
+            startLT: moment().add(1,"days").format('YYYY-MM-DD'),
             endGT: moment().format('YYYY-MM-DD')
+
         }).then((result) => {
             setOnGoingLoans(result)
         }, (error) => {
             console.log(error)
         })
 
-        // TODO possiblement 2 requêtes: 1 pour les réfuser, une pour les passer
-        // Request for refused and passed loans
+        // Request for passed loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: true,
             state: STATE.accepted,
             endLT: moment().format('YYYY-MM-DD')
         }).then((result) => {
-
             setPassedLoans(result)
         }, (error) => {
             console.log(error)
         })
 
+        // Request for refused loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: true,
             state: STATE.refused,
         }).then((result) => {
-            setRefusedLoans(result)
+
+            sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
+                borrower: true,
+                state: STATE.pending,
+                startLT: moment().add(1,"days").format('YYYY-MM-DD')
+            }).then((resultPassedPending) => {
+                setRefusedLoans(result.concat(resultPassedPending))
+
+            }, (error) => {
+                console.log(error)
+            })
         }, (error) => {
             console.log(error)
         })
@@ -99,7 +110,7 @@ function BorrowerLoans(props) {
     }, []); // the array is to avoid infinite loop https://stackoverflow.com/a/54923969
 
     const btnDisplayToolClicked = (loan) => {
-        props.history.push(`/tools/${loan.ezobject.id}`)
+        props.history.push(`/tooldetails/${loan.ezobject.id}`)
     }
     const btnCancelLoanClicked = (loan) => {
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import {useState} from 'react'
 import './App.css'
-import {Col, Container, NavDropdown, Row} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
 import {
     BrowserRouter as Router,
@@ -45,7 +45,6 @@ function App() {
 
     // Log out the user if his session has expired
     if(session.isUserLogin()) {
-
 
         if (session.isExpired()) {
             session.logout()

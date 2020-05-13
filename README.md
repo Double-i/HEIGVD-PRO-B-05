@@ -24,7 +24,7 @@ Development team:
 
 ## Dependencies
 
-This software requires Java 8 or above and the following libraries:
+This software requires Java 11 or above and the following libraries:
 
 * Lorem v. 4.3
 * Ipsum v. 48.3.p1

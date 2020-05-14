@@ -2,7 +2,6 @@ import React, {Fragment} from 'react'
 import {Image, Media, Button, Row, Col} from 'react-bootstrap'
 import {
     FaUser,
-    FaRegClock,
     FaRegCalendarAlt,
     FaLocationArrow,
 } from 'react-icons/fa'

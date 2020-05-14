@@ -9,7 +9,6 @@ class ToolDetails extends React.Component{
     SEARCH_URI = '/objects'
 
 
-
     constructor(props)
     {
         super(props);

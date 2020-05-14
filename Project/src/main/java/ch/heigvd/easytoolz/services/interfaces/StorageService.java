@@ -21,4 +21,6 @@ public interface StorageService {
 
     void store(MultipartFile file, EZObject ezObject, EZObjectImage img) throws Exception;
     void loadMultiple(List<MultipartFile> files);
+
+    void delete(String filename);
 }

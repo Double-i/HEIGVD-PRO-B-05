@@ -47,7 +47,6 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public Path load(String fileName) {
          		return storageLocation.resolve(fileName);
-
     }
 
     @Override
@@ -90,6 +89,12 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public void loadMultiple(List<MultipartFile> files) {
+
+    }
+
+    @Override
+    public void delete(String file)
+    {
 
     }
 }

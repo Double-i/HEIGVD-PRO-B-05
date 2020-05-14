@@ -8,4 +8,7 @@ import java.util.List;
 public interface EzObjectImageRepository extends JpaRepository<EZObjectImage,Integer> {
 
     List<EZObjectImage> findByEzObject_ID(int id);
+    EZObjectImage findByPathToImage(String file);
+    EZObjectImage findByID(int id);
+
 }

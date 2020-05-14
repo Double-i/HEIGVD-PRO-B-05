@@ -45,10 +45,12 @@ class DisplayTools extends React.Component {
                             ownerUserName={item.owner.userName}
                             objectTags={item.objectTags}
                             images={item.images}
+                            tool={item}
                             hideOwner={this.props.hideOwner}
                             hideBorrowButton={this.props.hideBorrowButton}
                             hideEditButton={this.props.hideEditButton}
                             hideDeleteButton={this.props.hideDeleteButton}
+                            deleteButtonCB={this.props.deleteButtonCB}
                         >
                         </DisplayTool>
                         )

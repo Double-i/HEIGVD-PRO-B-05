@@ -35,13 +35,29 @@ class AdminPage extends React.Component{
 
     deleteUser(user){
         if (window.confirm('Etes-vous sur de vouloir supprimer cet utilisateur ?')){
-            sendEzApiRequest(this.ALL_USER_URI + "/" + user, "DELETE")
+            sendEzApiRequest(this.ALL_USER_URI + "/" + user.userName, "DELETE")
                 .then((response) =>{
-                    console.log(response)
+                    const newUsers = [...this.state.users]
+                    const idxDeletedUser = newUsers.indexOf(user)
+                    if(idxDeletedUser !== -1){
+                        newUsers.splice(idxDeletedUser, 1)
+                        this.setState({users: newUsers})
+                    }
+
                 }, (error) => {
                     console.log(error)
                 })
         }
+    }
+    deleteTools(tool){
+        const newTools = [...this.state.tools]
+        const idxDeletedTool = newTools.indexOf(tool)
+        if(idxDeletedTool !== -1){
+            newTools.splice(idxDeletedTool, 1)
+            this.setState({tools: newTools})
+        }
+
+
     }
 
     render() {
@@ -64,6 +80,7 @@ class AdminPage extends React.Component{
                         hideBorrowButton={true}
                         hideEditButton={true}
                         hideDeleteButton={false}
+                        deleteButtonCB={(tool)=> this.deleteTools(tool)}
                     />
                 </div>
                 <div hidden={this.state.hideUsers}>
@@ -76,7 +93,7 @@ class AdminPage extends React.Component{
                                 <div className="col-2">
                                     <Button
                                         variant="danger"
-                                        onClick={() => this.deleteUser(user.userName)}
+                                        onClick={() => this.deleteUser(user)}
                                         key={"deleteButton"+user.userName}
                                     >Effacer l'utilisateur</Button>
                                 </div>

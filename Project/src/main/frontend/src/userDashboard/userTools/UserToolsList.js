@@ -1,7 +1,6 @@
 import * as React from 'react'
-import Condition from "yup/lib/Condition";
 import {Link} from "react-router-dom";
-import {Button, Card} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import {sendEzApiRequest} from "../../common/ApiHelper";
 import DisplayTools from "../../toolsUtil/displayTools";
@@ -23,7 +22,7 @@ class UserToolsList extends React.Component {
         //get user tools
         sendEzApiRequest(this.GET_TOOLS_URI)
             .then((response) => {
-                if (response.status == "403") {
+                if (response.status === "403") {
                     console.log("Pas réussi a fetch les outils utilisateur");
                 } else {
                     console.log(response)

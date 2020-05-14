@@ -14,12 +14,6 @@ class ToolDetails extends React.Component{
         owner: {}
     }
 
-    constructor(props)
-    {
-        super(props);
-
-    }
-
     async componentDidMount() {
         sendEzApiRequest(this.SEARCH_URI + '/' + this.props.match.params.id)
             .then((response) => {

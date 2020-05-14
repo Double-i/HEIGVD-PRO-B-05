@@ -29,7 +29,7 @@ class DisplayTool extends React.Component {
             borrowModalShow : false,
             editModalShow : false
         }
-        if(props.images[0] != undefined){
+        if(props.images[0] !== undefined){
              this.imgPath = props.images[0].pathToImage.toString();
         }else{
             this.imgPath = "default.png"
@@ -59,7 +59,9 @@ class DisplayTool extends React.Component {
         if (window.confirm('Etes-vous sur de vouloir effacer cet outil ?')){
             sendEzApiRequest(this.DELETE_ITEM_URI + this.props.id, "DELETE")
                 .then((response) =>{
-                    console.log(response)
+                    this.props.deleteButtonCB(this.props.tool)
+                }, error => {
+                    console.log(error)
                 })
         }
     }

@@ -1,7 +1,7 @@
 import {Container, Row, Col, Media, NavDropdown, Button, Badge} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 import * as React from "react"
-import {useContext, useEffect, useState, useRef} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {FaCalendarCheck} from 'react-icons/fa'
 import {EZT_API, sendEzApiRequest} from "../ApiHelper";
 import {formatString} from "../Utils";
@@ -22,7 +22,8 @@ const ENDPOINT_LIVE_NOTIFICATION = "/notifications/{0}"
 const ENDPOINT_NOTIFICATION_READ = "/notifications/{0}/markRead"
 
 function NotificationDropdown(props) {
-    const [showOldNotifications, setShowOldNotifications] = useState(false)
+   // TODO voir todo ci-dessus const
+    // const [showOldNotifications, setShowOldNotifications] = useState(false)
     const [showNotifcationsDropdown, setShowNotifcationsDropdown] = useState(false)
     const [unreadNotifications, _setUnreadNotifications] = useState([])
     const [oldNotifications, setOldNotifications] = useState([])

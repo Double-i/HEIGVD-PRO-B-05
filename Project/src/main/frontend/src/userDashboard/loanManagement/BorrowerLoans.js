@@ -10,7 +10,6 @@ import {STATE} from "../../common/State";
 import NewPeriodModal from "./NewPeriodModal";
 import ShortenLoanModal from "./ShortenLoanModal";
 import {ROLE} from "../../common/Role";
-import {formatString} from "../../common/Utils";
 
 const LOANS_REQUEST = "/loans/find/user/"
 const LOANS_UPDATE_STATE_REQUEST = "/loans/"
@@ -145,9 +144,6 @@ function BorrowerLoans(props) {
             state: state
         }).then(result => {
             const newContainerToUpdate = [...containerToUpdate];
-            const idxLoan = newContainerToUpdate.indexOf(loan)
-            const idxPeriod = newContainerToUpdate[idxLoan].periods.indexOf(period)
-            /*const newPeriod = newContainerToUpdate[idxLoan].periods[idxPeriod]*/
             period.state = state
             containerMethodtoUpdate(newContainerToUpdate)
         }, error => {

@@ -113,7 +113,8 @@ public class EZObjectController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Integer id) throws Exception {
         ezObjectService.deleteObject(id);
-        return new ResponseEntity<>("Object has been deleted",HttpStatus.OK);
+        // TODO do real response
+        return new ResponseEntity<>("{\"msg\":\"Object has been deleted\"}",HttpStatus.OK);
     }
 
     @GetMapping("find/name/{objectName}")

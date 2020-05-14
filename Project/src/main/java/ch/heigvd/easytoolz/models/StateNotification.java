@@ -2,7 +2,7 @@ package ch.heigvd.easytoolz.models;
 
 public enum StateNotification {
     MESSAGE("message", "Vous avez reçu un message de l'utilisateur '%s'"),
-    SIGNALEMENT("signalement", "Votre objet 'x' a été signalé par un utilisateur. Causes : %s"),
+    SIGNALEMENT("signalement", "Votre objet '%s' a été signalé par un utilisateur. Causes : %s"),
     RESERVATION("reservation", "L'utilisateur '%s' souhaite vous emprunter l'outil '%s'"),
     ACCEPTATION_DEMANDE_EMPRUNT("acceptationDemandeEmprunt", "Votre demande d'emprunt pour l'outil '%s' a été acceptée"),
     REFUS_DEMANDE_EMPRUNT("refusDemandeEmprunt", "Votre demande d'emprunt pour l'outil '%s' a été refusée"),

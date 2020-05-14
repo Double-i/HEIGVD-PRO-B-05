@@ -3,6 +3,7 @@ package ch.heigvd.easytoolz.controllers;
 import ch.heigvd.easytoolz.models.DTO.ReportRequest;
 import ch.heigvd.easytoolz.models.Report;
 import ch.heigvd.easytoolz.models.ReportType;
+import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.repositories.ReportRepository;
 import ch.heigvd.easytoolz.services.interfaces.ReportService;
 
@@ -56,7 +57,8 @@ public class ReportController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<String> addReport(@RequestBody ReportRequest newReport) {
-        return reportService.store(newReport);
+    public ResponseEntity<SuccessResponse> addReport(@RequestBody ReportRequest newReport) {
+        reportService.store(newReport);
+        return ResponseEntity.ok(new SuccessResponse("The report has been stored"));
     }
 }

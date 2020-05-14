@@ -24,10 +24,4 @@ public class AccessDeniedExceptionHandler extends DefaultExceptionHandler {
     {
         return makeError(ex, request, HttpStatus.UNAUTHORIZED);
     }
-
-    @ExceptionHandler({BadCredentialsException.class})
-    public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex, WebRequest request)
-    {
-        return makeError(ex,request,HttpStatus.FORBIDDEN);
-    }
 }

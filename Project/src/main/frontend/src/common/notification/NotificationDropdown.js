@@ -9,12 +9,7 @@ import {SessionContext} from "../SessionHelper";
 import {notificationRedirectUrl} from "./NotificationObject";
 
 
-/**
- * TODO:
- * - Voir avec Manu comment ouvrir son chat.
- * - Ajouter les anciennes notifications
- */
-
+// TODO ajouter ou supprimer les anciennes notifications...
 
 
 // Endpoint to get the notification - {0} = username
@@ -99,8 +94,6 @@ function NotificationDropdown(props) {
      */
     const notificationClicked = (notification) => {
         console.log("click notif id : ", notification)
-
-        // TODO marquer comme lu
         const newNotification = [...unreadNotifications]
         const idxNotification = newNotification.indexOf(notification)
         if (idxNotification !== -1) {

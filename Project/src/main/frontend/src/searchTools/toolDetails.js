@@ -14,8 +14,6 @@ class ToolDetails extends React.Component{
         owner: {}
     }
 
-
-
     constructor(props)
     {
         super(props);

@@ -144,7 +144,7 @@ function NotificationDropdown(props) {
                         <ul className="list-unstyled">
                             {
                                 unreadNotifications.map((notification, idx) => {
-                                    return (<Media as="li" className={"notification-item"} onClick={() => {
+                                    return (<Media as="li" key={`notification-${idx}-${notification.id}`} className={"notification-item"} onClick={() => {
                                         notificationClicked(notification)
                                     }}>
                                         <FaCalendarCheck size={30}/>

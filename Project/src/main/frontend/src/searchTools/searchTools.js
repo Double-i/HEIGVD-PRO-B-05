@@ -5,8 +5,6 @@ import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
 import {Form, Button, Container, Row, Col} from "react-bootstrap";
 import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 
-
-
 const containerStyle = {
     position: 'relative',
 
@@ -62,8 +60,8 @@ class SearchTools extends React.Component{
                 {
                     console.log("page "+i)
                     pages.push(
-                        <li class="page-item" onClick={() => {this.loadPage(i)}}>
-                        <a class = "page-link">
+                        <li className="page-item" key={`page-${nbPages}`} onClick={() => {this.loadPage(i)}}>
+                        <a className = "page-link"  key={`page-link-${nbPages}`} >
                             {i}
                         </a>
                         </li>
@@ -236,10 +234,10 @@ class SearchTools extends React.Component{
 
     getMarkers()
     {
-        return this.state.tools.map(tool => {
+        return this.state.tools.map((tool, idx) => {
             console.log('getting tool : '+tool.name+' at '+tool.owner.address);
             return <Marker onClick = {this.onMarkerClick}
-                           key = {tool.name}
+                           key ={`tool-marker-${idx}-${tool.name}`}
                            name = {tool.name}
                            position={{
                                lat: tool.owner.address.lat,
@@ -250,9 +248,7 @@ class SearchTools extends React.Component{
 
     render(){
         return (
-            <Container style={{
-                marginTop: '10px',
-            }}>
+            <>
                 <Row>
                     <Col>
                         <Form onSubmit={this.handleSubmit}>
@@ -320,8 +316,7 @@ class SearchTools extends React.Component{
                     </nav>
                 </Row>
 
-    </Container>
-
+            </>
     )
     }
 }

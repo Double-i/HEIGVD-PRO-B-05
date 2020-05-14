@@ -82,6 +82,7 @@ function App() {
     return (
         <SessionContext.Provider value={user}>
             <Router>
+
                 <NavigationBar showSignInForm={() => setShowSignInForm(true)}/>
                 <SignIn
                     showSignInForm={showSignInForm}
@@ -91,7 +92,7 @@ function App() {
                         setShowSignInForm(false)
                     }}
                 />
-                <div className="row">
+
                     <Container>
                         <Switch>
                             <Route exact path="/(home|accueil|)/">
@@ -182,7 +183,7 @@ function App() {
                             <Route component={UnkownPage} />
                         </Switch>
                     </Container>
-                </div>
+           
 
             </Router>
 

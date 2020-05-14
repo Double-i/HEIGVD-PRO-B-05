@@ -60,8 +60,8 @@ class SearchTools extends React.Component{
                 {
                     console.log("page "+i)
                     pages.push(
-                        <li className="page-item" key={`page-${nbPages}`} onClick={() => {this.loadPage(i)}}>
-                        <a className = "page-link"  key={`page-link-${nbPages}`} >
+                        <li className="page-item" key={`page-li-${i}`} onClick={() => {this.loadPage(i)}}>
+                        <a className = "page-link"  key={`page-link-${i}`} >
                             {i}
                         </a>
                         </li>
@@ -237,7 +237,7 @@ class SearchTools extends React.Component{
         return this.state.tools.map((tool, idx) => {
             console.log('getting tool : '+tool.name+' at '+tool.owner.address);
             return <Marker onClick = {this.onMarkerClick}
-                           key ={`tool-marker-${idx}-${tool.name}`}
+                           key ={`search-tool-maps-marker-${idx}-${tool.name}`}
                            name = {tool.name}
                            position={{
                                lat: tool.owner.address.lat,

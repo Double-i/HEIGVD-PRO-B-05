@@ -217,13 +217,13 @@ function AlreadyConnect() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
             <br/>
-            <p>
+            <div>
                 <h3> Vous êtes déjà connecté. Vous ne pouvez donc pas accéder à cette page.</h3>
                 <img
                     alt="forbideen"
                     src="/useless.png"
                 />
-            </p>
+            </div>
         </Container>
     )
 }

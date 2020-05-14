@@ -36,8 +36,9 @@ class DisplayTools extends React.Component {
                     </div>
                     {
                         this.props.data.length > 0 ?(
-                        this.props.data.map(item => (
+                        this.props.data.map((item,idx) => (
                         <DisplayTool
+                            key={"search-display-tool-"+item.id}
                             id={item.id}
                             name={item.name}
                             description={item.description}

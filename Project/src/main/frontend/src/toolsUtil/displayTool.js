@@ -88,7 +88,7 @@ class DisplayTool extends React.Component {
                     <div>
                         {
                             this.props.objectTags.map(tag =>(
-                            <li key={tag.id}>{tag.name}</li>
+                            <li key={"search-item-tag-"+tag.name}>{tag.name}</li>
                             ))
                         }
                     </div>

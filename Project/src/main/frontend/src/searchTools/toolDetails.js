@@ -8,46 +8,42 @@ class ToolDetails extends React.Component{
 
     SEARCH_URI = '/objects'
 
-    state = {
-        description: "",
-        name: "",
-        images: [],
-        objectTags: [],
-        owner: {}
-    }
-
 
 
     constructor(props)
     {
         super(props);
-
+        this.state = {
+            description: "",
+            name: "",
+            images: [],
+            objectTags: [],
+            owner: {}
+        }
     }
 
-    async componentDidMount() {
-
+    componentDidMount() {
         sendEzApiRequest(this.SEARCH_URI + '/' + this.props.match.params.id)
             .then((response) => {
-                console.log(response);
-                this.setState(response);
-                console.log(response)
-                response.images.map( test => (
-                  console.log(test)
-                ))
 
                 let temp = []
-                    response.images.map(image => (
-                        temp.push(
-                        {
-                            src : "http://localhost:8080/api/image/"+image.pathToImage.toString(),
-                            thumbnail :"http://localhost:8080/api/image/"+image.pathToImage.toString(),
-                            thumbnailWidth: "10%",
-                            thumbnailHeight: "10%"
-                        })
+                response.images.map(image => (
+                    temp.push(
+                    {
+                        src : "http://127.0.0.1:8080/api/image/"+image.pathToImage.toString(),
+                        thumbnail :"http://127.0.0.1:8080/api/image/"+image.pathToImage.toString(),
+                        thumbnailWidth: "10%",
+                        thumbnailHeight: "10%"
+                    })
                 ));
-                console.log(temp)
 
-                this.setState({images : temp})
+                this.setState(
+                    {images : temp,
+                        owner : response.owner,
+                        name : response.name,
+                        description : response.description,
+                        objectTags : response.objectTags
+                    })
             })
             .catch(err => alert(err));
     }

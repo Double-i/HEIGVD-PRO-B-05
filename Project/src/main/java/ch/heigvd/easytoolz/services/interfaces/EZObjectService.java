@@ -29,7 +29,7 @@ public interface EZObjectService {
     void updateObject(EZObject o, List<MultipartFile> files) throws Exception;
 
     void deleteObject(int id) throws Exception;
-
+    void deleteImage(int id)throws Exception;
     /**
      * Get the list of all the objects
      *

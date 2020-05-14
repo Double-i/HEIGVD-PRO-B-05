@@ -74,7 +74,7 @@ class DisplayTool extends React.Component {
                     <img
                         style={{width: '100px', height : '100px'}}
                         //TODO :
-                        src={"http://localhost:8080/api/image/"+this.thumbnail}
+                        src={"http://127.0.0.1:8080/api/image/"+this.thumbnail}
                     />
                 </div>
                 <div className="col-2">

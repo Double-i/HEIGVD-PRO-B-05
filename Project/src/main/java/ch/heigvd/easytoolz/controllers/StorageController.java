@@ -28,4 +28,10 @@ public class StorageController {
         Resource resource = storageService.loadAsRessource(filename);
         return resource;
     }
+
+    @DeleteMapping
+    public void deleteImage(@PathVariable String filename) throws Exception
+    {
+
+    }
 }

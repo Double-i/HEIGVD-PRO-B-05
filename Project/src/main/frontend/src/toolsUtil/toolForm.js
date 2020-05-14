@@ -15,23 +15,26 @@ class ToolForm extends React.Component {
 
         if(this.props.action === 'add'){
             this.state = {
+                action :'add',
                 toolId: '',
                 toolName: '',
                 toolDescription: '',
                 toolTags: '',
-                toolImage: '',
+                toolImage:'',
                 displayImages : [],
                 tags: [],
                 ApiRequest : '/objects/add'
             };
         }else if(this.props.action === 'update'){
+
             this.state = {
+                action :'update',
                 toolId: this.props.tool.id,
                 toolName: this.props.tool.name,
                 toolDescription: this.props.tool.description,
                 toolTags: this.props.tool.objectTags,
-                toolImage: this.props.tool.toolImage,
                 displayImages : [],
+                toolImage:'',
                 tags: [],
                 ApiRequest : '/objects/update'
             };
@@ -85,10 +88,6 @@ class ToolForm extends React.Component {
 
     componentDidMount() {
 
-        console.log("mounted !")
-        console.log(this.props.tool)
-        console.log(this.state)
-
         sendEzApiRequest(this.TAGS_URI)
             .then( (response) => {
                 //Get tags from db
@@ -98,6 +97,25 @@ class ToolForm extends React.Component {
                     this.setState({tags: response.map((value) => value.name)})
                 }
             })
+
+        if(this.state.action==="update")
+        {
+            let images = []
+            for(let i  = 0; i < this.props.tool.images.length; i++)
+            {
+                console.log(i)
+                let temp = this.props.tool.images[i];
+                images.push(
+                    {
+                        id:temp.id,
+                        filename:temp.pathToImage.toString(),
+                        url:"http://127.0.0.1:8080/api/image/"+temp.pathToImage.toString(),
+                        state:"updateAble"
+                    }
+                )
+                this.setState({displayImages:images})
+            }
+        }
     }
 
     schema = yup.object().shape({
@@ -110,18 +128,44 @@ class ToolForm extends React.Component {
         toolTags: yup.array().of(yup.string())
             .min(1, 'Minimum 1 catégorie!'),
     })
-
-
-    displayGrid()
+    addNewImage(id,url,filename,state)
     {
-
+        let images = this.state.displayImages;
+        images.push({id,url,filename,state});
+        this.setState({displayImages:images})
+    }
+    deleteImage(id)
+    {
+        let images = this.state.displayImages;
+        images.splice(id,1)
+        this.setState({displayImages:images})
+    }
+    displayGrid(source)
+    {
+        let images = this.state.displayImages
+        console.log(images)
         return (
             <Container>
                 <Row>
                     {
-                        this.state.displayImages.length > 0 ? (
-                                this.state.displayImages.map(image =>
-                                    <img src={image}  style={{height:"100px",width:"100px"}}/>
+                        images.length > 0 ? (
+                                images.map((image,key) =>
+                                    <div>
+                                        <img src={ image.url}  style={{height:"100px",width:"100px"}}/>
+                                        <img styles=
+                                                 {
+                                                     {
+                                                         position:"absolute",
+                                                         right: 5,
+                                                         top: 5,
+                                                     }
+                                                 }
+                                             src="https://img.icons8.com/office/16/000000/close-window.png"
+                                             onClick={() => {
+                                                this.deleteImage(key);
+                                             }}
+                                        />
+                                    </div>
                                 )
                             ):
                             (
@@ -129,7 +173,6 @@ class ToolForm extends React.Component {
                             )
                     }
                 </Row>
-
             </Container>
         )
     }
@@ -244,11 +287,13 @@ class ToolForm extends React.Component {
                                     placeholder="Photo de l'outil"
                                     onChange={(event) => {
                                         let paths = [];
+                                        let files =[];
                                         for( let i = 0; i < event.target.files.length; i++)
                                         {
                                             paths.push(URL.createObjectURL(event.target.files[i]));
+                                            this.addNewImage(null,URL.createObjectURL(event.target.files[i]),event.target.files[i],"new")
+
                                         }
-                                        this.setState({displayImages : paths});
                                         setFieldValue(
                                             'toolImage',
                                             event.currentTarget.files
@@ -258,7 +303,9 @@ class ToolForm extends React.Component {
                                 />
                             </Form.Group>
 
-                            {this.displayGrid()}
+                            {
+                                this.displayGrid()
+                            }
 
                             <Button
                                 variant="primary"

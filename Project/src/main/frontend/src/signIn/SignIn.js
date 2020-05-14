@@ -30,8 +30,6 @@ function SignInForm(props) {
                 setIsLogging(false)
 
                 console.log('So far so good')
-                //TODO voir si à supprimer car pour l'instant inutile car le modal se ferme tout seul après connexion
-                //setHasBeenLoggedIn(true)
 
                 props.setLoggedUser({
                     tokenDuration: result.tokenDuration,
@@ -44,7 +42,7 @@ function SignInForm(props) {
             error => {
                 setIsLogging(false)
 
-                if(error.errorCode === 403){
+                if(error.errorCode === 401){
                     console.log('Bad credential amigo')
                     sethasWrongCredential(true)
                 }else{
@@ -93,7 +91,7 @@ function SignInForm(props) {
                         hum humm.. problème de connexion au serveur
                     </Alert>
                     <Alert variant="warning" hidden={!hasWrongCredential}>
-                        Utilisateur inexistant
+                        Mauvais nom d'utilisateur ou/et mot de passe
                     </Alert>
                     <Container>
                         <Formik
@@ -146,11 +144,6 @@ function SignInForm(props) {
                                                 !errors.userPassword
                                             }
                                         />
-                                    </Form.Group>
-                                    <Form.Group controlId="formBasicCheckbox">
-                                        <Link to="/login/forget">
-                                            Oops j'ai oublié mon mot de passe
-                                        </Link>
                                     </Form.Group>
                                     <Button
                                         variant="primary"

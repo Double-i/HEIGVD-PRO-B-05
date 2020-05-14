@@ -38,6 +38,8 @@ class AdminPage extends React.Component{
             sendEzApiRequest(this.ALL_USER_URI + "/" + user, "DELETE")
                 .then((response) =>{
                     console.log(response)
+                }, (error) => {
+                    console.log(error)
                 })
         }
     }

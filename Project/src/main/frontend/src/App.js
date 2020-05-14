@@ -1,7 +1,7 @@
 import React from 'react'
 import {useState} from 'react'
 import './App.css'
-import {Col, Container, NavDropdown, Row} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
 import {
     BrowserRouter as Router,
@@ -46,7 +46,6 @@ function App() {
     // Log out the user if his session has expired
     if(session.isUserLogin()) {
 
-
         if (session.isExpired()) {
             session.logout()
         } else {
@@ -83,6 +82,7 @@ function App() {
     return (
         <SessionContext.Provider value={user}>
             <Router>
+
                 <NavigationBar showSignInForm={() => setShowSignInForm(true)}/>
                 <SignIn
                     showSignInForm={showSignInForm}
@@ -92,7 +92,7 @@ function App() {
                         setShowSignInForm(false)
                     }}
                 />
-                <div className="row">
+
                     <Container>
                         <Switch>
                             <Route exact path="/(home|accueil|)/">
@@ -183,7 +183,7 @@ function App() {
                             <Route component={UnkownPage} />
                         </Switch>
                     </Container>
-                </div>
+           
 
             </Router>
 
@@ -217,13 +217,13 @@ function AlreadyConnect() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
             <br/>
-            <p>
+            <div>
                 <h3> Vous êtes déjà connecté. Vous ne pouvez donc pas accéder à cette page.</h3>
                 <img
                     alt="forbideen"
                     src="/useless.png"
                 />
-            </p>
+            </div>
         </Container>
     )
 }

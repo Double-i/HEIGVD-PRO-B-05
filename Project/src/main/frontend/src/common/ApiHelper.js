@@ -105,6 +105,5 @@ export function prepareUrl(strURL, verb = 'GET', params = {}) {
             url.searchParams.append(key, params[key])
         )
     }
-    console.log(url);
     return url
 }

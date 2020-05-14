@@ -1,9 +1,9 @@
 import React from "react";
 import {
-    FaUser,
+
     FaRegClock,
-    FaRegCalendarAlt,
-    FaLocationArrow,
+
+
 } from 'react-icons/fa'
 
 export const STATE ={
@@ -13,23 +13,23 @@ export const STATE ={
     pending:"pending",
     passed : "passed"
 }
-export function transformState(state){
+export function transformState(state, idx){
     let stateInfo = [];
     switch(state){
         case "pending":
-            stateInfo= [ <FaRegClock/>, " En attente"]
+            stateInfo= [ <FaRegClock key={idx}/>, " En attente"]
             break
         case "accepted":
-            stateInfo=[<FaRegClock/>," Accepté"]
+            stateInfo=[<FaRegClock key={idx}/>," Accepté"]
             break
         case "refused":
-            stateInfo=[ <FaRegClock/>," Refusé"]
+            stateInfo=[ <FaRegClock key={idx}/>," Refusé"]
             break
         case "cancel":
-            stateInfo= [<FaRegClock/>," Annulé"]
+            stateInfo= [<FaRegClock key={idx}/>," Annulé"]
             break
         case "passed":
-            stateInfo = [<FaRegClock/>," Passé"]
+            stateInfo = [<FaRegClock key={idx}/>," Passé"]
             break;
     }
     return stateInfo

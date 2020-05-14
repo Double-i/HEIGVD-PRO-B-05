@@ -81,16 +81,16 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
      * @param periodState the period state we're interested in
      * @return
      */
-    @Query("SELECT CASE WHEN COUNT(lo) > 0 THEN true ELSE false END FROM Loan lo" +
+    @Query("SELECT lo FROM Loan lo" +
             " INNER JOIN Period peri ON lo.pkLoan = peri.loan.pkLoan" +
             " WHERE peri.state = :periodState " +
-            " AND lo.pkLoan <> :loan" +                                         // ignore the loan related to the given loan
+            " AND lo <> :loan" +                                         // ignore the loan related to the given loan
             " AND lo.state = :toolState " +
             " AND lo.EZObject = :tool"  +
             " AND ((:dateStart BETWEEN peri.dateStart AND peri.dateEnd )" +     // get all loans with dateStart during another loan period
             " OR (:dateEnd BETWEEN peri.dateStart AND peri.dateEnd)" +          // get all loans with dateEnd during another loan period
             " OR (peri.dateStart BETWEEN  :dateStart AND :dateEnd))")           // get all loans with dateStart during the new loan period
-    boolean isAlreadyBorrow(EZObject tool, Loan loan, Date dateStart, Date dateEnd, State toolState, State periodState);
+    List<Loan> overlapLoans(EZObject tool, Loan loan, Date dateStart, Date dateEnd, State toolState, State periodState);
 
 
     //EZObject findByLocalisation(int localisation);

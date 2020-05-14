@@ -72,16 +72,15 @@ public class LoanServiceImpl implements LoanService {
 
         User currentUser = authService.getTheDetailsOfCurrentUser();
 
-        Loan loan = new Loan(null, State.pending
-                , currentUser, obj);
+        Loan loan = new Loan(null, State.pending, currentUser, obj);
         loanRepository.save(loan);
 
         // The owner is notified that someone wants borrow his object
         notificationService.storeNotification(
                 ServiceUtils.createNotification(
-                    StateNotification.RESERVATION,
-                    obj.getOwner(),
-                    currentUser.getUserName(), obj.getName()));
+                        StateNotification.RESERVATION,
+                        obj.getOwner(),
+                        currentUser.getUserName(), obj.getName()));
 
         Period period = new Period(newLoan.getDateStart(), newLoan.getDateEnd(), State.accepted, Creator.borrower, loan);
 
@@ -115,7 +114,7 @@ public class LoanServiceImpl implements LoanService {
 
         switch (newState) {
             case accepted:
-                Conversation conv   = new Conversation(loan.getOwner(),loan.getBorrower().getUserName(),loan.getPkLoan());
+                Conversation conv = new Conversation(loan.getOwner(), loan.getBorrower().getUserName(), loan.getPkLoan());
                 conversationRepository.save(conv);
                 done = updateLoanStateByOwner(loan, newState);
                 break;
@@ -177,10 +176,10 @@ public class LoanServiceImpl implements LoanService {
         StateNotification stateNotification;
         User recipient;
         EZObject obj = loan.getEZObject();
-        if(creator.equals(Creator.borrower)){
+        if (creator.equals(Creator.borrower)) {
             recipient = obj.getOwner();
             stateNotification = StateNotification.RACCOURCISSEMENT_OWNER;
-        }else{
+        } else {
             recipient = loan.getBorrower();
             stateNotification = StateNotification.RACCOURCISSEMENT_BORROWER;
 
@@ -194,7 +193,7 @@ public class LoanServiceImpl implements LoanService {
         Period newPeriod = new Period(periodRequest.getDateStart(), periodRequest.getDateEnd(), State.pending, creator, loan);
         periodRepository.save(newPeriod);
 
-        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Period added\", \"id\": "+newPeriod.getId()+"}", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Period added\", \"id\": " + newPeriod.getId() + "}", HttpStatus.OK);
     }
 
     /**
@@ -245,18 +244,18 @@ public class LoanServiceImpl implements LoanService {
             User recipient;
             StateNotification stateNotification;
 
-            if(isBorrower(loan)){
+            if (isBorrower(loan)) {
                 recipient = obj.getOwner();
-                if(newState.equals(State.accepted)){
+                if (newState.equals(State.accepted)) {
                     stateNotification = StateNotification.ACCEPTATION_DEMANDE_RACOURCISSEMENT_OWNER;
-                }else{
+                } else {
                     stateNotification = StateNotification.REFUS_DEMANDE_RACOURCISSEMENT_OWNER;
                 }
-            }else{
+            } else {
                 recipient = loan.getBorrower();
-                if(newState.equals(State.accepted)){
+                if (newState.equals(State.accepted)) {
                     stateNotification = StateNotification.ACCEPTATION_DEMANDE_RACOURCISSEMENT_BORROWER;
-                }else{
+                } else {
                     stateNotification = StateNotification.REFUS_DEMANDE_RACOURCISSEMENT_BORROWER;
                 }
             }
@@ -286,7 +285,7 @@ public class LoanServiceImpl implements LoanService {
      * @return
      */
     @Override
-    public List<Loan> getLoan(String username, boolean borrower, List<String> state,  List<String> city, Date dateStartLess, Date dateEndLess,
+    public List<Loan> getLoan(String username, boolean borrower, List<String> state, List<String> city, Date dateStartLess, Date dateEndLess,
                               Date dateStartGreater, Date dateEndGreater) {
 
 
@@ -319,24 +318,23 @@ public class LoanServiceImpl implements LoanService {
         }
         ////////////////////////////////////
 
-        if(dateStartLess != null)
+        if (dateStartLess != null)
             specs = specs.and(LoanSpecs.getDateStartLess(dateStartLess));
 
-        if(dateEndLess != null)
+        if (dateEndLess != null)
             specs = specs.and(LoanSpecs.getDateEndLess(dateEndLess));
 
-        if(dateStartGreater != null)
+        if (dateStartGreater != null)
             specs = specs.and(LoanSpecs.getDateStartGreater(dateStartGreater));
 
-        if(dateEndGreater != null)
+        if (dateEndGreater != null)
             specs = specs.and(LoanSpecs.getDateEndGreater(dateEndGreater));
 
         return loanRepository.findAll(specs);
     }
 
     @Override
-    public List<Loan> getLoansRelatedTo(String username)
-    {
+    public List<Loan> getLoansRelatedTo(String username) {
         Specification<Loan> byUser = null;
 
         byUser = LoanSpecs.getLoanByOwner(username);
@@ -360,6 +358,14 @@ public class LoanServiceImpl implements LoanService {
     private boolean updateLoanStateByOwner(Loan loan, State state) {
         boolean updated = false;
         if (isOwner(loan)) {
+            if (state.equals(State.accepted)) {
+                List<Loan> pendingLoans = ezObjectRepository.overlapLoans(loan.getEZObject(), loan,
+                        loan.getValidPeriod().getDateStart(), loan.getValidPeriod().getDateEnd(), State.pending, State.accepted);
+                for (Loan currentLoan : pendingLoans){
+                    currentLoan.setState(State.refused);
+                    loanRepository.save(currentLoan);
+                }
+            }
             loan.setState(state);
             loanRepository.save(loan);
             updated = true;
@@ -424,7 +430,6 @@ public class LoanServiceImpl implements LoanService {
         }
         return creator;
     }
-
 
 
 }

@@ -4,6 +4,20 @@ import BorrowPanel from "../searchTools/BorrowPanel";
 import EditToolPanel from "../userDashboard/editTools/EditToolPanel";
 import {sendEzApiRequest} from "../common/ApiHelper";
 
+/**
+ * Display a tool
+ * Props :
+ * id={item.id}
+ * name={item.name}
+ * description={item.description}
+ * ownerUserName={item.ownerUserName}
+ * objectTags={item.objectTags}
+ * images={item.images}
+ * hideOwner={boolean}
+ * hideBorrowButton={boolean}
+ * hideEditButton={boolean}
+ * hideDeleteButton={boolean}
+ */
 class DisplayTool extends React.Component {
 
     DELETE_ITEM_URI = '/objects/delete/'
@@ -90,7 +104,7 @@ class DisplayTool extends React.Component {
                     <div>
                         {
                             this.props.objectTags.map(tag =>(
-                            <li key={tag.id}>{tag.name}</li>
+                            <li key={"search-item-tag-"+tag.name}>{tag.name}</li>
                             ))
                         }
                     </div>

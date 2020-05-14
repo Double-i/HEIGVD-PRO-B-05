@@ -15,9 +15,6 @@ function NewPeriodModal(props) {
     const minDate = tomorrow.isAfter(dateStartPlusDay) ? new Date(tomorrow) : new Date(dateStartPlusDay)
     const maxDate = dateEndLessDay.isAfter( dateStartPlusDay) ? new Date(dateEndLessDay) : new Date(dateStartPlusDay.add(1,'days'))
 
-
-    console.log("NEW PERIOD ", minDate, maxDate)
-
     return (
         <Modal
             size="lg"

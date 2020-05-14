@@ -1,4 +1,4 @@
-import {default as React, useContext, useState} from "react";
+import {default as React} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Calendar from 'react-calendar';
@@ -10,10 +10,10 @@ class BorrowPanel extends React.Component {
 
     sendLoansAPIEndpoint = "/loans"
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            dateRange : new Date()
+            dateRange: new Date()
         }
         this.onChange = this.onChange.bind(this);
         this.sendValidation = this.sendValidation.bind(this)
@@ -32,25 +32,20 @@ class BorrowPanel extends React.Component {
         }
 
         sendEzApiRequest(this.sendLoansAPIEndpoint, "POST", {
-            dateStart : moment(beginDate).add('1', 'days').format('YYYY-MM-DD'),
-            dateEnd : endDate.toString(),
-            toolId : this.props.tool.id
+            dateStart: moment(beginDate).add('1', 'days').format('YYYY-MM-DD'),
+            dateEnd: endDate.toString(),
+            toolId: this.props.tool.id
         }).then(
             (response) => {
                 alert("Requete envoyée!" + response.status)
 
-            }, (error)=>{
+            }, (error) => {
                 alert("Erreur dans l'envoi de la requete : " + error.errorCode);
-
-                /*if(error.errorCode === 403 || error.errorCode === 404 ) {
-                    alert("Erreur dans l'envoi de la requete : " + error.errorCode);
-                } else{
-                    alert("Erreur dans l'envoi de la requete : " + error.errorCode);
-                }*/
             })
     }
-    onChange(date){
-        this.setState({dateRange : date});
+
+    onChange(date) {
+        this.setState({dateRange: date});
     }
 
     render() {
@@ -75,9 +70,9 @@ class BorrowPanel extends React.Component {
                             onChange={this.onChange}
                             value={this.state.dateRange}
                             selectRange
-                            minDate={new Date()}
+                            minDate={moment().add(1, 'days').toDate()}
                         />
-                        <Button onClick={()=>this.sendValidation()}>Envoyer une demande</Button>
+                        <Button onClick={() => this.sendValidation()}>Envoyer une demande</Button>
 
                     </p>
                 </Modal.Body>

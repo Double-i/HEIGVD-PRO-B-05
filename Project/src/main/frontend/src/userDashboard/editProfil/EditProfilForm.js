@@ -4,7 +4,6 @@ import {useContext, useState, useEffect} from "react";
 import {Button} from "react-bootstrap";
 import {SessionContext} from "../../common/SessionHelper";
 import {sendEzApiRequest} from "../../common/ApiHelper";
-import {Link} from 'react-router-dom'
 import PasswordForm from "./PasswordForm";
 
 const USER_ENDPOINT = '/users/'

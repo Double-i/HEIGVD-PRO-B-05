@@ -1,9 +1,14 @@
 import * as React from 'react'
-import {Navbar, Nav, NavDropdown, NavItem, Container, Media} from 'react-bootstrap'
+import {Navbar, Nav, NavDropdown, NavItem} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { SessionContext } from './SessionHelper'
 import NotificationDropdown from "./notification/NotificationDropdown";
 
+/**
+ * Navigation bar. Features button will display depends of the user status : logged, admin ...
+ * @param props
+ * @returns {*}
+ */
 function NavigationBar(props) {
     return (
         <Navbar bg="light" expand="lg">

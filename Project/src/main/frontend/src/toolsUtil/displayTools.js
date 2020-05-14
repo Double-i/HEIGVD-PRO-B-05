@@ -1,8 +1,9 @@
 import * as React from "react";
-import {BrowserRouter as Router} from "react-router-dom";
-import Button from "react-bootstrap/Button";
 import DisplayTool from "./displayTool";
 
+/**
+ * Display tools as table, given from props
+ */
 class DisplayTools extends React.Component {
 
     constructor(props){
@@ -40,7 +41,7 @@ class DisplayTools extends React.Component {
                             id={item.id}
                             name={item.name}
                             description={item.description}
-                            ownerUserName={item.ownerUserName}
+                            ownerUserName={item.owner.userName}
                             objectTags={item.objectTags}
                             images={item.images}
                             hideOwner={this.props.hideOwner}

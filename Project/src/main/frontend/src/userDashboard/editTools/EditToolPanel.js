@@ -8,19 +8,7 @@ class EditToolPanel extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-        }
-        this.onChange = this.onChange.bind(this);
-        this.sendValidation = this.sendValidation.bind(this)
     }
-
-    sendValidation() {
-
-    }
-    onChange(date){
-
-    }
-
     render() {
         return (
             <Modal

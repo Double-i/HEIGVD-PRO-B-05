@@ -88,7 +88,7 @@ export function sendForm(
     }
     const url = prepareUrl(EZT_API.concat(endpoint), verb, params)
 
-    return fetch(url, requestInfo).then(res => res.json())
+    return fetch(url, requestInfo)
 }
 /**
  * Prepare URL with parameter if GET params given

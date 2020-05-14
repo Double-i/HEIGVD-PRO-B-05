@@ -4,7 +4,7 @@ import {Button, Form} from "react-bootstrap";
 import {sendEzApiRequest, sendForm} from "../common/ApiHelper";
 import * as yup from "yup";
 import {Col,Row,Container} from "react-bootstrap";
-
+import {withRouter} from "react-router"
 
 class ToolForm extends React.Component {
 
@@ -23,7 +23,8 @@ class ToolForm extends React.Component {
                 toolImage:'',
                 displayImages : [],
                 tags: [],
-                ApiRequest : '/objects/add'
+                ApiRequest : '/objects/add',
+                imgToDelete: []
             };
         }else if(this.props.action === 'update'){
 
@@ -36,7 +37,9 @@ class ToolForm extends React.Component {
                 displayImages : [],
                 toolImage:'',
                 tags: [],
-                ApiRequest : '/objects/update'
+                ApiRequest : '/objects/update',
+                imgToDelete: []
+
             };
         }
         this.sendToolForm = this.sendToolForm.bind(this);
@@ -67,12 +70,30 @@ class ToolForm extends React.Component {
         for (let p of formData.entries()){
             console.log(p)
         }
+
+        console.log(this.state.imgToDelete)
+        for (let i of this.state.imgToDelete)
+        {
+
+            if(i !== null)
+            {
+                sendEzApiRequest("/objects/delete/image/"+i,'DELETE').then( result => {
+                    console.log("Image deleted")
+                },
+                error => {
+                console.log(error)
+                })
+            }
+
+        }
         // A voir en fonction de notre API
         sendForm(this.state.ApiRequest, 'POST', formData
         ).then(
             (result) => {
                 console.log("result  :")
                 console.log(result)
+                this.props.history.push("./toolList")
+
             },
             (errors) => {
                 console.log("errors  :")
@@ -80,9 +101,6 @@ class ToolForm extends React.Component {
             }
         ).then(
             alert("Opération réussie!")
-        ).then(
-            //this.props.history.push("DashBoard")
-            //return <Redirect to={'DashBoard'} />
         )
     }
 
@@ -134,16 +152,19 @@ class ToolForm extends React.Component {
         images.push({id,url,filename,state});
         this.setState({displayImages:images})
     }
-    deleteImage(id)
+    deleteImage(key,id)
     {
         let images = this.state.displayImages;
-        images.splice(id,1)
-        this.setState({displayImages:images})
+        let toDelete = this.state.imgToDelete;
+
+        toDelete.push(id);
+        images.splice(key,1)
+
+        this.setState({displayImages:images,imgToDelete : toDelete})
     }
-    displayGrid(source)
+    displayGrid()
     {
         let images = this.state.displayImages
-        console.log(images)
         return (
             <Container>
                 <Row>
@@ -162,14 +183,14 @@ class ToolForm extends React.Component {
                                                  }
                                              src="https://img.icons8.com/office/16/000000/close-window.png"
                                              onClick={() => {
-                                                this.deleteImage(key);
+                                                this.deleteImage(key,image.id);
                                              }}
                                         />
                                     </div>
                                 )
                             ):
                             (
-                                console.log("no images")
+                                null
                             )
                     }
                 </Row>
@@ -324,4 +345,4 @@ class ToolForm extends React.Component {
     }
 }
 
-export default ToolForm;
+export default  withRouter(ToolForm);

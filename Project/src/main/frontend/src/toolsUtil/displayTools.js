@@ -40,7 +40,7 @@ class DisplayTools extends React.Component {
                             id={item.id}
                             name={item.name}
                             description={item.description}
-                            ownerUserName={item.ownerUserName}
+                            ownerUserName={item.owner.userName}
                             objectTags={item.objectTags}
                             images={item.images}
                             hideOwner={this.props.hideOwner}

@@ -1,37 +1,53 @@
 import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 import React from "react"
 import {sendEzApiRequest} from "../common/ApiHelper";
+import { usePosition } from 'use-position';
 
 const mapStyles = {
     width :  '80%'
 }
 
-class MapContainer extends React.Component {
+/*export function getUserPos(Component) {
+    return function WrappedComponent(props) {
+        const position = usePosition();
+        return <Component {...props} position={usePosition()} />;
+    }
+}*/
+
+export class MapContainer extends React.Component {
 
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
 
     constructor(props)
     {
+        console.log(props);
         super(props);
 
         this.state = {
             search : '',
-            tools : [],
+            tools : props.tools,
             tags : [],
             searchTags : [],
             showingInfoWindow: false,
             activeMarker: {},
-            selectedTool: {}
+            selectedTool: {},
+            initialPosition : {}
         }
 
-        sendEzApiRequest(this.SEARCH_URI)
-        .then((response) =>{
-            console.log(response);
-            this.setState({tools:response});
-            console.log(this.state.tools);
-        })
-        .catch(err => alert(err));
+
+    }
+
+    componentDidMount() {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const initialPosition = JSON.stringify(position);
+                this.setState({ initialPosition });
+                console.log(this.state.initialPosition);
+            },
+            (error) => alert(error.message),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
     }
 
     onMarkerClick = (props, marker, e) => {
@@ -87,7 +103,7 @@ class MapContainer extends React.Component {
                  google={this.props.google}
                  zoom={10}
                  style={mapStyles}
-                 initialCenter={{ lat: 46.5, lng: 6.5}}
+                 initialCenter={{ lat: /*this.props.position.lat*/40, lng: /*this.props.position.lng*/40}}
                  onClick={this.onMapClicked}
                >
                {this.getMarkers()}

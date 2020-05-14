@@ -4,6 +4,7 @@ import {SessionContext} from "../common/SessionHelper";
 import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
 import {Form, Button, Container, Row, Col} from "react-bootstrap";
 import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
+import { MapContainer } from "./map";
 
 
 
@@ -290,17 +291,7 @@ class SearchTools extends React.Component{
                         </Form>
                     </Col>
                     <Col>
-                        <Map
-                            key={0}
-                            google={this.props.google}
-                            zoom={10}
-                            containerStyle={containerStyle}
-                            initialCenter={{ lat: 46.5, lng: 6.5}}
-                            onClick={this.onMapClicked}
-                        >
-                            {this.getMarkers()}
-                            {this.getInfoWindow()}
-                        </Map>
+                        <MapContainer tools = {this.state.tools}/>
                     </Col>
                 </Row>
                 <Row>

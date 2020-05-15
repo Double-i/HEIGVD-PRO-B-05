@@ -1,10 +1,14 @@
 import React from "react";
 import {
-    FaUser,
+    FaCheck,
+    FaBan,
     FaRegClock,
-    FaRegCalendarAlt,
-    FaLocationArrow,
+    FcCancel,
+    FaCross
+
+
 } from 'react-icons/fa'
+import {GiCancel} from "react-icons/gi";
 
 export const STATE ={
     cancel: "cancel",
@@ -13,23 +17,23 @@ export const STATE ={
     pending:"pending",
     passed : "passed"
 }
-export function transformState(state){
+export function transformState(state, idx){
     let stateInfo = [];
     switch(state){
         case "pending":
-            stateInfo= [ <FaRegClock/>, " En attente"]
+            stateInfo= [ <FaRegClock key={idx}/>, " En attente"]
             break
         case "accepted":
-            stateInfo=[<FaRegClock/>," Accepté"]
+            stateInfo=[<FaCheck key={idx}/>," Accepté"]
             break
         case "refused":
-            stateInfo=[ <FaRegClock/>," Refusé"]
+            stateInfo=[ <FaBan key={idx}/>," Refusé"]
             break
         case "cancel":
-            stateInfo= [<FaRegClock/>," Annulé"]
+            stateInfo= [<GiCancel key={idx}/>," Annulé"]
             break
         case "passed":
-            stateInfo = [<FaRegClock/>," Passé"]
+            stateInfo = [<FaCross key={idx}/>," Passé"]
             break;
     }
     return stateInfo

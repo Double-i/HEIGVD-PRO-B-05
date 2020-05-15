@@ -1,7 +1,7 @@
 import {Container, Row, Col, Media, NavDropdown, Button, Badge} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 import * as React from "react"
-import {useContext, useEffect, useState, useRef} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import {FaCalendarCheck} from 'react-icons/fa'
 import {EZT_API, sendEzApiRequest} from "../ApiHelper";
 import {formatString} from "../Utils";
@@ -9,12 +9,7 @@ import {SessionContext} from "../SessionHelper";
 import {notificationRedirectUrl} from "./NotificationObject";
 
 
-/**
- * TODO:
- * - Voir avec Manu comment ouvrir son chat.
- * - Ajouter les anciennes notifications
- */
-
+// TODO ajouter ou supprimer les anciennes notifications...
 
 
 // Endpoint to get the notification - {0} = username
@@ -27,7 +22,8 @@ const ENDPOINT_LIVE_NOTIFICATION = "/notifications/{0}"
 const ENDPOINT_NOTIFICATION_READ = "/notifications/{0}/markRead"
 
 function NotificationDropdown(props) {
-    const [showOldNotifications, setShowOldNotifications] = useState(false)
+   // TODO voir todo ci-dessus const
+    // const [showOldNotifications, setShowOldNotifications] = useState(false)
     const [showNotifcationsDropdown, setShowNotifcationsDropdown] = useState(false)
     const [unreadNotifications, _setUnreadNotifications] = useState([])
     const [oldNotifications, setOldNotifications] = useState([])
@@ -99,8 +95,6 @@ function NotificationDropdown(props) {
      */
     const notificationClicked = (notification) => {
         console.log("click notif id : ", notification)
-
-        // TODO marquer comme lu
         const newNotification = [...unreadNotifications]
         const idxNotification = newNotification.indexOf(notification)
         if (idxNotification !== -1) {
@@ -144,7 +138,7 @@ function NotificationDropdown(props) {
                         <ul className="list-unstyled">
                             {
                                 unreadNotifications.map((notification, idx) => {
-                                    return (<Media as="li" className={"notification-item"} onClick={() => {
+                                    return (<Media as="li" key={`notification-${idx}-${notification.id}`} className={"notification-item"} onClick={() => {
                                         notificationClicked(notification)
                                     }}>
                                         <FaCalendarCheck size={30}/>

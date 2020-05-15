@@ -1,14 +1,10 @@
 import {default as React} from "react";
-import {sendEzApiRequest} from "../../common/ApiHelper";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import ToolForm from "../../toolsUtil/toolForm";
 
 class EditToolPanel extends React.Component {
 
-    constructor(props){
-        super(props);
-    }
     render() {
         return (
             <Modal

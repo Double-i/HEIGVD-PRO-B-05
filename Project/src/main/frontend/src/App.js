@@ -82,6 +82,7 @@ function App() {
     return (
         <SessionContext.Provider value={user}>
             <Router>
+
                 <NavigationBar showSignInForm={() => setShowSignInForm(true)}/>
                 <SignIn
                     showSignInForm={showSignInForm}
@@ -91,7 +92,7 @@ function App() {
                         setShowSignInForm(false)
                     }}
                 />
-                <div className="row">
+
                     <Container>
                         <Switch>
                             <Route exact path="/(home|accueil|)/">
@@ -182,7 +183,7 @@ function App() {
                             <Route component={UnkownPage} />
                         </Switch>
                     </Container>
-                </div>
+           
 
             </Router>
 
@@ -216,13 +217,13 @@ function AlreadyConnect() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
             <br/>
-            <p>
+            <div>
                 <h3> Vous êtes déjà connecté. Vous ne pouvez donc pas accéder à cette page.</h3>
                 <img
                     alt="forbideen"
                     src="/useless.png"
                 />
-            </p>
+            </div>
         </Container>
     )
 }

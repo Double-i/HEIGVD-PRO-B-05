@@ -14,7 +14,7 @@ class DisplayTools extends React.Component {
 
         return (
 
-            <div className="content">
+            <>
                 {/* Result */}
                 <div className="container" style={{marginTop: '20px'}}>
                     <div className="row border-bottom header">
@@ -36,24 +36,27 @@ class DisplayTools extends React.Component {
                     </div>
                     {
                         this.props.data.length > 0 ?(
-                        this.props.data.map(item => (
+                        this.props.data.map((item,idx) => (
                         <DisplayTool
+                            key={"search-display-tool-"+item.id}
                             id={item.id}
                             name={item.name}
                             description={item.description}
                             ownerUserName={item.owner.userName}
                             objectTags={item.objectTags}
                             images={item.images}
+                            tool={item}
                             hideOwner={this.props.hideOwner}
                             hideBorrowButton={this.props.hideBorrowButton}
                             hideEditButton={this.props.hideEditButton}
                             hideDeleteButton={this.props.hideDeleteButton}
+                            deleteButtonCB={this.props.deleteButtonCB}
                         >
                         </DisplayTool>
                         )
                     )) : (<></>)}
                 </div>
-            </div>
+            </>
         )
     }
 }

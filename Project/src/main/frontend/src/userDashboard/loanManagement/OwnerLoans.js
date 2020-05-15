@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import {Container, Modal} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import LoansList from './LoansList'
 import {SessionContext} from "../../common/SessionHelper";
 import * as moment from "moment";

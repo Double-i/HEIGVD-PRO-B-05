@@ -5,8 +5,6 @@ import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
 import {Form, Button, Container, Row, Col} from "react-bootstrap";
 import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 
-
-
 const containerStyle = {
     position: 'relative',
 
@@ -38,9 +36,7 @@ class SearchTools extends React.Component{
 
         sendEzApiRequest(this.SEARCH_URI)
             .then((response) =>{
-                console.log(response);
                 this.setState({tools:response});
-                console.log(this.state.tools);
             })
             .catch(err => alert(err));
 
@@ -60,10 +56,9 @@ class SearchTools extends React.Component{
                 let nbPages = result/10;
                 for(let i = 0; i < nbPages; i++)
                 {
-                    console.log("page "+i)
                     pages.push(
-                        <li class="page-item" onClick={() => {this.loadPage(i)}}>
-                        <a class = "page-link">
+                        <li className="page-item" key={`page-li-${i}`} onClick={() => {this.loadPage(i)}}>
+                        <a className = "page-link"  key={`page-link-${i}`} >
                             {i}
                         </a>
                         </li>
@@ -162,13 +157,11 @@ class SearchTools extends React.Component{
         sendEzApiRequest(URL)
             .then(
                 (result) => {
-                    console.log(result)
                     if (result.status === 403) {
                         console.log('No tools founded')
                     } else {
                         console.log('items founded')
                         let pages = []
-                        console.log(result)
                         let nbPages = result/10;
                         for(let i = 0; i < nbPages; i++)
                         {
@@ -203,7 +196,6 @@ class SearchTools extends React.Component{
     }
 
     onMarkerClick = (props, marker, e) => {
-        console.log("Clicked on marker !");
         this.setState({
             selectedTool: this.state.tools.find(tool => tool.name ===props.name),
             activeMarker: marker,
@@ -236,10 +228,10 @@ class SearchTools extends React.Component{
 
     getMarkers()
     {
-        return this.state.tools.map(tool => {
+        return this.state.tools.map((tool, idx) => {
             console.log('getting tool : '+tool.name+' at '+tool.owner.address);
             return <Marker onClick = {this.onMarkerClick}
-                           key = {tool.name}
+                           key ={`search-tool-maps-marker-${idx}-${tool.name}`}
                            name = {tool.name}
                            position={{
                                lat: tool.owner.address.lat,
@@ -250,9 +242,7 @@ class SearchTools extends React.Component{
 
     render(){
         return (
-            <Container style={{
-                marginTop: '10px',
-            }}>
+            <>
                 <Row>
                     <Col>
                         <Form onSubmit={this.handleSubmit}>
@@ -320,8 +310,7 @@ class SearchTools extends React.Component{
                     </nav>
                 </Row>
 
-    </Container>
-
+            </>
     )
     }
 }

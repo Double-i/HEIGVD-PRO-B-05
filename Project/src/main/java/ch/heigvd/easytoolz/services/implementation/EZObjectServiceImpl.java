@@ -245,6 +245,15 @@ public class EZObjectServiceImpl implements EZObjectService {
         return ezObjectRepository.getAllByObjectTagsIn(tags);
     }
 
+    public void deleteImage(int id) throws Exception
+    {
+        EZObjectImage toDelete = imagesRepository.findByID(id);
+        if (toDelete == null)
+            throw new EZObjectNotFoundException("" + id);
+
+        toDelete.setIs_active(false);
+        imagesRepository.save(toDelete);
+    }
 
 
 

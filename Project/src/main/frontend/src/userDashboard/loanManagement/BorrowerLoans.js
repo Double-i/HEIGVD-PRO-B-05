@@ -10,7 +10,6 @@ import {STATE} from "../../common/State";
 import NewPeriodModal from "./NewPeriodModal";
 import ShortenLoanModal from "./ShortenLoanModal";
 import {ROLE} from "../../common/Role";
-import {formatString} from "../../common/Utils";
 
 const LOANS_REQUEST = "/loans/find/user/"
 const LOANS_UPDATE_STATE_REQUEST = "/loans/"
@@ -28,7 +27,6 @@ function BorrowerLoans(props) {
     const [onGoingLoans, setOnGoingLoans] = useState([]);
     const [passedLoans, setPassedLoans] = useState([]);
     const [refusedLoans, setRefusedLoans] = useState([]);
-
     const [showShortenLoansModal, setShowShortenLoansModal] = useState(false);
     const [showNewPeriodModal, setShowNewPeriodModal] = useState(false);
 
@@ -38,7 +36,6 @@ function BorrowerLoans(props) {
     console.log(moment().format('YYYY-MM-DD'))
 
     useEffect(() => {
-        console.log("test", username)
 
         // Request for pending loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
@@ -107,7 +104,7 @@ function BorrowerLoans(props) {
         })
 
 
-    }, []); // the array is to avoid infinite loop https://stackoverflow.com/a/54923969
+    }, []);
 
     const btnDisplayToolClicked = (loan) => {
         props.history.push(`/tooldetails/${loan.ezobject.id}`)
@@ -142,14 +139,11 @@ function BorrowerLoans(props) {
 
 
     const updatePeriodState = (loan, period, state) => {
-        console.log("UPDATE", loan, period, state)
+
         return sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/periods/${period.id}/state`, 'PATCH', {
             state: state
         }).then(result => {
             const newContainerToUpdate = [...containerToUpdate];
-            const idxLoan = newContainerToUpdate.indexOf(loan)
-            const idxPeriod = newContainerToUpdate[idxLoan].periods.indexOf(period)
-            const newPeriod = newContainerToUpdate[idxLoan].periods[idxPeriod]
             period.state = state
             containerMethodtoUpdate(newContainerToUpdate)
         }, error => {
@@ -163,6 +157,13 @@ function BorrowerLoans(props) {
 
     const acceptPeriod = (loan, period) => {
         updatePeriodState(loan, period, STATE.accepted)
+        const newContainerToUpdate = [...containerToUpdate]
+        const idxLoan = newContainerToUpdate.indexOf(loan)
+        if(idxLoan !== -1){
+            newContainerToUpdate[idxLoan].validPeriod = period
+            containerMethodtoUpdate(newContainerToUpdate)
+        }
+
     };
 
     const cancelPeriod = (loan, period) => {
@@ -175,6 +176,7 @@ function BorrowerLoans(props) {
         }).then(result => {
             const newContainerToUpdate = [...containerToUpdate]
             const idxLoan = newContainerToUpdate.indexOf(loan)
+
             // filter the periods to get only the ones created by the borrower
             // then update their state to cancel.
             newContainerToUpdate[idxLoan].periods.filter((period, idx) => period.creator === ROLE.borrower && period.state === STATE.pending)

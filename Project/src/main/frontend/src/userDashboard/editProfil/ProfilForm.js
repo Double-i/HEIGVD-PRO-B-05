@@ -9,20 +9,6 @@ import {sendEzApiRequest, sendRequest} from '../../common/ApiHelper'
 import {VALIDATION_MSG} from "../../common/ValidationMessages";
 import {formatString} from "../../common/Utils";
 
-// TODO use it when signup
-/*{
-    userName: '',
-    userEmail: '',
-    userPassword: '',
-    userPasswordRepeat: '',
-    userFirstname: '',
-    userLastname: '',
-    userAddress: '',
-    userNpa: '',
-    userDistrict: '',
-    userCity: '',
-    userCountry: '',
-}*/
 function ProfilForm(props) {
 
     const [isSendingForm, setIsSendingForm] = useState(false)

@@ -238,7 +238,7 @@ class ToolForm extends React.Component {
                                     value={values.toolName}
                                     onChange={handleChange}
 
-                                    onBlur={handleBlur} // TODO OBLIGATOIRE POUR UTILISER TOUCHED https://stackoverflow.com/questions/57385931/why-isnt-the-formik-touched-property-being-populated
+                                    onBlur={handleBlur}
                                     isInvalid={
                                         touched.toolName && !!errors.toolName
                                     }

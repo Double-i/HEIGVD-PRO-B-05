@@ -100,7 +100,6 @@ class ConversationList  extends React.Component {
                                             {
                                                 ()=>
                                                 {
-                                                    //TODO display message of current conversation
                                                     this.displayConversationContent(conversation)
                                                 }
                                             }>
@@ -115,7 +114,6 @@ class ConversationList  extends React.Component {
                                         {
                                             ()=>
                                             {
-                                                //TODO display message of current conversation
                                                 this.displayConversationContent(conversation)
                                             }
                                         }>

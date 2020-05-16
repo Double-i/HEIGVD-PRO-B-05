@@ -2,11 +2,6 @@ import React from 'react'
 import * as moment from 'moment'
 import {sendEzApiRequest} from "./ApiHelper";
 
-
-// TODO: - checker si token toujours valide autrement suppression de la session
-//       - Si toujours valide mettre un refresh avant de l'expiration pour redemander un token
-
-
 // Session duration in miliseconds should be the same that the server
 export const SESSION_DURATION = 1000000
 /**

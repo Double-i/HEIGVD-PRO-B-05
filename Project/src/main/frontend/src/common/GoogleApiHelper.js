@@ -8,8 +8,6 @@ const GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?"
  * the first value is a int which indicates if the address is valid (1), not precise enough (-1),
  * several result (-2) or invalid (0)
  *
- * TODO voir si méthode ok ? voir si possible de réporter une partir de la logique
- *
  * the second value is the address, can be empty if first value is false
  *
  * @param {Object} addressData

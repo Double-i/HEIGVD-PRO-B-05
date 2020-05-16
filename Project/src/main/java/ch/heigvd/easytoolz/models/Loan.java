@@ -40,7 +40,7 @@ public class Loan {
         }
         return validPeriod;
     }
-    // TODO à voir si utile
+
     public List<Period> getPendingPeriods(){
         List<Period> pendingPeriod = new ArrayList<>();
         for(Period period : periods){

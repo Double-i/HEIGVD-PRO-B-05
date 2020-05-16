@@ -44,7 +44,6 @@ public class AddressServiceImpl implements AddressService {
 
         Address oldAddress = optionalAddress.get();
 
-        // TODO : vérifier que c'est la bonne ville dans le monde (piste: se baser sur le pays également)
         if (address.getCity() != null) {
             City city = cityService.loadByName(address.getCity().getCity());
             if(city == null)

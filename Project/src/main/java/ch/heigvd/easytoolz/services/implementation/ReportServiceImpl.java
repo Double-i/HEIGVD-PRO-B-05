@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.exceptions.report.ReportTypeIncorrectException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.models.dto.ReportRequest;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
@@ -40,7 +41,10 @@ public class ReportServiceImpl implements ReportService {
         if (obj == null)
             throw new EZObjectNotFoundException("Object not found " + newReport.getToolId() + " ");
 
-        //TODO : Check report type exists
+        String nameReportType = newReport.getReportType();
+
+        if(!checkReportType(nameReportType))
+            throw new ReportTypeIncorrectException();
 
         // Save report
         Report report = new Report(ReportType.valueOf(newReport.getReportType()),obj, authService.getTheDetailsOfCurrentUser());
@@ -66,8 +70,15 @@ public class ReportServiceImpl implements ReportService {
         else{
             return reportRepository.findReportByReporter_UserName(username);
         }
-
     }
 
+    private boolean checkReportType(String nameReportType){
+        for(ReportType reportType : ReportType.values()){
+            if(reportType.getReportType().equals(nameReportType)){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

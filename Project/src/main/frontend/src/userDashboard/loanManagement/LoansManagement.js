@@ -40,7 +40,6 @@ function LoansManagement(props) {
 
     useEffect(() => {
 
-        // TODO mettre une variable pour borrower en fonction de ce qu'il affiche
         // Request for pending loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: isBorrower(role),
@@ -283,7 +282,7 @@ function LoansManagement(props) {
             console.log(error)
         })
     };
-    // TODO remplace les owner and Role.borrower par des variable
+
     return (
 
         <Container>

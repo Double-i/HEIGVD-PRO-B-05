@@ -44,55 +44,14 @@ class AuthenticationController {
         if(!authenticationService.authenticateUser(authenticationRequest.getUserName(), authenticationRequest.getPassword()))
             throw new BadCredentialsException("Incorrect username or password");
 
-        final User userDetails = authenticationService.loadByUsername(authenticationRequest.getUserName());
-
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-
-        // store jwt into a http cookie to avoid cookie theft by XSS attack
-        HttpCookie cookie = ResponseCookie.from(accessTokenName, jwt)
-                .maxAge(Integer.parseInt(duration))
-                .httpOnly(true)
-                .path("/")
-                .build();
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
-
-        Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + Integer.parseInt(duration) * 1000 );
-
-        AuthentificationResponse response = new AuthentificationResponse(userDetails, expirationDate);
-        return ResponseEntity.ok().headers(responseHeaders).body(response);
+        return generateResponseEntity(authenticationRequest.getUserName());
     }
 
     @GetMapping("/authrefresh")
     public ResponseEntity<?> refreshToken(){
-        // TODO refactor avec la méthode au-dessus
         User userDetails = authenticationService.getTheDetailsOfCurrentUser();
         if(userDetails != null){
-
-            userDetails = authenticationService.loadByUsername(userDetails.getUserName());
-
-            final String jwt = jwtTokenUtil.generateToken(userDetails);
-
-            // store jwt into a http cookie to avoid cookie theft by XSS attack
-            HttpCookie cookie = ResponseCookie.from(accessTokenName, jwt)
-                    .maxAge(Integer.parseInt(duration))
-                    .httpOnly(true)
-                    .path("/")
-                    .build();
-
-            HttpHeaders responseHeaders = new HttpHeaders();
-
-            responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
-
-            Date now = new Date();
-            Date expirationDate = new Date(now.getTime() + Integer.parseInt(duration) * 1000 );
-
-            AuthentificationResponse response = new AuthentificationResponse(userDetails, expirationDate);
-            return ResponseEntity.ok().headers(responseHeaders).body(response);
-
+            return generateResponseEntity(userDetails.getUserName());
         }else{
             throw new AccessDeniedException();
         }
@@ -119,8 +78,31 @@ class AuthenticationController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        // TODO : mauvaise réponse ne devrait pas être du plain text
-        return ResponseEntity.ok().headers(responseHeaders).body("{\"msg\":\"ok\"}");
+        return ResponseEntity.ok().headers(responseHeaders).body(new SuccessResponse("The user has been logged out"));
 
+    }
+
+    private ResponseEntity<?> generateResponseEntity(String username){
+        User userDetails = authenticationService.loadByUsername(username);
+
+        final String jwt = jwtTokenUtil.generateToken(userDetails);
+
+        // store jwt into a http cookie to avoid cookie theft by XSS attack
+        HttpCookie cookie = ResponseCookie.from(accessTokenName, jwt)
+                .maxAge(Integer.parseInt(duration))
+                .httpOnly(true)
+                .path("/")
+                .build();
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + Integer.parseInt(duration) * 1000 );
+
+        AuthentificationResponse response = new AuthentificationResponse(userDetails, expirationDate);
+
+        return ResponseEntity.ok().headers(responseHeaders).body(response);
     }
 }

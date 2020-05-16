@@ -157,7 +157,6 @@ class Conversation extends React.Component
     }
     /**
      * Loads the all the messages from the current conversation
-     * //TODO pagination ?
      */
     loadMessages( )
     {

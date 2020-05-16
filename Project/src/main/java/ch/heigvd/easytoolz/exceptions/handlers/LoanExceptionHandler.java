@@ -28,7 +28,7 @@ public class LoanExceptionHandler extends DefaultExceptionHandler {
     @ExceptionHandler({LoanPeriodAlreadyPassedException.class})
     public ResponseEntity<ApiError> handleLoanAlreadyPassedException(LoanPeriodAlreadyPassedException ex, WebRequest request)
     {
-        return makeError(ex,request, HttpStatus.BAD_REQUEST);
+        return makeError(ex,request, HttpStatus.IM_USED);
     }
     @ExceptionHandler({LoanStateCantBeUpdatedException.class})
     public ResponseEntity<ApiError> handleLoanStateCantBeUpdatedException(LoanStateCantBeUpdatedException ex, WebRequest request)

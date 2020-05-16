@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.*;
+import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
@@ -76,37 +77,36 @@ public class EZObjectController {
     }
 
     @PostMapping(value="/add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> add(@RequestParam(name = "object") String newObject,
+    public ResponseEntity<SuccessResponse> add(@RequestParam(name = "object") String newObject,
                                       @RequestParam(name = "image") List<MultipartFile> files) throws Exception {
 
 
         EZObject obj = mapper.readValue(newObject,EZObject.class);
         ezObjectService.addObject(obj, files);
-        return new ResponseEntity<>("Object has been saved", HttpStatus.OK);
+        return ResponseEntity.ok().body(new SuccessResponse("The object has been stored"));
     }
 
     @PostMapping(value="/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> update(@RequestParam(name = "object") String newObject,
+    public ResponseEntity<SuccessResponse> update(@RequestParam(name = "object") String newObject,
                                          @RequestParam(name = "image") List<MultipartFile> files) throws Exception {
 
 
         EZObject obj = mapper.readValue(newObject,EZObject.class);
         ezObjectService.updateObject(obj, files);
-        return new ResponseEntity<>("Object has been saved", HttpStatus.OK);
+        return ResponseEntity.ok().body(new SuccessResponse("The object has been updated"));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable Integer id) throws Exception {
+    public ResponseEntity<SuccessResponse> delete(@PathVariable Integer id) throws Exception {
         ezObjectService.deleteObject(id);
-        // TODO do real response
-        return new ResponseEntity<>("{\"msg\":\"Object has been deleted\"}",HttpStatus.OK);
+        return ResponseEntity.ok().body(new SuccessResponse("The object has been deleted"));
     }
 
     @DeleteMapping("/delete/image/{id}")
-    public ResponseEntity<String> deleteImage(@PathVariable int id) throws Exception
+    public ResponseEntity<SuccessResponse> deleteImage(@PathVariable int id) throws Exception
     {
         ezObjectService.deleteImage(id);
-        return new ResponseEntity<>("Image has been deleted",HttpStatus.OK);
+        return ResponseEntity.ok().body(new SuccessResponse("The image has been deleted"));
     }
 
     @GetMapping("find/name/{objectName}")

@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.services.implementation;
 
+import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedException;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectAlreadyUsed;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.exceptions.loan.LoanInvalidParameterException;
@@ -52,7 +53,10 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public ResponseEntity<String> store(LoanRequest newLoan) {
 
-        // TODO check the logged in user instead of the given user.
+
+        if(authService.getTheDetailsOfCurrentUser() == null)
+            throw new AccessDeniedException();
+
         // Check tool exists
         EZObject obj = ezObjectRepository.findByID(newLoan.getToolId());
         if (obj == null)

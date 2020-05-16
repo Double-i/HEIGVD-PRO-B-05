@@ -95,9 +95,6 @@ class SearchTools extends React.Component{
     {
         let URL = this.SEARCH_URI
         let parameters ='?';
-        //http://127.0.0.1:8080/api/objects?page=1/filter?tags=ecole
-        //http://127.0.0.1:8080/api/objects/filter??page=1tags=ecole
-        //http://127.0.0.1:8080/api/objects/filter?page=1tags=ecole
         parameters+='page='+page;
 
         //Search by name
@@ -142,7 +139,7 @@ class SearchTools extends React.Component{
         let parameters = ''
         //Search by name
         if(this.state.search !== ''){
-            parameters += 'names=' + this.state.search;
+            parameters += '?names=' + this.state.search;
             if(this.state.searchTags.length !== 0)
                 parameters += '&';
         }
@@ -150,14 +147,17 @@ class SearchTools extends React.Component{
         if(this.state.searchTags.length !== 0){
             if(this.state.search === '')
                 parameters += ""
-            parameters += 'tags=';
+            parameters += '?tags=';
             for(let i = 0; i < this.state.searchTags.length; ++i){
                 if(i > 0)
                     parameters += ",";
                 parameters += this.state.searchTags[i];
             }
         }
-        path = '/filter/count?'
+        if(parameters === '')
+            path = '/count'
+        else
+            path = '/filter/count'
         sendRequestSimple(this.SEARCH_URI+path+parameters).then(
             (result) =>
             {
@@ -181,7 +181,11 @@ class SearchTools extends React.Component{
         )
 
         event.preventDefault();
-        path = '/filter?'
+
+        if(parameters === '')
+            path = ''
+        else
+            path = '/filter'
         sendEzApiRequest(this.SEARCH_URI+path+parameters)
             .then(
                 (result) => {

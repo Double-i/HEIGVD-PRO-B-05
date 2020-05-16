@@ -114,7 +114,7 @@ public class LoanServiceImpl implements LoanService {
 
         switch (newState) {
             case accepted:
-                Conversation conv = new Conversation(loan.getOwner(), loan.getBorrower().getUserName(), loan.getPkLoan());
+                Conversation conv = new Conversation(loan.getOwner().getUserName(), loan.getBorrower().getUserName(), loan.getPkLoan());
                 conversationRepository.save(conv);
                 done = updateLoanStateByOwner(loan, newState);
                 if(done){

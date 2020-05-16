@@ -77,7 +77,7 @@ public class Loan {
         this.periods = periods;
     }
 
-    public String getOwner(){return this.EZObject.getOwnerUserName();}
+    public User getOwner(){return this.EZObject.getOwner();}
 
     @Id
     @Column(name="pkloan")

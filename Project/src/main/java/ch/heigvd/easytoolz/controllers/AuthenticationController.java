@@ -2,7 +2,7 @@ package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedException;
 import ch.heigvd.easytoolz.models.AuthenticationRequest;
-import ch.heigvd.easytoolz.models.DTO.AuthentificationResponse;
+import ch.heigvd.easytoolz.models.dto.AuthentificationResponse;
 import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
@@ -17,7 +17,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Date;
 

@@ -3,7 +3,7 @@ package ch.heigvd.easytoolz.config;
 import java.security.Principal;
 
 public class StompPrincipal implements Principal {
-    String name;
+    private final String name;
 
     StompPrincipal(String name){
         this.name = name;

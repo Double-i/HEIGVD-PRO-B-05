@@ -5,7 +5,6 @@ import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.NotificationRepository;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.MailService;
-import ch.heigvd.easytoolz.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

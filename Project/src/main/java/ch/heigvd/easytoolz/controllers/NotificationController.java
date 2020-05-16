@@ -7,14 +7,12 @@ import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
 @RequestMapping("/notifications")
@@ -104,15 +102,15 @@ public class NotificationController {
 
             ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
             // Send notification to all the emitters
-            for(int i = 0 ; i < userEmitters.size(); i++){
+            for (SseEmitter userEmitter : userEmitters) {
                 try {
-                    userEmitters.get(i).send(notification);
+                    userEmitter.send(notification);
                     //userEmitters.get(i).send(notification);
                     System.out.println("has been sent to user : " + username);
 
                 } catch (Exception e) {
                     // If the emitters seems dead, add it to the collection of emitters which will be deleted
-                    deadEmitters.add(userEmitters.get(i));
+                    deadEmitters.add(userEmitter);
                 }
             }
 

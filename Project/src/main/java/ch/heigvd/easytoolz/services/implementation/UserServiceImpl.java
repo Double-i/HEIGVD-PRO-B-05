@@ -8,7 +8,7 @@ import ch.heigvd.easytoolz.exceptions.user.UserFailedDeleteException;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
 import ch.heigvd.easytoolz.models.Notification;
-import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
+import ch.heigvd.easytoolz.models.dto.EditPasswordRequest;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AddressService;
@@ -78,7 +78,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editPassword(String username, EditPasswordRequest editPasswordRequest) {
         User connectedUser = authenticationService.getTheDetailsOfCurrentUser();
-     ;
         // We check the user wants to edit his password and that his current password is correct
         if(!connectedUser.getUserName().equals(username) )
             throw new AccessDeniedException();

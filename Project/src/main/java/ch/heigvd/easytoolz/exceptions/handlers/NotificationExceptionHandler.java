@@ -1,7 +1,6 @@
 package ch.heigvd.easytoolz.exceptions.handlers;
 
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
-import ch.heigvd.easytoolz.exceptions.loan.LoanInvalidParameterException;
 import ch.heigvd.easytoolz.exceptions.notifications.NotificationFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.notifications.NotificationFailedUpdateException;
 import ch.heigvd.easytoolz.exceptions.notifications.NotificationNotFoundException;

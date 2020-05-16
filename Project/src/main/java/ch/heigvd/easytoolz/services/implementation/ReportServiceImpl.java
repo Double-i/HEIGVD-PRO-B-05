@@ -2,9 +2,8 @@ package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.*;
-import ch.heigvd.easytoolz.models.DTO.ReportRequest;
+import ch.heigvd.easytoolz.models.dto.ReportRequest;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
-import ch.heigvd.easytoolz.repositories.NotificationRepository;
 import ch.heigvd.easytoolz.repositories.ReportRepository;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
@@ -12,8 +11,6 @@ import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import ch.heigvd.easytoolz.services.interfaces.ReportService;
 import ch.heigvd.easytoolz.util.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

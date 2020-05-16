@@ -31,14 +31,13 @@ export class MapContainer extends React.Component {
             searchTags : [],
             showingInfoWindow: false,
             activeMarker: {},
-            selectedTool: {},
-            initialPosition : {}
+            selectedTool: {}
         }
 
 
     }
 
-    componentDidMount() {
+    /*componentDidMount() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const initialPosition = JSON.stringify(position);
@@ -48,7 +47,7 @@ export class MapContainer extends React.Component {
             (error) => alert(error.message),
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
         );
-    }
+    }*/
 
     onMarkerClick = (props, marker, e) => {
         console.log("Clicked on marker !");
@@ -107,7 +106,7 @@ export class MapContainer extends React.Component {
                  onClick={this.onMapClicked}
                >
                {this.getMarkers()}
-                {this.getInfoWindow()}
+               {this.getInfoWindow()}
                </Map>
 
     }

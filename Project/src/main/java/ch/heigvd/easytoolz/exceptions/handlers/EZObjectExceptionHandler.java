@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.exceptions.handlers;
 
+import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectAlreadyUsed;
 import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectFormatException;
@@ -30,4 +31,9 @@ public class EZObjectExceptionHandler extends DefaultExceptionHandler {
         return makeError(ex,request,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({EZObjectAlreadyUsed.class})
+    public ResponseEntity<ApiError> handleEzObjectAlreadyUsed(EZObjectAlreadyUsed ex, WebRequest request)
+    {
+        return makeError(ex,request, HttpStatus.IM_USED);
+    }
 }

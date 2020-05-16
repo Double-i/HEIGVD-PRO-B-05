@@ -52,7 +52,7 @@ public class EZObjectController {
     @GetMapping("/count")
     public ResponseEntity<Integer> getNbObjects()
     {
-        return new ResponseEntity<Integer>((Integer)ezObjectService.getNbObjects(),HttpStatus.OK);
+        return new ResponseEntity<>(ezObjectService.getNbObjects(),HttpStatus.OK);
     }
 
     /**
@@ -61,7 +61,7 @@ public class EZObjectController {
      * @return
      */
     @GetMapping("/{id}")
-    public EZObjectView get(@PathVariable int id, @RequestParam(name = "page", defaultValue="0") int pageno)
+    public EZObjectView get(@PathVariable int id )
     {
         return ezObjectService.getObject(id);
     }
@@ -161,8 +161,8 @@ public class EZObjectController {
 
         return objects.stream().map(obj -> convertToView(obj)).collect(Collectors.toList());
     }
-    @GetMapping("count/filter")
-    public int getFilteredCount(
+    @GetMapping("filter/count")
+    public ResponseEntity<Integer> getFilteredCount(
             @RequestParam(name = "names", required = false) List<String> names,
             @RequestParam(name = "owners", required = false) List<String> owners,
             @RequestParam(name = "description", required = false) List<String> description,
@@ -170,8 +170,7 @@ public class EZObjectController {
             @RequestParam(name = "page", defaultValue="0") int pageno)
 
     {
-
-        return ezObjectService.getFilteredCount(names,owners,description,tags, pageno);
+        return new ResponseEntity<>(ezObjectService.getFilteredCount(names,owners,description,tags, pageno),HttpStatus.OK);
     }
 
     @GetMapping("find/report")

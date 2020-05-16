@@ -32,7 +32,6 @@ class DisplayTool extends React.Component {
         }
         if(this.props.images.length > 0 )
         {
-            console.log(this.props.images);
             this.thumbnail = this.props.images[0].pathToImage.toString();
         }
         else
@@ -41,10 +40,8 @@ class DisplayTool extends React.Component {
 
 
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log(nextProps)
             if(nextProps.images.length > 0 )
             {
-                console.log(nextProps.images);
                 this.thumbnail = nextProps.images[0].pathToImage.toString();
             }
 

@@ -18,11 +18,11 @@ import java.util.Optional;
 @Service
 public class NotificationServiceImpl implements NotificationService {
     @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
     @Autowired
     private AuthenticationService authenticationService;
     @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     public final ApplicationEventPublisher eventPublisher;
 

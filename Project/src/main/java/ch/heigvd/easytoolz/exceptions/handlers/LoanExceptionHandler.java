@@ -1,6 +1,5 @@
 package ch.heigvd.easytoolz.exceptions.handlers;
 
-import ch.heigvd.easytoolz.exceptions.address.AddressFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
 import ch.heigvd.easytoolz.exceptions.loan.*;
 import org.springframework.http.HttpStatus;

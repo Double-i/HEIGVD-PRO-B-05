@@ -1,7 +1,6 @@
 package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
-import java.awt.*;
 
 @Entity
 public class ChatMessage {

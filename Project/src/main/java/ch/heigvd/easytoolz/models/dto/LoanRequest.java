@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.models.DTO;
+package ch.heigvd.easytoolz.models.dto;
 
 import java.util.Date;
 

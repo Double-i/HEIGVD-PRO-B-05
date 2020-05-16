@@ -1,30 +1,22 @@
 package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.*;
-import ch.heigvd.easytoolz.repositories.EZObjectRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
-import ch.heigvd.easytoolz.services.interfaces.StorageService;
 import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.views.AddressView;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.views.UserView;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,13 +26,15 @@ public class EZObjectController {
 
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    EZObjectService ezObjectService;
+    private EZObjectService ezObjectService;
 
     @Autowired
-    AuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     
     @GetMapping()
@@ -80,8 +74,6 @@ public class EZObjectController {
     {
         return ezObjectService.getObjectByOwner(username);
     }
-    
-    ObjectMapper mapper = new ObjectMapper();
 
     @PostMapping(value="/add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> add(@RequestParam(name = "object") String newObject,
@@ -159,7 +151,7 @@ public class EZObjectController {
         List<EZObject> objects = ezObjectService.getFiltered(names,owners,description,tags, pageno);
 
 
-        return objects.stream().map(obj -> convertToView(obj)).collect(Collectors.toList());
+        return objects.stream().map(this::convertToView).collect(Collectors.toList());
     }
     @GetMapping("filter/count")
     public ResponseEntity<Integer> getFilteredCount(
@@ -192,7 +184,7 @@ public class EZObjectController {
         User owner  = obj.getOwner();
         Address address = owner.getAddress();
 
-        EZObjectView view = new EZObjectView() {
+        return new EZObjectView() {
             @Override
             public int getID() {
                 return obj.getID();
@@ -258,7 +250,5 @@ public class EZObjectController {
                 };
             }
         };
-
-        return view;
     }
 }

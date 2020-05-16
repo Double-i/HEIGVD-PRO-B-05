@@ -175,7 +175,7 @@ public class EZObject {
 
     /**
      * Do not include the full owner in the JSON file when returned
-     * Join with the corresponding user {@link User#userName}
+     * Join with the corresponding user
      * Cannot be null
      */
     @JsonIgnore

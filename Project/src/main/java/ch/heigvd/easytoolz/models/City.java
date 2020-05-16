@@ -1,7 +1,5 @@
 package ch.heigvd.easytoolz.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity

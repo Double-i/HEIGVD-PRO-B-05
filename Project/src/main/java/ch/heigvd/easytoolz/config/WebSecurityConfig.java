@@ -2,7 +2,6 @@ package ch.heigvd.easytoolz.config;
 
 import ch.heigvd.easytoolz.components.EasyAuthenticationProvider;
 import ch.heigvd.easytoolz.filters.JwtRequestFilter;
-import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

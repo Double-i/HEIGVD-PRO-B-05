@@ -39,7 +39,7 @@ public class AddressServiceImpl implements AddressService {
 
         Optional<Address> optionalAddress = addressRepository.findById(id);
 
-        if (!optionalAddress.isPresent())
+        if (optionalAddress.isEmpty())
             throw new AddressNotFoundException(id);
 
         Address oldAddress = optionalAddress.get();
@@ -48,7 +48,7 @@ public class AddressServiceImpl implements AddressService {
         if (address.getCity() != null) {
             City city = cityService.loadByName(address.getCity().getCity());
             if(city == null)
-                city = cityService.storeCity(city);
+                city = cityService.storeCity(address.getCity());
             oldAddress.setCity(city);
         }
 

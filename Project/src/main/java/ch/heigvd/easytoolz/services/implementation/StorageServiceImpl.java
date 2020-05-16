@@ -1,8 +1,8 @@
 package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.config.FileStorageProperties;
-import ch.heigvd.easytoolz.exceptions.FileSystem.FileUploadException;
-import ch.heigvd.easytoolz.exceptions.FileSystem.StorageException;
+import ch.heigvd.easytoolz.exceptions.filesystem.FileUploadException;
+import ch.heigvd.easytoolz.exceptions.filesystem.StorageException;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.services.interfaces.StorageService;
@@ -19,8 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class StorageServiceImpl implements StorageService {
@@ -37,11 +35,6 @@ public class StorageServiceImpl implements StorageService {
         } catch (IOException e) {
             throw new Exception("Could not create directory at specified location");
         }
-    }
-
-    @Override
-    public Stream<Path> loadAll() {
-        return null;
     }
 
     @Override
@@ -85,11 +78,6 @@ public class StorageServiceImpl implements StorageService {
         {
             throw new FileUploadException("Could not store file with filename " + filename);
         }
-    }
-
-    @Override
-    public void loadMultiple(List<MultipartFile> files) {
-
     }
 
     @Override

@@ -1,7 +1,7 @@
 package ch.heigvd.easytoolz.services.interfaces;
 
-import ch.heigvd.easytoolz.models.DTO.LoanRequest;
-import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
+import ch.heigvd.easytoolz.models.dto.LoanRequest;
+import ch.heigvd.easytoolz.models.dto.PeriodRequest;
 import ch.heigvd.easytoolz.models.Loan;
 import ch.heigvd.easytoolz.models.State;
 import org.springframework.http.ResponseEntity;

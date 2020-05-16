@@ -5,7 +5,6 @@ import ch.heigvd.easytoolz.exceptions.errors.ApiError;
 import ch.heigvd.easytoolz.exceptions.user.UserAlreadyPresent;
 import ch.heigvd.easytoolz.exceptions.user.UserFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -38,7 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // old way
         //final String authorizationHeader = request.getHeader("Authorization");
         // todo : delete me ! mtn le token est récupérer via le cookie fourni automatiquement par le navigateur web.
-        Cookie accessCookie = getCookieByName(request.getCookies(), "accessToken");
+        Cookie accessCookie = getCookieByName(request.getCookies());
 
         String username = null;
         String jwt = null;
@@ -66,7 +66,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
-    private Cookie getCookieByName(Cookie[] cookies, String name ){
+    private Cookie getCookieByName(Cookie[] cookies){
         Cookie requestedCookie = null;
         if(cookies != null){
             for(Cookie cookie : cookies){

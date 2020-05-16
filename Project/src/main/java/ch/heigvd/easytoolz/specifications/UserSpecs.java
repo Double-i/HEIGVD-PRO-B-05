@@ -1,12 +1,9 @@
 package ch.heigvd.easytoolz.specifications;
 
-import ch.heigvd.easytoolz.models.User_;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.models.User_;
 import ch.heigvd.easytoolz.util.ServiceUtils;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.util.function.Predicate;
 
 public class UserSpecs extends DefaultSpecs{
     public static Specification<User> getFirstname(String firstname){

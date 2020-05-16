@@ -1,7 +1,6 @@
 package ch.heigvd.easytoolz.exceptions.handlers;
 
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;

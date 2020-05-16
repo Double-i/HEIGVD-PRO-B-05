@@ -13,7 +13,6 @@ import java.util.Date;
 import java.math.BigDecimal;
 import java.util.List;
 import ch.heigvd.easytoolz.models.State;
-import java.util.Set;
 
 /**
  *

@@ -2,6 +2,7 @@ package ch.heigvd.easytoolz.models;
 
 import javax.persistence.*;
 import java.awt.*;
+import java.util.Date;
 
 @Entity
 public class ChatMessage {
@@ -13,18 +14,23 @@ public class ChatMessage {
     private String content;
     private String sender;
     private String recipient;
-
+    private Date date;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_conversation", referencedColumnName = "ID")
     private Conversation fkConversation;
 
 
+    public Date getDate() {
+        return date;
+    }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
     public int getId() {
         return id;
     }
-
 
     public String getContent() {
         return content;

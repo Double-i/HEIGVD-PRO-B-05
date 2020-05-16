@@ -2,26 +2,18 @@ package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.exceptions.user.UserNotFoundException;
 import ch.heigvd.easytoolz.models.ChatMessage;
-import ch.heigvd.easytoolz.models.OutputMessage;
 import ch.heigvd.easytoolz.models.StateNotification;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.repositories.ChatRepository;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.NotificationService;
-import ch.heigvd.easytoolz.services.interfaces.UserService;
 import ch.heigvd.easytoolz.util.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.support.NativeMessageHeaderAccessor;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 
 @RestController

@@ -5,7 +5,6 @@ import {sendEzApiRequest} from "../common/ApiHelper";
 const SockJS = require("sockjs-client")
 const Stomp = require( "@stomp/stompjs")
 
-
 /**
  * A conversation between two Users
  * props contains
@@ -186,7 +185,7 @@ class Conversation extends React.Component
 
                         <li className="list-group-item text-right" style={this.senderStyle} ref={el => (this.messageRefs[i]) = el} key={i}>
                             {sender}
-                            <Message content={result[i].content} date={"sometime"}/>
+                            <Message content={result[i].content} date={result[i].date}/>
                         </li>
                     )
                 }
@@ -196,7 +195,7 @@ class Conversation extends React.Component
 
                         <li className="list-group-item text-left" style={this.recipientStyle} ref={el => (this.messageRefs[i]) = el}>
                             {recipient}
-                            <Message content={result[i].content} date={"sometime"}/>
+                            <Message content={result[i].content} date={result[i].date}/>
                         </li>
                     )
                 }
@@ -229,7 +228,7 @@ class Conversation extends React.Component
 
                 <li className="list-group-item text-right" style={this.senderStyle}>
                     {sender}
-                    <Message content={output.content} date={"sometime"}/>
+                    <Message content={output.content} date={output.date}/>
                 </li>
             )
         }
@@ -262,8 +261,10 @@ class Conversation extends React.Component
             content : content_message,
             recipient :  recipient,
             sender: sender,
-            fkConversation : this.props.conversation
+            fkConversation : this.props.conversation,
+            date:Date.now()
         }
+        console.log(Date.now())
         this.client.send('/EZChat/'+message.fkConversation.id+'/private',{},JSON.stringify(message))
     }
 

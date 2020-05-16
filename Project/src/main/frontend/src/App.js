@@ -16,8 +16,6 @@ import SignIn from './signIn/SignIn'
 
 import Map from './searchTools/map'
 import ToolDetails from './searchTools/toolDetails'
-import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
-import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AdminPage from "./admin/AdminPage";
 import UserToolsList from "./userDashboard/userTools/UserToolsList";
 
@@ -31,6 +29,7 @@ import SearchTools from "./searchTools/searchTools";
 
 
 import ToolForm from "./toolsUtil/toolForm";
+import LoansManagement from "./userDashboard/loanManagement/LoansManagement";
 
 const SESSION_REFRESH_ENDPOINT = "/authrefresh"
 
@@ -105,7 +104,7 @@ function App() {
                                     <NotRigthToBeHere/>
                                 )}
                             </Route>
-                            <Route exact path="/disconnect"></Route>
+                            <Route exact path="/disconnect"/>
                             <Route exact path="/signup">
                                 {user.session.isUserLogin() ? (
                                     <AlreadyConnect/>
@@ -121,9 +120,9 @@ function App() {
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails/>
                             </Route>
-                            <Route exact path="/dashboard/myloans/borrower">
+                            <Route exact path="/dashboard/myloans/:role">
                                 {user.session.isUserLogin() ? (
-                                    <BorrowerLoans/>
+                                    <LoansManagement />
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
@@ -156,14 +155,6 @@ function App() {
                                 )}
                             </Route>
 
-
-                            <Route exact path="/dashboard/myloans/owner">
-                                {user.session.isUserLogin() ? (
-                                    <OwnerLoans/>
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
                             <Route exact path="/AdminPage">
                                 {user.session.isUserAdmin() ? (
                                     <AdminPage/>

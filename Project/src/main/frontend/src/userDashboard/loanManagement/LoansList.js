@@ -20,7 +20,7 @@ function formatAdress(address) {
 function LoansListItem(props) {
     return (
         <Fragment>
-            <Media as="li">
+
                 <Row className="justify-content-md-center">
                     <Col xs="4" sm="4" md="3" lg="2">
                         <Image
@@ -82,7 +82,7 @@ function LoansListItem(props) {
                         ))}
                     </Col>
                 </Row>
-            </Media>
+        
 
             <hr/>
         </Fragment>)

@@ -17,6 +17,14 @@ class UserToolsList extends React.Component {
         }
     }
 
+    removeTool(tool){
+        const newToolsList = [...this.state.tools]
+        const idxTool = newToolsList.indexOf(tool)
+        if(idxTool !== -1){
+            newToolsList.splice(idxTool,1)
+            this.setState({tools: newToolsList})
+        }
+    }
 
     componentDidMount() {
         //get user tools
@@ -41,6 +49,7 @@ class UserToolsList extends React.Component {
                     hideOwner={true}
                     hideBorrowButton={true}
                     hideEditButton={false}
+                    deleteButtonCB={(tool) => this.removeTool(tool)}
                 />
             </Container>
         )

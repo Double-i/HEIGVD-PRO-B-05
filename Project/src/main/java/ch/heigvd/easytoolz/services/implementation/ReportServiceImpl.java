@@ -4,10 +4,13 @@ import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.models.DTO.ReportRequest;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
+import ch.heigvd.easytoolz.repositories.NotificationRepository;
 import ch.heigvd.easytoolz.repositories.ReportRepository;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
+import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import ch.heigvd.easytoolz.services.interfaces.ReportService;
+import ch.heigvd.easytoolz.util.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +21,22 @@ import java.util.List;
 @Service
 public class ReportServiceImpl implements ReportService {
     @Autowired
-    ReportRepository reportRepository;
+    private ReportRepository reportRepository;
 
     @Autowired
-    EZObjectRepository ezObjectRepository;
+    private EZObjectRepository ezObjectRepository;
 
     @Autowired
-    AuthenticationService authService;
+    private AuthenticationService authService;
 
     @Autowired
-    UserRepository user;
+    private UserRepository user;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
-    public ResponseEntity<String> store(ReportRequest newReport) {
+    public Report store(ReportRequest newReport) {
 
         // Check tool exists
         EZObject obj = ezObjectRepository.findByID(newReport.getToolId());
@@ -42,9 +48,16 @@ public class ReportServiceImpl implements ReportService {
         // Save report
         Report report = new Report(ReportType.valueOf(newReport.getReportType()),obj, authService.getTheDetailsOfCurrentUser());
 
-        reportRepository.save(report);
+        report = reportRepository.save(report);
 
-        return new ResponseEntity<>(" {\"status\": \"ok\",\"msg\": \"The report has been stored\"}", HttpStatus.OK);
+        notificationService.storeNotification(ServiceUtils.createNotification(
+                StateNotification.SIGNALEMENT,
+                report.getEZObject().getOwner(),
+                report.getEZObject().getName(),
+                report.getReportType().getReportType()
+        ));
+
+        return report;
     }
 
     @Override

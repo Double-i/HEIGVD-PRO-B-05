@@ -1,25 +1,9 @@
 import {default as React} from "react";
-import {sendEzApiRequest} from "../../common/ApiHelper";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import ToolForm from "../../toolsUtil/toolForm";
 
 class EditToolPanel extends React.Component {
-
-    constructor(props){
-        super(props);
-        this.state = {
-        }
-        this.onChange = this.onChange.bind(this);
-        this.sendValidation = this.sendValidation.bind(this)
-    }
-
-    sendValidation() {
-
-    }
-    onChange(date){
-
-    }
 
     render() {
         return (

@@ -1,7 +1,7 @@
 import React from 'react'
 import {useState} from 'react'
 import './App.css'
-import {Col, Container, NavDropdown, Row} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
 import {
     BrowserRouter as Router,
@@ -16,8 +16,6 @@ import SignIn from './signIn/SignIn'
 
 import Map from './searchTools/map'
 import ToolDetails from './searchTools/toolDetails'
-import BorrowerLoans from './userDashboard/loanManagement/BorrowerLoans'
-import OwnerLoans from './userDashboard/loanManagement/OwnerLoans'
 import AdminPage from "./admin/AdminPage";
 import UserToolsList from "./userDashboard/userTools/UserToolsList";
 
@@ -31,6 +29,7 @@ import SearchTools from "./searchTools/searchTools";
 
 
 import ToolForm from "./toolsUtil/toolForm";
+import LoansManagement from "./userDashboard/loanManagement/LoansManagement";
 
 const SESSION_REFRESH_ENDPOINT = "/authrefresh"
 
@@ -45,6 +44,7 @@ function App() {
 
     // Log out the user if his session has expired
     if(session.isUserLogin()) {
+
         if (session.isExpired()) {
             session.logout()
         } else {
@@ -104,7 +104,7 @@ function App() {
                                     <NotRigthToBeHere/>
                                 )}
                             </Route>
-                            <Route exact path="/disconnect"></Route>
+                            <Route exact path="/disconnect"/>
                             <Route exact path="/signup">
                                 {user.session.isUserLogin() ? (
                                     <AlreadyConnect/>
@@ -120,9 +120,9 @@ function App() {
                             <Route exact path="/tools/:toolId">
                                 <TmpToolDetails/>
                             </Route>
-                            <Route exact path="/dashboard/myloans/borrower">
+                            <Route exact path="/dashboard/myloans/:role">
                                 {user.session.isUserLogin() ? (
-                                    <BorrowerLoans/>
+                                    <LoansManagement />
                                 ) : (
                                     <NotRigthToBeHere/>
                                 )}
@@ -155,14 +155,6 @@ function App() {
                                 )}
                             </Route>
 
-
-                            <Route exact path="/dashboard/myloans/owner">
-                                {user.session.isUserLogin() ? (
-                                    <OwnerLoans/>
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
                             <Route exact path="/AdminPage">
                                 {user.session.isUserAdmin() ? (
                                     <AdminPage/>
@@ -182,7 +174,7 @@ function App() {
                             <Route component={UnkownPage} />
                         </Switch>
                     </Container>
-
+           
 
             </Router>
 
@@ -216,13 +208,13 @@ function AlreadyConnect() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
             <br/>
-            <p>
+            <div>
                 <h3> Vous êtes déjà connecté. Vous ne pouvez donc pas accéder à cette page.</h3>
                 <img
                     alt="forbideen"
                     src="/useless.png"
                 />
-            </p>
+            </div>
         </Container>
     )
 }

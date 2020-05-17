@@ -19,6 +19,13 @@ public class ServiceUtils {
         return "%" + s + "%";
     }
 
+    /**
+     * create a new notification
+     * @param stateNotification State of the notification
+     * @param recipient
+     * @param args
+     * @return
+     */
     public static Notification createNotification(StateNotification stateNotification, User recipient, String ... args){
         return new Notification(String.format(stateNotification.getMessage(), args), stateNotification, recipient);
     }

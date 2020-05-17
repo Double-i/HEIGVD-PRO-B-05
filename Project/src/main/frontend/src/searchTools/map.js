@@ -2,6 +2,7 @@ import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 import React from "react"
 import {sendEzApiRequest} from "../common/ApiHelper";
 import { usePosition } from 'use-position';
+import MarkerClusterer from 'node-js-marker-clusterer';
 
 const mapStyles = {
     width :  '80%'
@@ -14,7 +15,7 @@ const mapStyles = {
     }
 }*/
 
-export class MapContainer extends React.Component {
+class MapContainer extends React.Component {
 
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
@@ -52,10 +53,11 @@ export class MapContainer extends React.Component {
     onMarkerClick = (props, marker, e) => {
         console.log("Clicked on marker !");
         this.setState({
-            selectedTool: this.state.tools.find(tool => tool.name ===props.name),
+            selectedTool: this.props.tools.find(tool => tool.name === props.name),
             activeMarker: marker,
             showingInfoWindow: true
         });
+        console.log(this.state.selectedTool);
     }
 
     onMapClicked = (props) => {
@@ -67,16 +69,37 @@ export class MapContainer extends React.Component {
         }
     };
 
+    getToolsFromMarker(selectedTool)
+    {
+        console.log(selectedTool);
+        if(selectedTool.owner !== undefined)
+        {
+            let tools = this.props.tools.filter(tool => {
+                console.log(tool);
+                console.log(selectedTool);
+                return tool.owner.address.lat == selectedTool.owner.address.lat &&
+                    tool.owner.address.lng == selectedTool.owner.address.lng
+            })
+            console.log(tools);
+            return tools.map(tool => {
+                return <div>
+                    <h1>{tool === undefined ? "" : tool.name}</h1>
+                    <p>
+                        {tool === undefined ? "" : tool.description}
+                    </p>
+                </div>
+            })
+        }
+    }
+
     getInfoWindow()
     {
+        console.log("Reloading InfoWindow")
         return <InfoWindow
         marker = {this.state.activeMarker}
         visible = {this.state.showingInfoWindow}>
         <div>
-        <h1>{this.state.selectedTool === undefined ? "" : this.state.selectedTool.name}</h1>
-        <p>
-            {this.state.selectedTool === undefined ? "" : this.state.selectedTool.description}
-        </p>
+            {this.getToolsFromMarker(this.state.selectedTool)}
         </div>
         </InfoWindow>;
     }
@@ -100,9 +123,9 @@ export class MapContainer extends React.Component {
         return <Map
                  key={0}
                  google={this.props.google}
-                 zoom={10}
+                 zoom={5}
                  style={mapStyles}
-                 initialCenter={{ lat: /*this.props.position.lat*/40, lng: /*this.props.position.lng*/40}}
+                 initialCenter={{ lat: /*this.props.position.lat*/45, lng: /*this.props.position.lng*/30}}
                  onClick={this.onMapClicked}
                >
                {this.getMarkers()}

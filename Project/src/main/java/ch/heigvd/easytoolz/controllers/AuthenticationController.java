@@ -120,8 +120,8 @@ class AuthenticationController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        return ResponseEntity.ok().headers(responseHeaders).body("ok");
+        // TODO : mauvaise réponse ne devrait pas être du plain text
+        return ResponseEntity.ok().headers(responseHeaders).body("{\"msg\":\"ok\"}");
 
     }
-
 }

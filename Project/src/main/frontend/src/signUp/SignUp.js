@@ -1,6 +1,5 @@
 import * as React from 'react'
 import ProfilForm from "../userDashboard/editProfil/ProfilForm";
-import {useContext, useState, useEffect} from "react";
 
 const SIGNUP_ENDPOINT = '/signup'
 function SignUp(props){

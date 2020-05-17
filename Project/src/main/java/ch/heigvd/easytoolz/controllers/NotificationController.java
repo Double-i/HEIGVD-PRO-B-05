@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
 @RequestMapping("/notifications")
@@ -52,6 +53,7 @@ public class NotificationController {
      */
     @GetMapping("/{username}")
     public SseEmitter subscribeToNotifications(@PathVariable String username) {
+
         User user = authService.getTheDetailsOfCurrentUser();
         System.out.println("Logged in user : " + user);
         if (user == null || !user.getUserName().equals(username))
@@ -59,7 +61,6 @@ public class NotificationController {
 
         // Create a new emitter for the user
         SseEmitter emitter = new SseEmitter();
-
 
         // Get the user list of emitters - the user might have several emitter if he has opened several tabs in his
         // web browser
@@ -74,12 +75,14 @@ public class NotificationController {
 
         System.out.println("Subscribe user : " + username);
 
-        emitter.onCompletion(() ->{
-            //this.emitters.remove(pair);
+        emitter.onCompletion(() -> this.emitters.remove(emitter));
+        emitter.onTimeout(() -> {
+            emitter.complete();
             this.emitters.get(username).remove(emitter);
         });
 
         return emitter;
+
     }
     /**
      * This method is used to send the notification to all the users who have been registered by subscribeToNotifications
@@ -89,6 +92,7 @@ public class NotificationController {
 
     @EventListener
     public void onNotification(Notification notification) {
+
 
         String username = notification.getRecipient().getUserName();
 

@@ -1,4 +1,4 @@
-import {default as React, useContext, useState} from "react";
+import {default as React} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Calendar from 'react-calendar';
@@ -41,12 +41,6 @@ class BorrowPanel extends React.Component {
 
             }, (error) => {
                 alert("Erreur dans l'envoi de la requete : " + error.errorCode);
-
-                /*if(error.errorCode === 403 || error.errorCode === 404 ) {
-                    alert("Erreur dans l'envoi de la requete : " + error.errorCode);
-                } else{
-                    alert("Erreur dans l'envoi de la requete : " + error.errorCode);
-                }*/
             })
     }
 

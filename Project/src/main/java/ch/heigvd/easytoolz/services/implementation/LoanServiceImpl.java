@@ -117,14 +117,24 @@ public class LoanServiceImpl implements LoanService {
                 Conversation conv = new Conversation(loan.getOwner(), loan.getBorrower().getUserName(), loan.getPkLoan());
                 conversationRepository.save(conv);
                 done = updateLoanStateByOwner(loan, newState);
+                if(done){
+                    notificationService.storeNotification(ServiceUtils.createNotification(
+                            StateNotification.ACCEPTATION_DEMANDE_EMPRUNT,
+                            loan.getBorrower(),
+                            loan.getEZObject().getName()
+                    ));
+                }
                 break;
             case refused:
-                notificationService.storeNotification(ServiceUtils.createNotification(
-                        StateNotification.REFUS_DEMANDE_EMPRUNT,
-                        loan.getBorrower(),
-                        loan.getEZObject().getName()
-                ));
+
                 done = updateLoanStateByOwner(loan, newState);
+                if(done){
+                    notificationService.storeNotification(ServiceUtils.createNotification(
+                            StateNotification.REFUS_DEMANDE_EMPRUNT,
+                            loan.getBorrower(),
+                            loan.getEZObject().getName()
+                    ));
+                }
                 break;
             case cancel:
                 done = cancelLoan(loan);
@@ -132,6 +142,7 @@ public class LoanServiceImpl implements LoanService {
         }
         if (!done)
             throw new RuntimeException("LoanService - Something went wrong while trying to update loan state");
+
 
         return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"The loans has been\"}", HttpStatus.OK);
     }

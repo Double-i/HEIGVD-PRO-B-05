@@ -12,7 +12,7 @@ public interface ReportService {
      * Store in db a Report. It checks the date, the availabilty of the tools and the other provided informations
      * @param newReport Report
      */
-    ResponseEntity<String> store(ReportRequest newReport);
+    Report store(ReportRequest newReport);
 
     /**
      * Get reports where the user is signaled (as a reported or reporter user)

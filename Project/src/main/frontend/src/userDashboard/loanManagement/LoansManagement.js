@@ -1,15 +1,15 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import {Container, Modal} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
+import {withRouter} from 'react-router-dom'
 import LoansList from './LoansList'
-import {SessionContext} from "../../common/SessionHelper";
-import * as moment from "moment";
 import {sendEzApiRequest} from "../../common/ApiHelper";
+import * as moment from 'moment'
+import {SessionContext} from '../../common/SessionHelper'
 import {STATE} from "../../common/State";
-import ShortenLoanModal from "./ShortenLoanModal";
-import {withRouter} from "react-router-dom";
 import NewPeriodModal from "./NewPeriodModal";
-import {ROLE} from "../../common/Role";
+import ShortenLoanModal from "./ShortenLoanModal";
+import {isBorrower, isOwner, ROLE} from "../../common/Role";
 
 const LOANS_REQUEST = "/loans/find/user/"
 const LOANS_UPDATE_STATE_REQUEST = "/loans/"
@@ -18,25 +18,32 @@ const LOANS_UPDATE_STATE_REQUEST = "/loans/"
 let containerToUpdate;
 let containerMethodtoUpdate;
 
-function OwnerLoans(props) {
-    const session = useContext(SessionContext);
-    const username = session.session.getUserName();
+function LoansManagement(props) {
+
+    const session = useContext(SessionContext)
+    const username = session.session.getUserName()
     const [pendingLoans, setPendingLoans] = useState([]);
     const [inComingLoans, setInComingLoans] = useState([]);
     const [onGoingLoans, setOnGoingLoans] = useState([]);
     const [passedLoans, setPassedLoans] = useState([]);
     const [refusedLoans, setRefusedLoans] = useState([]);
-
     const [showShortenLoansModal, setShowShortenLoansModal] = useState(false);
-    const [showNewPeriodModal, setShowNewPeriodModal] = useState(false)
+    const [showNewPeriodModal, setShowNewPeriodModal] = useState(false);
 
-    const [loan, setLoan] = useState({validPeriod: moment(), periods: []}) // should be defined because of ShortenLoanModal
+    const [loan, setLoan] = useState({validPeriod: moment(), periods: []}); // should be defined because of ShortenLoanModal
+    const role = props.match.params.role
 
-    // Get loans data
+    // If the url param isn't correct we redirect the user on the home page
+    if(role !== "borrower" && role !== "owner"){
+        props.history.push("/home")
+    }
+
     useEffect(() => {
+
+        // TODO mettre une variable pour borrower en fonction de ce qu'il affiche
         // Request for pending loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower: false,
+            borrower: isBorrower(role),
             state: STATE.pending,
             startGT: moment().add("1", "days").format('YYYY-MM-DD')
         }).then((result) => {
@@ -47,7 +54,7 @@ function OwnerLoans(props) {
 
         // Request for incoming loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower: false,
+            borrower:  isBorrower(role),
             state: STATE.accepted,
             startGT: moment().add("1", "days").format('YYYY-MM-DD')
         }).then((result) => {
@@ -58,10 +65,11 @@ function OwnerLoans(props) {
 
         // Request for ongoing loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower: false,
+            borrower:  isBorrower(role),
             state: STATE.accepted,
-            startLT: moment().format('YYYY-MM-DD'),
+            startLT: moment().add(1,"days").format('YYYY-MM-DD'),
             endGT: moment().format('YYYY-MM-DD')
+
         }).then((result) => {
             setOnGoingLoans(result)
         }, (error) => {
@@ -70,7 +78,7 @@ function OwnerLoans(props) {
 
         // Request for passed loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower: false,
+            borrower:  isBorrower(role),
             state: STATE.accepted,
             endLT: moment().format('YYYY-MM-DD')
         }).then((result) => {
@@ -81,12 +89,12 @@ function OwnerLoans(props) {
 
         // Request for refused loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower: false,
+            borrower:  isBorrower(role),
             state: STATE.refused,
         }).then((result) => {
 
             sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-                borrower: false,
+                borrower:  isBorrower(role),
                 state: STATE.pending,
                 startLT: moment().add(1,"days").format('YYYY-MM-DD')
             }).then((resultPassedPending) => {
@@ -98,10 +106,27 @@ function OwnerLoans(props) {
         }, (error) => {
             console.log(error)
         })
-    }, []); // the array is to avoid infinite loop https://stackoverflow.com/a/54923969
+
+
+    }, []);
 
     const btnDisplayToolClicked = (loan) => {
         props.history.push(`/tooldetails/${loan.ezobject.id}`)
+    }
+    const btnCancelLoanClicked = (loan) => {
+
+        sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/state`, 'PATCH', {
+            state: STATE.cancel
+        }).then((result) => {
+            const newPendingLoans = [...pendingLoans]; // make a separate copy of the array
+            const index = newPendingLoans.indexOf(loan)
+            if (index !== -1) {
+                newPendingLoans.splice(index, 1);
+                setPendingLoans(newPendingLoans)
+            }
+        }, (error) => {
+            console.log(error)
+        })
     }
 
     const updateLoanState = (loan, state) => {
@@ -119,6 +144,7 @@ function OwnerLoans(props) {
             console.log(error)
         })
     };
+
     /**
      * Return a true if the rLoan and rLoan periods overlapped
      *
@@ -172,6 +198,14 @@ function OwnerLoans(props) {
         })
     };
 
+
+    const btnShowPeriodClicked = (loan) => {
+        console.log("wtf")
+        // Show modal
+        setLoan(loan)
+        setShowShortenLoansModal(true)
+    };
+
     const btnRefusedClicked = (loan) => {
         updateLoanState(loan, STATE.refused).then((result) => {
             const newRefusedLoans = [...refusedLoans]
@@ -183,26 +217,18 @@ function OwnerLoans(props) {
         })
     };
 
-    const btnShowPeriodClicked = (loan) => {
-        // Show modal
-        setLoan(loan)
-        setShowShortenLoansModal(true)
-
-    };
-
     const btnPassBackClicked = (loan) => {
         setLoan(loan)
         setShowNewPeriodModal(true)
     };
 
+
     const updatePeriodState = (loan, period, state) => {
+
         return sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/periods/${period.id}/state`, 'PATCH', {
             state: state
         }).then(result => {
-            const newContainerToUpdate = [...containerToUpdate]
-            const idxLoan = newContainerToUpdate.indexOf(loan)
-            const idxPeriod = newContainerToUpdate[idxLoan].periods.indexOf(period)
-            const newPeriod = newContainerToUpdate[idxLoan].periods[idxPeriod]
+            const newContainerToUpdate = [...containerToUpdate];
             period.state = state
             containerMethodtoUpdate(newContainerToUpdate)
         }, error => {
@@ -216,6 +242,13 @@ function OwnerLoans(props) {
 
     const acceptPeriod = (loan, period) => {
         updatePeriodState(loan, period, STATE.accepted)
+        const newContainerToUpdate = [...containerToUpdate]
+        const idxLoan = newContainerToUpdate.indexOf(loan)
+        if(idxLoan !== -1){
+            newContainerToUpdate[idxLoan].validPeriod = period
+            containerMethodtoUpdate(newContainerToUpdate)
+        }
+
     };
 
     const cancelPeriod = (loan, period) => {
@@ -228,42 +261,60 @@ function OwnerLoans(props) {
         }).then(result => {
             const newContainerToUpdate = [...containerToUpdate]
             const idxLoan = newContainerToUpdate.indexOf(loan)
+
+            // filter the periods to get only the ones created by the borrower
+            // then update their state to cancel.
+            newContainerToUpdate[idxLoan].periods.filter((period, idx) => period.creator === ROLE.borrower && period.state === STATE.pending)
+                .forEach((period, idx) => {
+                    period.state = STATE.cancel
+                })
+
             newContainerToUpdate[idxLoan].periods.push({
                 id: result.id,
                 dateStart: loan.validPeriod.dateStart,
                 dateEnd: newEndDate,
-                creator: "owner",
+                creator: role,
                 state: STATE.pending
             })
+
             containerMethodtoUpdate(newContainerToUpdate)
 
         }, error => {
             console.log(error)
         })
     };
-
+    // TODO remplace les owner and Role.borrower par des variable
     return (
+
         <Container>
             <NewPeriodModal show={showNewPeriodModal}
                             onHide={() => setShowNewPeriodModal(false)}
                             addPeriod={addPeriod}
                             loan={loan}
             />
+
             <ShortenLoanModal show={showShortenLoansModal}
                               onHide={() => setShowShortenLoansModal(false)}
                               loan={loan}
-                              role={ROLE.owner}
+                              role={role}
                               refusePeriod={refusePeriod}
                               acceptPeriod={acceptPeriod}
                               cancelPeriod={cancelPeriod}
-
             />
-
             <h3>Demande d'emprunt en attente</h3>
             <LoansList
-                loansData={pendingLoans}
-                isOwner={true}
-                actionButtons={[
+                loansData={pendingLoans.map((value, number) => value)}
+                isOwner={isOwner(role)}
+                actionButtons={(isBorrower(role))?[
+                    {
+                        action: btnDisplayToolClicked,
+                        label: 'Afficher l\'outil',
+                    },
+                    {
+                        action: btnCancelLoanClicked,
+                        label: 'Annuler',
+                    },
+                ]: [
                     {
                         action: btnDisplayToolClicked,
                         label: 'Afficher',
@@ -281,7 +332,7 @@ function OwnerLoans(props) {
             <h3>Emprunt à venir</h3>
             <LoansList
                 loansData={inComingLoans}
-                isOwner={true}
+                isOwner={isOwner(role)}
                 actionButtons={[
                     {
                         action: btnDisplayToolClicked,
@@ -309,7 +360,7 @@ function OwnerLoans(props) {
             <h3>Emprunt en cours</h3>
             <LoansList
                 loansData={onGoingLoans}
-                isOwner={true}
+                isOwner={isOwner(role)}
                 actionButtons={[
                     {
                         action: btnDisplayToolClicked,
@@ -337,7 +388,7 @@ function OwnerLoans(props) {
             <h3>Emprunts passés </h3>
             <LoansList
                 loansData={passedLoans}
-                isOwner={true}
+                isOwner={isOwner(role)}
                 actionButtons={[
                     {
                         action: btnDisplayToolClicked,
@@ -348,7 +399,7 @@ function OwnerLoans(props) {
             <h3>Demandes refusées </h3>
             <LoansList
                 loansData={refusedLoans}
-                isOwner={true}
+                isOwner={isOwner(role)}
                 actionButtons={[
                     {
                         action: btnDisplayToolClicked,
@@ -360,4 +411,4 @@ function OwnerLoans(props) {
     )
 }
 
-export default withRouter(OwnerLoans)
+export default withRouter(LoansManagement)

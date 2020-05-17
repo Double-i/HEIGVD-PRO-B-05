@@ -102,18 +102,19 @@ public class EZObjectController {
         ezObjectService.updateObject(obj, files);
         return new ResponseEntity<>("Object has been saved", HttpStatus.OK);
     }
-    /*@PostMapping("/update")
-    public ResponseEntity<String> update(@RequestBody EZObject o)
-    {
-
-        ezObjectService.updateObject(o);
-        return new ResponseEntity<>("Object has been updated",HttpStatus.OK);
-    }*/
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Integer id) throws Exception {
         ezObjectService.deleteObject(id);
-        return new ResponseEntity<>("Object has been deleted",HttpStatus.OK);
+        // TODO do real response
+        return new ResponseEntity<>("{\"msg\":\"Object has been deleted\"}",HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/image/{id}")
+    public ResponseEntity<String> deleteImage(@PathVariable int id) throws Exception
+    {
+        ezObjectService.deleteImage(id);
+        return new ResponseEntity<>("Image has been deleted",HttpStatus.OK);
     }
 
     @GetMapping("find/name/{objectName}")

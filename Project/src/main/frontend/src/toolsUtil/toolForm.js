@@ -3,7 +3,8 @@ import {Formik} from "formik";
 import {Button, Form} from "react-bootstrap";
 import {sendEzApiRequest, sendForm} from "../common/ApiHelper";
 import * as yup from "yup";
-
+import {Col,Row,Container} from "react-bootstrap";
+import {withRouter} from "react-router"
 
 class ToolForm extends React.Component {
 
@@ -14,23 +15,31 @@ class ToolForm extends React.Component {
 
         if(this.props.action === 'add'){
             this.state = {
+                action :'add',
                 toolId: '',
                 toolName: '',
                 toolDescription: '',
                 toolTags: '',
-                toolImage: '',
+                toolImage:'',
+                displayImages : [],
                 tags: [],
-                ApiRequest : '/objects/add'
+                ApiRequest : '/objects/add',
+                imgToDelete: []
             };
         }else if(this.props.action === 'update'){
+
             this.state = {
+                action :'update',
                 toolId: this.props.tool.id,
                 toolName: this.props.tool.name,
                 toolDescription: this.props.tool.description,
                 toolTags: this.props.tool.objectTags,
-                toolImage: this.props.tool.toolImage,
+                displayImages : [],
+                toolImage:'',
                 tags: [],
-                ApiRequest : '/objects/update'
+                ApiRequest : '/objects/update',
+                imgToDelete: []
+
             };
         }
         this.sendToolForm = this.sendToolForm.bind(this);
@@ -54,10 +63,28 @@ class ToolForm extends React.Component {
 
         const formData = new FormData();
         formData.append('object', JSON.stringify(data));
-        formData.append('image', values.toolImage);
+        for (let i = 0; i < values.toolImage.length; i++) {
+            formData.append(`image`, values.toolImage[i])
+        }
 
         for (let p of formData.entries()){
             console.log(p)
+        }
+
+        console.log(this.state.imgToDelete)
+        for (let i of this.state.imgToDelete)
+        {
+
+            if(i !== null)
+            {
+                sendEzApiRequest("/objects/delete/image/"+i,'DELETE').then( result => {
+                    console.log("Image deleted")
+                },
+                error => {
+                console.log(error)
+                })
+            }
+
         }
         // A voir en fonction de notre API
         sendForm(this.state.ApiRequest, 'POST', formData
@@ -65,6 +92,8 @@ class ToolForm extends React.Component {
             (result) => {
                 console.log("result  :")
                 console.log(result)
+                this.props.history.push("./toolList")
+
             },
             (errors) => {
                 console.log("errors  :")
@@ -72,17 +101,10 @@ class ToolForm extends React.Component {
             }
         ).then(
             alert("Opération réussie!")
-        ).then(
-            //this.props.history.push("DashBoard")
-            //return <Redirect to={'DashBoard'} />
         )
     }
 
     componentDidMount() {
-
-        console.log("mounted !")
-        console.log(this.props.tool)
-        console.log(this.state)
 
         sendEzApiRequest(this.TAGS_URI)
             .then( (response) => {
@@ -93,6 +115,25 @@ class ToolForm extends React.Component {
                     this.setState({tags: response.map((value) => value.name)})
                 }
             })
+
+        if(this.state.action==="update")
+        {
+            let images = []
+            for(let i  = 0; i < this.props.tool.images.length; i++)
+            {
+                console.log(i)
+                let temp = this.props.tool.images[i];
+                images.push(
+                    {
+                        id:temp.id,
+                        filename:temp.pathToImage.toString(),
+                        url:"http://127.0.0.1:8080/api/image/"+temp.pathToImage.toString(),
+                        state:"updateAble"
+                    }
+                )
+                this.setState({displayImages:images})
+            }
+        }
     }
 
     schema = yup.object().shape({
@@ -105,7 +146,57 @@ class ToolForm extends React.Component {
         toolTags: yup.array().of(yup.string())
             .min(1, 'Minimum 1 catégorie!'),
     })
+    addNewImage(id,url,filename,state)
+    {
+        let images = this.state.displayImages;
+        images.push({id,url,filename,state});
+        this.setState({displayImages:images})
+    }
+    deleteImage(key,id)
+    {
+        let images = this.state.displayImages;
+        let toDelete = this.state.imgToDelete;
 
+        toDelete.push(id);
+        images.splice(key,1)
+
+        this.setState({displayImages:images,imgToDelete : toDelete})
+    }
+    displayGrid()
+    {
+        let images = this.state.displayImages
+        return (
+            <Container>
+                <Row>
+                    {
+                        images.length > 0 ? (
+                                images.map((image,key) =>
+                                    <div>
+                                        <img src={ image.url}  style={{height:"100px",width:"100px"}}/>
+                                        <img styles=
+                                                 {
+                                                     {
+                                                         position:"absolute",
+                                                         right: 5,
+                                                         top: 5,
+                                                     }
+                                                 }
+                                             src="https://img.icons8.com/office/16/000000/close-window.png"
+                                             onClick={() => {
+                                                this.deleteImage(key,image.id);
+                                             }}
+                                        />
+                                    </div>
+                                )
+                            ):
+                            (
+                                null
+                            )
+                    }
+                </Row>
+            </Container>
+        )
+    }
     render() {
         return(
             <>
@@ -216,13 +307,27 @@ class ToolForm extends React.Component {
                                     type="file"
                                     placeholder="Photo de l'outil"
                                     onChange={(event) => {
+                                        let paths = [];
+                                        let files =[];
+                                        for( let i = 0; i < event.target.files.length; i++)
+                                        {
+                                            paths.push(URL.createObjectURL(event.target.files[i]));
+                                            this.addNewImage(null,URL.createObjectURL(event.target.files[i]),event.target.files[i],"new")
+
+                                        }
                                         setFieldValue(
                                             'toolImage',
-                                            event.currentTarget.files[0]
+                                            event.currentTarget.files
                                         )
                                     }}
+                                    multiple
                                 />
                             </Form.Group>
+
+                            {
+                                this.displayGrid()
+                            }
+
                             <Button
                                 variant="primary"
                                 type="submit"
@@ -234,9 +339,10 @@ class ToolForm extends React.Component {
                         </Form>
                     )}
                 </Formik>
+
             </>
         )
     }
 }
 
-export default ToolForm;
+export default  withRouter(ToolForm);

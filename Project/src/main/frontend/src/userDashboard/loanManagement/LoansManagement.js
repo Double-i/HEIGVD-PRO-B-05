@@ -282,10 +282,18 @@ function LoansManagement(props) {
             console.log(error)
         })
     };
+    const getPageTitle = () => {
+        if(role === "borrower"){
+            return "Vos demande d'emprunts (coté emprunteur)"
+        }else {
+            return "Les demandes d'emprunts sur vos outils (coté propriétaire)"
+        }
+
+    }
 
     return (
-
         <Container>
+            <h2>{getPageTitle()}</h2>
             <NewPeriodModal show={showNewPeriodModal}
                             onHide={() => setShowNewPeriodModal(false)}
                             addPeriod={addPeriod}

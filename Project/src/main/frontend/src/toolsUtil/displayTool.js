@@ -2,7 +2,8 @@ import Button from "react-bootstrap/Button";
 import * as React from "react";
 import BorrowPanel from "../searchTools/BorrowPanel";
 import EditToolPanel from "../userDashboard/editTools/EditToolPanel";
-import {sendEzApiRequest} from "../common/ApiHelper";
+import {IMG_API_URL, sendEzApiRequest} from "../common/ApiHelper";
+import {formatString} from "../common/Utils";
 
 /**
  * Display a tool
@@ -86,7 +87,7 @@ class DisplayTool extends React.Component {
                 <div className="col-2">
                     <img
                         style={{width: '100px', height : '100px'}}
-                        src={"http://127.0.0.1:8080/api/image/"+this.thumbnail}
+                        src={formatString("{0}/{1}",IMG_API_URL, this.thumbnail)}
                     />
                 </div>
                 <div className="col-2">

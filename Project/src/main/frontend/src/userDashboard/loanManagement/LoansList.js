@@ -7,6 +7,8 @@ import {
 } from 'react-icons/fa'
 import * as moment from 'moment'
 import {transformState} from "../../common/State";
+import {formatString} from "../../common/Utils";
+import {IMG_API_URL} from "../../common/ApiHelper";
 
 /**
  * This method is used to display the adresse properly - Street, city (district - country)
@@ -16,6 +18,15 @@ import {transformState} from "../../common/State";
 function formatAdress(address) {
     return `${address.address} ${address.city.city} (${address.district} - ${address.city.country.country})`
 }
+function getThumbnail(tool){
+    if(tool.images.length > 0 )
+    {
+        return tool.images[0].pathToImage.toString();
+    }
+    else
+        return "default.png";
+
+}
 
 function LoansListItem(props) {
     return (
@@ -24,7 +35,7 @@ function LoansListItem(props) {
                 <Row className="justify-content-md-center">
                     <Col xs="4" sm="4" md="3" lg="2">
                         <Image
-                            src="/tools_img_placeholder.png"
+                            src={formatString("{0}/{1}",IMG_API_URL, getThumbnail(props.loan.ezobject))}
                             rounded
                             fluid
                             style={{maxWidth: '140px'}}
@@ -54,7 +65,7 @@ function LoansListItem(props) {
                                 <span style={{fontSize: 'smaller'}}>
                                     <FaUser/> {props.isOwner ? props.loan.borrower.userName : props.loan.ezobject.ownerUserName}
                                     <hr/>
-                                    <FaLocationArrow/> {props.isOwner ? "TODO" : formatAdress(props.loan.borrower.address)}
+                                    <FaLocationArrow/> {props.isOwner ? formatAdress(props.loan.borrower.address) : formatAdress(props.loan.owner.address)}
                                 </span>
                             </Col>
                             <Col xs="6" sm="6" md="6" lg="6" xl="6">

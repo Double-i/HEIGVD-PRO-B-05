@@ -77,6 +77,7 @@ export class SessionHelper {
         this.setUserSession(user)
         localStorage.setItem('user', JSON.stringify(user))
     }
+
     update = info => {
         const newUserInfo = {...this.userSession}
         if(info.userFirstname !== 'undefined') newUserInfo.firstname =  info.userFirstname
@@ -91,6 +92,5 @@ export class SessionHelper {
     getExpirationDate = ()=> {
         return this.userSession.tokenDuration;
     }
-
 }
 export const SessionContext = React.createContext({user:{}})

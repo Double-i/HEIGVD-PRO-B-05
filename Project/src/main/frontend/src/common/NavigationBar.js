@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {Navbar, Nav, NavDropdown, NavItem} from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { SessionContext } from './SessionHelper'
 import NotificationDropdown from "./notification/NotificationDropdown";
 
@@ -65,7 +65,11 @@ function NavigationBar(props) {
                                             </Link>
 
                                             <NavDropdown.Divider />
-                                            <NavDropdown.Item onClick={session.logout}>
+                                            <NavDropdown.Item onClick={()=>{
+                                                session.logout()
+                                                props.history.push("/home")
+
+                                            }}>
                                                 Déconnexion
                                             </NavDropdown.Item>
                                         </NavDropdown>
@@ -95,4 +99,4 @@ function NavigationBar(props) {
         </Navbar>
     )
 }
-export default NavigationBar
+export default withRouter(NavigationBar)

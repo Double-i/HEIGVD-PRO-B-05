@@ -29,7 +29,7 @@ function ProfilForm(props) {
             if (isValid === 1) {
                 setIsValidAddress(true);
 
-                let verb = "PUT";
+                let verb
 
                 const profilData = {
                     firstName: values.userFirstname,
@@ -54,6 +54,7 @@ function ProfilForm(props) {
                     profilData.password = values.userPassword
                     profilData.userName = values.userName
                 }else{
+                    verb = "PUT"
                     // if we edit the profil we need the address'id
                     profilData.address.id = props.initialValues.userAddressId
                 }
@@ -63,10 +64,9 @@ function ProfilForm(props) {
                     result => {
                         // en principe seul les requete http 200 passe ici
                         console.log('Connection ok et réponse du serveur, ' + values)
-
-                        props.afterEditCb(values)
                         setIsSendingForm(false)
                         setHasBeenSaved(true)
+                        props.afterEditCb(values)
                     },
                     error => {
                         console.log(error);

@@ -125,9 +125,16 @@ function App() {
                         <Route exact path="/tools/:toolId">
                             <TmpToolDetails/>
                         </Route>
-                        <Route exact path="/dashboard/myloans/:role">
+                        <Route exact path="/dashboard/myloans/borrower">
                             {user.session.isUserLogin() ? (
-                                <LoansManagement/>
+                                <LoansManagement borrower={true}/>
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
+                        <Route exact path="/dashboard/myloans/owner">
+                            {user.session.isUserLogin() ? (
+                                <LoansManagement borrower={false}/>
                             ) : (
                                 <NotRightToBeHere/>
                             )}

@@ -29,13 +29,17 @@ function LoansManagement(props) {
     const [refusedLoans, setRefusedLoans] = useState([]);
     const [showShortenLoansModal, setShowShortenLoansModal] = useState(false);
     const [showNewPeriodModal, setShowNewPeriodModal] = useState(false);
+    const [receiveMessageResponse, setReceiveMessageResponse] = useState(false)
+    const [newPeriodResponse, setNewPeriodResponse] = useState({message:""})
 
     const [loan, setLoan] = useState({validPeriod: moment(), periods: []}); // should be defined because of ShortenLoanModal
-    const role = props.match.params.role
+    const role = props.borrower ? ROLE.borrower : ROLE.owner
+
 
     // If the url param isn't correct we redirect the user on the home page
-    if(role !== "borrower" && role !== "owner"){
+    if (role !== ROLE.borrower && role !== ROLE.owner) {
         props.history.push("/home")
+
     }
 
     useEffect(() => {
@@ -53,7 +57,7 @@ function LoansManagement(props) {
 
         // Request for incoming loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower:  isBorrower(role),
+            borrower: isBorrower(role),
             state: STATE.accepted,
             startGT: moment().add("1", "days").format('YYYY-MM-DD')
         }).then((result) => {
@@ -64,9 +68,9 @@ function LoansManagement(props) {
 
         // Request for ongoing loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower:  isBorrower(role),
+            borrower: isBorrower(role),
             state: STATE.accepted,
-            startLT: moment().add(1,"days").format('YYYY-MM-DD'),
+            startLT: moment().add(1, "days").format('YYYY-MM-DD'),
             endGT: moment().format('YYYY-MM-DD')
 
         }).then((result) => {
@@ -77,7 +81,7 @@ function LoansManagement(props) {
 
         // Request for passed loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower:  isBorrower(role),
+            borrower: isBorrower(role),
             state: STATE.accepted,
             endLT: moment().format('YYYY-MM-DD')
         }).then((result) => {
@@ -88,14 +92,14 @@ function LoansManagement(props) {
 
         // Request for refused loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-            borrower:  isBorrower(role),
+            borrower: isBorrower(role),
             state: STATE.refused,
         }).then((result) => {
 
             sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
-                borrower:  isBorrower(role),
+                borrower: isBorrower(role),
                 state: STATE.pending,
-                startLT: moment().add(1,"days").format('YYYY-MM-DD')
+                startLT: moment().add(1, "days").format('YYYY-MM-DD')
             }).then((resultPassedPending) => {
                 setRefusedLoans(result.concat(resultPassedPending))
 
@@ -107,7 +111,7 @@ function LoansManagement(props) {
         })
 
 
-    }, []);
+    }, [props.borrower]);
 
     const btnDisplayToolClicked = (loan) => {
         props.history.push(`/tooldetails/${loan.ezobject.id}`)
@@ -157,9 +161,9 @@ function LoansManagement(props) {
         const startDateRLoan = moment(rLoan.validPeriod.dateStart)
         const endDateRLoan = moment(rLoan.validPeriod.dateEnd)
 
-        return (startDateLLoan.isBetween(startDateRLoan, endDateRLoan,  null, '[]')
+        return (startDateLLoan.isBetween(startDateRLoan, endDateRLoan, null, '[]')
             || endDateLLoan.isBetween(startDateRLoan, endDateRLoan, null, '[]')
-            || startDateRLoan.isBetween( startDateLLoan, endDateRLoan, null, '[]'))
+            || startDateRLoan.isBetween(startDateLLoan, endDateRLoan, null, '[]'))
     }
 
     const btnAcceptedClicked = (loan) => {
@@ -177,9 +181,9 @@ function LoansManagement(props) {
                 newPendingLoans.splice(index, 1)
             }
 
-            for(let i = 0 ; i < pendingLoans.length; ++i){
-                if(pendingLoans[i].ezobject.id === loan.ezobject.id && pendingLoans[i].pkLoan !== loan.pkLoan){
-                    if(overlapPeriod(pendingLoans[i], loan)){
+            for (let i = 0; i < pendingLoans.length; ++i) {
+                if (pendingLoans[i].ezobject.id === loan.ezobject.id && pendingLoans[i].pkLoan !== loan.pkLoan) {
+                    if (overlapPeriod(pendingLoans[i], loan)) {
                         const index = newPendingLoans.indexOf(pendingLoans[i])
                         if (index !== -1) {
                             pendingLoans[i].state = STATE.refused
@@ -243,7 +247,7 @@ function LoansManagement(props) {
         updatePeriodState(loan, period, STATE.accepted)
         const newContainerToUpdate = [...containerToUpdate]
         const idxLoan = newContainerToUpdate.indexOf(loan)
-        if(idxLoan !== -1){
+        if (idxLoan !== -1) {
             newContainerToUpdate[idxLoan].validPeriod = period
             containerMethodtoUpdate(newContainerToUpdate)
         }
@@ -277,15 +281,17 @@ function LoansManagement(props) {
             })
 
             containerMethodtoUpdate(newContainerToUpdate)
+            setNewPeriodResponse({error: false, message: "Votre demande à bien été effectuée"})
 
         }, error => {
+            setNewPeriodResponse({error: true, message: "Votre demande n'est pas valide. Assurez-vous d'avoir bien fourni une date"})
             console.log(error)
         })
     };
     const getPageTitle = () => {
-        if(role === "borrower"){
+        if (role === "borrower") {
             return "Vos demande d'emprunts (coté emprunteur)"
-        }else {
+        } else {
             return "Les demandes d'emprunts sur vos outils (coté propriétaire)"
         }
 
@@ -295,9 +301,14 @@ function LoansManagement(props) {
         <Container>
             <h2>{getPageTitle()}</h2>
             <NewPeriodModal show={showNewPeriodModal}
-                            onHide={() => setShowNewPeriodModal(false)}
+                            onHide={() => {
+                                setShowNewPeriodModal(false)
+                                setReceiveMessageResponse(false)
+                                setNewPeriodResponse({message:""})
+                            }}
                             addPeriod={addPeriod}
                             loan={loan}
+                            response={newPeriodResponse}
             />
 
             <ShortenLoanModal show={showShortenLoansModal}
@@ -312,7 +323,7 @@ function LoansManagement(props) {
             <LoansList
                 loansData={pendingLoans.map((value, number) => value)}
                 isOwner={isOwner(role)}
-                actionButtons={(isBorrower(role))?[
+                actionButtons={(isBorrower(role)) ? [
                     {
                         action: btnDisplayToolClicked,
                         label: 'Afficher l\'outil',
@@ -321,7 +332,7 @@ function LoansManagement(props) {
                         action: btnCancelLoanClicked,
                         label: 'Annuler',
                     },
-                ]: [
+                ] : [
                     {
                         action: btnDisplayToolClicked,
                         label: 'Afficher',

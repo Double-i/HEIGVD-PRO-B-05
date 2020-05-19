@@ -1,6 +1,5 @@
 import {default as React} from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import {Button, Modal, Alert} from "react-bootstrap";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import {sendEzApiRequest} from "../common/ApiHelper";
@@ -13,7 +12,12 @@ class BorrowPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dateRange: new Date()
+            dateRange: new Date(),
+            response: {
+                    show : false,
+                    type:"",
+                    message: ""
+                }
         }
         this.onChange = this.onChange.bind(this);
         this.sendValidation = this.sendValidation.bind(this)
@@ -37,10 +41,18 @@ class BorrowPanel extends React.Component {
             toolId: this.props.tool.id
         }).then(
             (response) => {
-                alert("Requete envoyée!" + response.status)
+                this.setState({response: {
+                        show : true,
+                        type:"success",
+                        message: "Demande d'emprunt effectuée !"
+                    }})
 
             }, (error) => {
-                alert("Erreur dans l'envoi de la requete : " + error.errorCode);
+                this.setState({response: {
+                        show : true,
+                        type:"warning",
+                        message: "L'outil est déjà occupé pendant cette période"
+                    }})
             })
     }
 
@@ -55,6 +67,13 @@ class BorrowPanel extends React.Component {
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
+                onShow={()=>{
+                    this.setState({response: {
+                            show : false,
+                            type:"warning",
+                            message: ""
+                        }})
+                }}
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
@@ -62,6 +81,9 @@ class BorrowPanel extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <Alert variant={this.state.response.type} show={this.state.response.show}>
+                        {this.state.response.message}
+                    </Alert>
                     <p>
                         <h4>Outil : {this.props.tool.name} </h4>
 

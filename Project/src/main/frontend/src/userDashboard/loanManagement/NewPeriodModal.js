@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Button, Modal} from 'react-bootstrap'
+import {Alert, Button, Modal} from 'react-bootstrap'
 import * as moment from 'moment'
 import DatePicker from 'react-date-picker'
 
@@ -13,7 +13,7 @@ function NewPeriodModal(props) {
 
     // min date : plus grand que date start et plus grand que aujourd'hui
     const minDate = tomorrow.isAfter(dateStartPlusDay) ? new Date(tomorrow) : new Date(dateStartPlusDay)
-    const maxDate = dateEndLessDay.isAfter( dateStartPlusDay) ? new Date(dateEndLessDay) : new Date(dateStartPlusDay.add(1,'days'))
+    const maxDate = dateEndLessDay.isSameOrAfter( dateStartPlusDay) ? new Date(dateEndLessDay) : new Date(dateStartPlusDay.add(1,'days'))
 
     return (
         <Modal
@@ -29,15 +29,25 @@ function NewPeriodModal(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>Cette date ne peut être inféreur à la date de début de la location, ni être supérieur à celle de fin couramment valide</p>
-                <DatePicker value={selectedDate}  minDate={minDate} maxDate={maxDate} onChange={date => {
-                    setSelectedDate(date)
-                }}
-                />
-                <Button   variant="outline-primary" onClick={()=>{
-                    props.addPeriod(props.loan, selectedDate)
+                {(dateEndLessDay.isSameOrAfter( dateStartPlusDay) ?
+                    <>
+                    <Alert variant={props.response.error ? "warning" : "success"} show={props.response.message !== ""}>
+                        {props.response.message}
+                    </Alert>
+                    <p>Cette date ne peut être inféreur à la date de début de la location, ni être supérieur à celle de fin couramment valide</p>
+                    <DatePicker value={selectedDate}  minDate={minDate} maxDate={maxDate} onChange={date => {
+                        setSelectedDate(date)
+                    }}
+                    />
+                    <Button   variant="outline-primary" onClick={()=>{
+                        props.addPeriod(props.loan, selectedDate)
 
-                }}>Ajouter</Button>
+                    }}>Ajouter</Button></>
+                :
+                    "La période est trop courte pour raccourcir d'avantage la réservation"
+
+                )}
+
 
             </Modal.Body>
         </Modal>

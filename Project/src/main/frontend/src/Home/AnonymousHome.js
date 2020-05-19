@@ -37,7 +37,7 @@ function AnonymousHome(props) {
                 <br/>
                 <h3>Vous manquez d'outil</h3>
                 <br/>
-                <p>Après un passage chez Ikea, vous avez dépensé vos dernière économie pour la bibliothèque Fäêkjö
+                <p>Après un passage chez Ikea, vous avez dépensé vos dernière économie pour la table en verre Fäêkjö
                     mais vous vous rendez compte après coup que votre marteau n'est pas l'outil le plus adatpé pour monter votre meuble.
 
                 </p>

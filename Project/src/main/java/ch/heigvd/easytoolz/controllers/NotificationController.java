@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 @RequestMapping("/notifications")
 public class NotificationController {
+
     // Use ConcurrentHashMap (thread-safe hashmap) to store the username with the corresponding emitter
     // to be able to notify only the right user
     private final ConcurrentHashMap<String, List<SseEmitter>> emitters = new ConcurrentHashMap<>();
@@ -51,9 +52,7 @@ public class NotificationController {
      */
     @GetMapping("/{username}")
     public SseEmitter subscribeToNotifications(@PathVariable String username) {
-
-        User user = authService.getTheDetailsOfCurrentUser();
-        System.out.println("Logged in user : " + user);
+              User user = authService.getTheDetailsOfCurrentUser();
         if (user == null || !user.getUserName().equals(username))
             throw new AccessDeniedException();
 
@@ -119,7 +118,6 @@ public class NotificationController {
             if(this.emitters.get(username).size() == 0){
                 this.emitters.remove(username);
             }
-
         }
     }
 }

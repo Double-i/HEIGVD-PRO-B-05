@@ -5,6 +5,7 @@ import Gallery from 'react-grid-gallery';
 import {Container, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import BorrowPanel from "./BorrowPanel";
+import ReportPanel from "./reportPanel";
 
 class ToolDetails extends React.Component{
 
@@ -19,8 +20,12 @@ class ToolDetails extends React.Component{
             images: [],
             objectTags: [],
             owner: {},
-            borrowModalShow: false
+            toolId:"",
+            borrowModalShow: false,
+            reportModalShow: false
         }
+
+        console.log(props)
     }
 
     componentDidMount() {
@@ -43,7 +48,8 @@ class ToolDetails extends React.Component{
                         owner : response.owner,
                         name : response.name,
                         description : response.description,
-                        objectTags : response.objectTags
+                        objectTags : response.objectTags,
+                        toolId:response.id
                     })
             })
             .catch(err => alert(err));
@@ -56,7 +62,10 @@ class ToolDetails extends React.Component{
     setBorrowModalShow(value) {
         this.setState({borrowModalShow: value});
     }
-
+    setReportModalShow(value)
+    {
+        this.setState({reportModalShow:value})
+    }
     render()
     {
         return <div>
@@ -79,6 +88,7 @@ class ToolDetails extends React.Component{
                 </Row>
             </Container>
             <Gallery images={this.state.images}/>
+
             <Button
                 disabled={false} //TODO : avoir une props de l'item isBorrowable !
                 key={"buttonId" + this.props.id}
@@ -89,6 +99,22 @@ class ToolDetails extends React.Component{
             >
                 Emprunter
             </Button>
+            <Button
+                disabled={false} //TODO : avoir une props de l'item isBorrowable !
+                key={"buttonId" + this.props.id}
+                style={{
+                    marginBottom: '10px'
+                }}
+                onClick={() => this.setReportModalShow(true)}
+            >
+                Signaler
+            </Button>
+            {console.log(this.state)}
+            <ReportPanel
+                show={this.state.reportModalShow}
+                onHide={() => this.setReportModalShow(false)}
+                toolId={this.state.toolId}
+            />
             <BorrowPanel
                 show={this.state.borrowModalShow}
                 onHide={() => this.setBorrowModalShow(false)}

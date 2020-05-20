@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,14 @@ public class ReportController {
     @Autowired
     ReportService reportService;
 
+
+    @GetMapping("/types")
+    public List<ReportType> getReportTypes()
+    {
+
+
+        return Arrays.asList(ReportType.values());
+    }
     /**
      * Get the list of all the reports
      *

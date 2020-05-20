@@ -11,7 +11,9 @@ public enum StateNotification {
     ACCEPTATION_DEMANDE_RACOURCISSEMENT_OWNER("acceptationDemandeRacourcissement", "Votre demande racourcissement pour l'outil '%s' a été acceptée"),
     ACCEPTATION_DEMANDE_RACOURCISSEMENT_BORROWER("acceptationDemandeRacourcissement", "Votre demande racourcissement pour l'outil '%s' a été acceptée"),
     REFUS_DEMANDE_RACOURCISSEMENT_OWNER("refusDemandeRacourcissement", "Votre demande racourcissement pour l'outil '%s' a été refusée"),
-    REFUS_DEMANDE_RACOURCISSEMENT_BORROWER("refusDemandeRacourcissement", "Votre demande racourcissement pour l'outil '%s' a été refusée");
+    REFUS_DEMANDE_RACOURCISSEMENT_BORROWER("refusDemandeRacourcissement", "Votre demande racourcissement pour l'outil '%s' a été refusée"),
+    ANNULATION_RESERVATION_OWNER("annulationReservation", "La réservation pour l'outil  %s a été annulée"),
+    ANNULATION_RESERVATION_BORROWER("annulationReservation", "Votre réservation pour l'outil  %s a été annulée");
 
 
     private final String name;

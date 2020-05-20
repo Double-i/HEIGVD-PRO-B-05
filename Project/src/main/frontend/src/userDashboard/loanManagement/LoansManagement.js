@@ -10,6 +10,7 @@ import {STATE} from "../../common/State";
 import NewPeriodModal from "./NewPeriodModal";
 import ShortenLoanModal from "./ShortenLoanModal";
 import {isBorrower, isOwner, ROLE} from "../../common/Role";
+import {formatString} from "../../common/Utils";
 
 const LOANS_REQUEST = "/loans/find/user/"
 const LOANS_UPDATE_STATE_REQUEST = "/loans/"
@@ -18,6 +19,13 @@ const LOANS_UPDATE_STATE_REQUEST = "/loans/"
 let containerToUpdate;
 let containerMethodtoUpdate;
 
+/**
+ * LoansManagement is a component which display different list of LoansList which represent the loans of the user in
+ * different state (pending loans, confirmed loans etc.)
+ * @param props
+ * @returns {React.Component}
+ * @constructor
+ */
 function LoansManagement(props) {
 
     const session = useContext(SessionContext)
@@ -93,9 +101,8 @@ function LoansManagement(props) {
         // Request for refused loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: isBorrower(role),
-            state: STATE.refused,
+            state: formatString("{0},{1}",STATE.refused, STATE.cancel),
         }).then((result) => {
-
             sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
                 borrower: isBorrower(role),
                 state: STATE.pending,
@@ -121,11 +128,21 @@ function LoansManagement(props) {
         sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/state`, 'PATCH', {
             state: STATE.cancel
         }).then((result) => {
-            const newPendingLoans = [...pendingLoans]; // make a separate copy of the array
+            const newPendingLoans = [...containerToUpdate]; // make a separate copy of the array
             const index = newPendingLoans.indexOf(loan)
             if (index !== -1) {
+
+                // Add loan to refused array
+                const loan = newPendingLoans[index]
+                loan.state = STATE.cancel;
+                const newRefusedLoans = [...refusedLoans]
+                newRefusedLoans.push(loan)
+                setRefusedLoans(newRefusedLoans)
+
+                //Remove loans from previous container
                 newPendingLoans.splice(index, 1);
-                setPendingLoans(newPendingLoans)
+                containerMethodtoUpdate(newPendingLoans)
+
             }
         }, (error) => {
             console.log(error)
@@ -203,7 +220,6 @@ function LoansManagement(props) {
 
 
     const btnShowPeriodClicked = (loan) => {
-        console.log("wtf")
         // Show modal
         setLoan(loan)
         setShowShortenLoansModal(true)
@@ -329,7 +345,11 @@ function LoansManagement(props) {
                         label: 'Afficher l\'outil',
                     },
                     {
-                        action: btnCancelLoanClicked,
+                        action: (loan) => {
+                            containerToUpdate=pendingLoans
+                            containerMethodtoUpdate=setPendingLoans
+                            btnCancelLoanClicked(loan)
+                        },
                         label: 'Annuler',
                     },
                 ] : [
@@ -371,6 +391,14 @@ function LoansManagement(props) {
                             btnPassBackClicked(loan)
                         },
                         label: 'Demande retour'
+                    },
+                    {
+                        action : (loan) => {
+                            containerToUpdate = inComingLoans
+                            containerMethodtoUpdate = setInComingLoans
+                            btnCancelLoanClicked(loan)
+                        },
+                        label:"Annuler"
                     }
                 ]}
             />

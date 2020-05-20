@@ -2,7 +2,7 @@ import {sendEzApiRequest} from "../common/ApiHelper"
 import React from "react"
 import ImageGallery from 'react-image-gallery'
 import Gallery from 'react-grid-gallery';
-import {Container, Row} from "react-bootstrap";
+import {Container, Row, Col, ListGroup, Card, Carousel} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import BorrowPanel from "./BorrowPanel";
 import ReportPanel from "./reportPanel";
@@ -17,7 +17,14 @@ class ToolDetails extends React.Component{
         this.state = {
             description: "",
             name: "",
-            images: [],
+            images:
+            [{
+                src : undefined,
+                thumbnail: undefined,
+                thumbnailWidth: undefined,
+                thumbnailHeight:undefined,
+            }],
+
             objectTags: [],
             owner: {},
             toolId:"",
@@ -68,59 +75,104 @@ class ToolDetails extends React.Component{
     }
     render()
     {
-        return <div>
-            <h1>{this.state.name}</h1>
-            <p>{this.state.description}</p>
-            <h2>
-                Tags
-            </h2>
-            <ul>
-            {
-                this.state.objectTags.map(tag =>(
-                    <li key={tag.id}>{tag.name}</li>
-                ))
-            }
-            </ul>
+        return (
 
-            <Container>
-                <Row>
-                     <p>Propriétaire : {this.state.owner.userName}</p>
-                </Row>
+        <Container class="align-content-center" style={{margin:"10px"}}>
+             <Card style={
+                        {
+                            width:'100%',
+                            margin: '0 auto',
+                            float: 'none',
+                            marginBottom: '10px'
+
+                        }}>
+
+                    <Card.Body>
+                        <Carousel>
+                            {
+                                this.state.images.map((values) =>
+                                    <Carousel.Item >
+                                        <img
+                                            className="d-block w-25"
+                                            src={values.src}
+                                            alt="first slide"
+                                        />
+                                    </Carousel.Item>
+                                )
+                            }
+                        </Carousel>
+                        <Card.Title>
+                            {this.state.name}
+                        </Card.Title>
+                        <Card.Text>
+                            Propriétaire : {this.state.owner.userName}
+                        </Card.Text>
+
+                        <Card.Subtitle>
+                            Description
+                        </Card.Subtitle>
+                        <Card.Text>
+                            {this.state.description}
+                        </Card.Text>
+
+                        <Card.Subtitle>
+                            Catégories
+                        </Card.Subtitle>
+
+                        <Card.Text>
+                            <ListGroup>
+                                {
+                                    this.state.objectTags.map(tag =>(
+                                        <ListGroup.Item key={tag.id}>{tag.name}</ListGroup.Item>
+                                    ))
+                                }
+                            </ListGroup>
+                        </Card.Text>
+
+
+
+                    </Card.Body>
+
+                        {/*Modals*/}
+                        <ReportPanel
+                            show={this.state.reportModalShow}
+                            onHide={() => this.setReportModalShow(false)}
+                            toolId={this.state.toolId}
+                        />
+                        <BorrowPanel
+                            show={this.state.borrowModalShow}
+                            onHide={() => this.setBorrowModalShow(false)}
+                            tool={this.state}
+                        />
+                        <Card.Footer>
+                            <Button
+                                disabled={false} //TODO : avoir une props de l'item isBorrowable !
+                                key={"buttonId" + this.props.id}
+                                style={{
+                                    marginBottom: '10px'
+                                }}
+                                onClick={() => this.setBorrowModalShow(true)}
+                            >
+                                Emprunter
+                            </Button>
+
+
+                            <Button
+                                disabled={false} //TODO : avoir une props de l'item isBorrowable !
+                                key={"buttonId" + this.props.id}
+                                style={{
+                                    marginBottom: '10px'
+                                }}
+                                onClick={() => this.setReportModalShow(true)}
+                            >
+                                Signaler
+                            </Button>
+                        </Card.Footer>
+                </Card>
+            <Gallery  images={this.state.images}/>
+
             </Container>
-            <Gallery images={this.state.images}/>
-
-            <Button
-                disabled={false} //TODO : avoir une props de l'item isBorrowable !
-                key={"buttonId" + this.props.id}
-                style={{
-                    marginBottom: '10px'
-                }}
-                onClick={() => this.setBorrowModalShow(true)}
-            >
-                Emprunter
-            </Button>
-            <Button
-                disabled={false} //TODO : avoir une props de l'item isBorrowable !
-                key={"buttonId" + this.props.id}
-                style={{
-                    marginBottom: '10px'
-                }}
-                onClick={() => this.setReportModalShow(true)}
-            >
-                Signaler
-            </Button>
-            {console.log(this.state)}
-            <ReportPanel
-                show={this.state.reportModalShow}
-                onHide={() => this.setReportModalShow(false)}
-                toolId={this.state.toolId}
-            />
-            <BorrowPanel
-                show={this.state.borrowModalShow}
-                onHide={() => this.setBorrowModalShow(false)}
-                tool={this.state}
-            />
-        </div>
+        )
     }
 }
 

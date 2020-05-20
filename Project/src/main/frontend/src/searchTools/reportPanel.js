@@ -49,7 +49,7 @@ class ReportPanel extends React.Component {
         return (
             <Modal
                 {...this.props}
-                size="lg"
+                size="sm"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
                 onShow={()=>{
@@ -77,32 +77,27 @@ class ReportPanel extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={this.handleSubmit}>
 
-                        <Form.Group controlId={'reportFlags'}>
+                    <Dropdown>
+                        <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                            Pourquoi?
+                        </Dropdown.Toggle>
+                        <p>{this.state.reason}</p>
+                        <Dropdown.Menu>
+                            {this.state.reportFlags.map((value, idx) => (
+                                <Dropdown.Item
+                                    key={`tag-${idx}`}
+                                    value={value}
+                                    onClick={()=>{
+                                        this.setState({reason:value})
+                                    }}
+                                >
+                                    {value}
+                                </Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
 
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                    Pourquoi?
-                                </Dropdown.Toggle>
-                                <p>{this.state.reason}</p>
-                                <Dropdown.Menu>
-                                    {this.state.reportFlags.map((value, idx) => (
-                                        <Dropdown.Item
-                                            key={`tag-${idx}`}
-                                            value={value}
-                                            onClick={()=>{
-                                                this.setState({reason:value})
-                                            }}
-                                        >
-                                            {value}
-                                        </Dropdown.Item>
-                                    ))}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </Form.Group>
-
-                    </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={

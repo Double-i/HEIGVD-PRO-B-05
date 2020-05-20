@@ -32,23 +32,30 @@ class MapContainer extends React.Component {
             searchTags : [],
             showingInfoWindow: false,
             activeMarker: {},
-            selectedTool: {}
+            selectedTool: {},
+            initialPos: {lat:40, lng:40}
         }
 
 
     }
 
-    /*componentDidMount() {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const initialPosition = JSON.stringify(position);
-                this.setState({ initialPosition });
-                console.log(this.state.initialPosition);
-            },
-            (error) => alert(error.message),
-            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-        );
-    }*/
+    componentDidMount() {
+        if (!navigator.geolocation) {
+            alert("Geolocaton is not supported by your browser");
+        } else
+        {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const initialPosition = JSON.stringify(position);
+                    this.setState({ initialPosition });
+                    console.log(this.state.initialPosition);
+                },
+                (error) => alert("Geolocation : "+error.message),
+                { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+            );
+        }
+
+    }
 
     onMarkerClick = (props, marker, e) => {
         console.log("Clicked on marker !");
@@ -125,7 +132,7 @@ class MapContainer extends React.Component {
                  google={this.props.google}
                  zoom={5}
                  style={mapStyles}
-                 initialCenter={{ lat: /*this.props.position.lat*/45, lng: /*this.props.position.lng*/30}}
+                 initialCenter={{ lat: this.state.initialPos.lat, lng: this.state.initialPos.lng}}
                  onClick={this.onMapClicked}
                >
                {this.getMarkers()}

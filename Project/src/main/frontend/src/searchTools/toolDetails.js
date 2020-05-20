@@ -140,7 +140,12 @@ class ToolDetails extends React.Component{
                         <BorrowPanel
                             show={this.state.borrowModalShow}
                             onHide={() => this.setBorrowModalShow(false)}
-                            tool={this.state}
+                            tool={{
+                                    name:this.state.name,
+                                    id:this.state.toolId
+                                }}
+
+
                         />
                         <Card.Footer>
                             <Button

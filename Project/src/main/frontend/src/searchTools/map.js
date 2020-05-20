@@ -28,8 +28,6 @@ class MapContainer extends React.Component {
             selectedTool: {},
             initialPos: {lat:46.6, lng:6.6}
         }
-
-
     }
 
     componentDidMount() {

@@ -12,7 +12,7 @@ class BorrowPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dateRange: new Date(),
+            dateRange: moment().add(1, "days").toDate(),
             response: {
                     show : false,
                     type:"",

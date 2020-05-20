@@ -1,10 +1,7 @@
 package ch.heigvd.easytoolz.exceptions.handlers;
 
-import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectAlreadyUsed;
+import ch.heigvd.easytoolz.exceptions.ezobject.*;
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
-import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectCurrentlyBorrowedException;
-import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectFormatException;
-import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +14,12 @@ import org.springframework.web.context.request.WebRequest;
  */
 @ControllerAdvice
 public class EZObjectExceptionHandler extends DefaultExceptionHandler {
+
+    @ExceptionHandler({UserHasNoObjectException.class})
+    public ResponseEntity<ApiError> handleUserHasNoObjectException(UserHasNoObjectException ex, WebRequest request)
+    {
+        return makeError(ex,request, HttpStatus.NO_CONTENT);
+    }
 
     @ExceptionHandler({EZObjectNotFoundException.class})
     public ResponseEntity<ApiError> handleEZObjectNotFoundException(EZObjectNotFoundException ex, WebRequest request)
@@ -41,4 +44,5 @@ public class EZObjectExceptionHandler extends DefaultExceptionHandler {
     {
         return makeError(ex,request, HttpStatus.BAD_REQUEST);
     }
+
 }

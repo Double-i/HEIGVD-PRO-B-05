@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.services.interfaces;
 
+import ch.heigvd.easytoolz.exceptions.ezobject.UserHasNoObjectException;
 import ch.heigvd.easytoolz.models.EZObject;
 import ch.heigvd.easytoolz.models.EZObjectImage;
 import ch.heigvd.easytoolz.views.EZObjectView;
@@ -43,7 +44,7 @@ public interface EZObjectService {
      * @param username
      * @return
      */
-    List<EZObjectView> getObjectByOwner(String username);
+    List<EZObjectView> getObjectByOwner(String username) throws UserHasNoObjectException;
 
     /**
      * Find an object by its ID

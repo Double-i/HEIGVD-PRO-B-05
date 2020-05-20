@@ -1,6 +1,7 @@
 package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.exceptions.ezobject.UserHasNoObjectException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.repositories.EzObjectImageRepository;
 import ch.heigvd.easytoolz.services.interfaces.*;
@@ -152,7 +153,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         List<EZObjectView> res = ezObjectRepository.getByOwner_UserName(username);
 
         if (res.size() == 0)
-            throw new EZObjectNotFoundException("No Objects where found for user " + username);
+            throw new UserHasNoObjectException( username);
 
         return res;
     }

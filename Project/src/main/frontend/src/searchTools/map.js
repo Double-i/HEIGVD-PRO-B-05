@@ -33,7 +33,7 @@ class MapContainer extends React.Component {
             showingInfoWindow: false,
             activeMarker: {},
             selectedTool: {},
-            initialPos: {lat:40, lng:40}
+            initialPos: {lat:46.6, lng:6.6}
         }
 
 
@@ -42,8 +42,7 @@ class MapContainer extends React.Component {
     componentDidMount() {
         if (!navigator.geolocation) {
             alert("Geolocaton is not supported by your browser");
-        } else
-        {
+        } else {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const initialPosition = JSON.stringify(position);
@@ -131,7 +130,7 @@ class MapContainer extends React.Component {
         return <Map
                  key={0}
                  google={this.props.google}
-                 zoom={5}
+                 zoom={8}
                  style={mapStyles}
                  initialCenter={{ lat: this.state.initialPos.lat, lng: this.state.initialPos.lng}}
                  onClick={this.onMapClicked}

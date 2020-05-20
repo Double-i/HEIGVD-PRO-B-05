@@ -8,13 +8,6 @@ const mapStyles = {
     width :  '80%'
 }
 
-/*export function getUserPos(Component) {
-    return function WrappedComponent(props) {
-        const position = usePosition();
-        return <Component {...props} position={usePosition()} />;
-    }
-}*/
-
 class MapContainer extends React.Component {
 
     SEARCH_URI = '/objects'
@@ -49,7 +42,7 @@ class MapContainer extends React.Component {
                     this.setState({ initialPosition });
                     console.log(this.state.initialPosition);
                 },
-                (error) => alert("Geolocation : "+error.message),
+                (error) => console.log("Geolocation : "+error.message),
                 { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
             );
         }

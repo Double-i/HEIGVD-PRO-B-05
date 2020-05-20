@@ -3,10 +3,7 @@ package ch.heigvd.easytoolz.services.implementation;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.repositories.EzObjectImageRepository;
-import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
-import ch.heigvd.easytoolz.services.interfaces.EZObjectService;
-import ch.heigvd.easytoolz.services.interfaces.StorageService;
-import ch.heigvd.easytoolz.services.interfaces.UserService;
+import ch.heigvd.easytoolz.services.interfaces.*;
 import ch.heigvd.easytoolz.util.ServiceUtils;
 import ch.heigvd.easytoolz.views.EZObjectView;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
@@ -38,6 +35,9 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    LoanService loanService;
 
     @Autowired
     AuthenticationService authenticationService;
@@ -213,8 +213,13 @@ public class EZObjectServiceImpl implements EZObjectService {
 
     public void deleteObject(int id) throws Exception {
         EZObject toDelete = ezObjectRepository.findByID(id);
+
         if (toDelete == null)
             throw new EZObjectNotFoundException("" + id);
+
+        if(loanService.isObjectIsCurrentlyBorrowed(id)){
+            throw new RuntimeException("ta maman");
+        }
 
         toDelete.setActive(false);
         updateObject(toDelete,null);

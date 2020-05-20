@@ -27,5 +27,7 @@ public interface LoanService {
 
     List<Loan> getLoan(String username, boolean borrower, List<String> state, List<String> city, Date dateStartLess, Date dateEndLess,Date dateStartGreater, Date dateEndGreater);
 
+    boolean isObjectIsCurrentlyBorrowed(int objectId);
+
     List<Loan> getLoansRelatedTo(String username);
 }

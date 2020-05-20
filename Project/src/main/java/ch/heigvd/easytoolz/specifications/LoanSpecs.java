@@ -26,6 +26,13 @@ public class LoanSpecs {
 
     }
 
+    public static Specification<Loan> getObject(int objectId) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Loan, EZObject> EZObjectJoin = root.join(Loan_.EZObject);
+            return criteriaBuilder.equal(EZObjectJoin.get(EZObject_.I_D),objectId);
+        };
+    }
+
     public static Specification<Loan> getDateEndLess(Date dateEnd) {
         return (root, query, criteriaBuilder) ->
         {

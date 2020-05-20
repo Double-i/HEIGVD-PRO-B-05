@@ -334,6 +334,20 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
+    public boolean isObjectIsCurrentlyBorrowed(int objectId) {
+        Specification<Loan> specs = null;
+
+        Date currentDate = new Date();
+
+        specs = LoanSpecs.getObject(objectId);
+        specs = specs.and(LoanSpecs.getDateEndLess(currentDate));
+
+        List<Loan> loans = loanRepository.findAll(specs);
+
+        return loans.size() <= 0;
+    }
+
+    @Override
     public List<Loan> getLoansRelatedTo(String username) {
         Specification<Loan> byUser = null;
 

@@ -2,6 +2,7 @@ package ch.heigvd.easytoolz.exceptions.handlers;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectAlreadyUsed;
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
+import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectCurrentlyBorrowedException;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectFormatException;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,11 @@ public class EZObjectExceptionHandler extends DefaultExceptionHandler {
     public ResponseEntity<ApiError> handleEzObjectAlreadyUsed(EZObjectAlreadyUsed ex, WebRequest request)
     {
         return makeError(ex,request, HttpStatus.IM_USED);
+    }
+
+    @ExceptionHandler({EZObjectCurrentlyBorrowedException.class})
+    public ResponseEntity<ApiError> handleEzObjectAlreadyUsed(EZObjectCurrentlyBorrowedException ex, WebRequest request)
+    {
+        return makeError(ex,request, HttpStatus.BAD_REQUEST);
     }
 }

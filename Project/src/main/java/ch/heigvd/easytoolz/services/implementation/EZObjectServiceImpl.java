@@ -60,6 +60,12 @@ public class EZObjectServiceImpl implements EZObjectService {
         Predicate queries = cb.conjunction();
         Predicate tagQuery =  cb.conjunction();
 
+        User currentUser = authenticationService.getTheDetailsOfCurrentUser();
+
+        if(currentUser != null){
+            predicates.add(cb.notEqual(root.get(EZObject_.OWNER).get("userName"), currentUser.getUserName()));
+        }
+
         if(namesList != null) {
             for(String s : namesList) {
                 predicates.add( cb.like(root.get(EZObject_.NAME), ServiceUtils.transformLike(s)));
@@ -70,7 +76,6 @@ public class EZObjectServiceImpl implements EZObjectService {
             for(String s : ownersList) {
                 predicates.add( cb.equal(root.get(EZObject_.OWNER).get("userName"),s));
             }
-
         }
         if(descriptionList != null) {
             for(String s : descriptionList) {
@@ -101,7 +106,6 @@ public class EZObjectServiceImpl implements EZObjectService {
     {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-
 
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<EZObject> countRoot = countQuery.from(EZObject.class);

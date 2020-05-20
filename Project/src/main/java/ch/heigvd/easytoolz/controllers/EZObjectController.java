@@ -41,13 +41,14 @@ public class EZObjectController {
     @GetMapping()
     public List<EZObjectView> index( @RequestParam(value = "nbItems", defaultValue = "10") int nbItems, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
-        return ezObjectService.getAll(pageno,nbItems);
+        List<EZObject> objects = ezObjectService.getFiltered(null,null,null,null, pageno);
+        return objects.stream().map(this::convertToView).collect(Collectors.toList());
     }
 
     @GetMapping("/count")
     public ResponseEntity<Integer> getNbObjects()
     {
-        return new ResponseEntity<>(ezObjectService.getNbObjects(),HttpStatus.OK);
+        return ResponseEntity.ok(ezObjectService.getFilteredCount(null,null,null,null, 0));
     }
 
     /**
@@ -162,7 +163,7 @@ public class EZObjectController {
             @RequestParam(name = "page", defaultValue="0") int pageno)
 
     {
-        return new ResponseEntity<>(ezObjectService.getFilteredCount(names,owners,description,tags, pageno),HttpStatus.OK);
+        return ResponseEntity.ok(ezObjectService.getFilteredCount(names,owners,description,tags, pageno));
     }
 
     @GetMapping("find/report")

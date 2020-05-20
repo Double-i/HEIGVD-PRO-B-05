@@ -70,6 +70,7 @@ class ToolDetails extends React.Component{
             </Container>
             <Gallery images={this.state.images}/>
 
+
         </div>
     }
 }

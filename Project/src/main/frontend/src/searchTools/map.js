@@ -90,10 +90,11 @@ class MapContainer extends React.Component {
             console.log(tools);
             return tools.map(tool => {
                 return <div>
-                    <h1>{tool === undefined ? "" : tool.name}</h1>
+                    <h2>{tool === undefined ? "" : tool.name}</h2>
                     <p>
                         {tool === undefined ? "" : tool.description}
                     </p>
+                    <a href={"/toolDetails/"+tool.id}>Details</a>
                 </div>
             })
         }

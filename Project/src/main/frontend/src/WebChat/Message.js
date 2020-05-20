@@ -25,7 +25,7 @@ class Message extends React.Component
                             moment(this.state.date).fromNow()
                         ):
                         (
-                            moment(this.state.date).format("HH:MM")
+                            moment(this.state.date).format("HH:mm")
                         )
 
                 }</p>

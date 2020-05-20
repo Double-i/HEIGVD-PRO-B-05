@@ -67,6 +67,7 @@ class Conversation extends React.Component
         this.sendMessage = this.sendMessage.bind(this)
 
         this.messageRefs = []
+        console.log(props)
     }
 
     /**
@@ -237,7 +238,7 @@ class Conversation extends React.Component
 
                 <li className="list-group-item text-left" style={this.recipientStyle}>
                     {recipient}
-                    <Message content={output.content} date={"sometime"}/>
+                    <Message content={output.content} date={output.date}/>
                 </li>
             )
         }

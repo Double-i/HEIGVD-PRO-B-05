@@ -92,7 +92,6 @@ class ConversationList  extends React.Component {
                         <ul className="navbar-nav">
                             {
                                 this.state.ongoingConversations.map((conversation, idx)  =>
-                                this.state.currentUser === conversation.participants[0] ?
                                     (
                                     <li className="nav-item" key={idx}>
                                         <a className="nav-link"
@@ -103,24 +102,11 @@ class ConversationList  extends React.Component {
                                                     this.displayConversationContent(conversation)
                                                 }
                                             }>
-                                        {conversation.participants[1]}
+                                        {conversation.convName}
                                         </a>
                                     </li>
-                                ):
-                                (
-                                <li className="nav-item" key={idx}>
-                                    <a className="nav-link"
-                                        onClick=
-                                        {
-                                            ()=>
-                                            {
-                                                this.displayConversationContent(conversation)
-                                            }
-                                        }>
-                                        {conversation.participants[0]}
-                                    </a>
-                                </li>
                                 ))
+
                             }
                         </ul>
                     </nav>

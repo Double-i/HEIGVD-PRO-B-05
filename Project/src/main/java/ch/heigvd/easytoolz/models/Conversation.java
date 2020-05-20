@@ -27,8 +27,20 @@ public class Conversation {
     List<ChatMessage> conversation;
 
     @NotNull
+    String convName;
+
+    @NotNull
     @Column(name="fk_loan")
     int loan;
+
+
+    public String getConvName() {
+        return convName;
+    }
+
+    public void setConvName(String convName) {
+        this.convName = convName;
+    }
 
     public String getOwner()
     {
@@ -77,10 +89,11 @@ public class Conversation {
     }
 
     public Conversation(){}
-    public Conversation(String owner, String borrower, int loan)
+    public Conversation(String owner, String borrower, int loan, String convName)
     {
         this.owner = owner;
         this.borrower = borrower;
         this.loan = loan;
+        this.convName = convName;
     }
 }

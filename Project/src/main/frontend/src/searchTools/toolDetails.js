@@ -31,8 +31,6 @@ class ToolDetails extends React.Component{
             borrowModalShow: false,
             reportModalShow: false
         }
-
-        console.log(props)
     }
 
     componentDidMount() {

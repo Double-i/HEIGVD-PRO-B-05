@@ -2,11 +2,6 @@ import React from 'react'
 import * as moment from 'moment'
 import {sendEzApiRequest} from "./ApiHelper";
 
-
-// TODO: - checker si token toujours valide autrement suppression de la session
-//       - Si toujours valide mettre un refresh avant de l'expiration pour redemander un token
-
-
 // Session duration in miliseconds should be the same that the server
 export const SESSION_DURATION = 1000000
 /**
@@ -82,6 +77,7 @@ export class SessionHelper {
         this.setUserSession(user)
         localStorage.setItem('user', JSON.stringify(user))
     }
+
     update = info => {
         const newUserInfo = {...this.userSession}
         if(info.userFirstname !== 'undefined') newUserInfo.firstname =  info.userFirstname
@@ -96,6 +92,5 @@ export class SessionHelper {
     getExpirationDate = ()=> {
         return this.userSession.tokenDuration;
     }
-
 }
 export const SessionContext = React.createContext({user:{}})

@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,9 +17,8 @@ public class JwtUtil {
     @Value("${ch.heigvd.easytools.jwtToken.duration}")
     private String duration;
 
-
-    // TODO : A DEPLACER DANS UN FICHIER DE CONFIG ET METTRE UNE CLEE PLUS FORTE
-    private String SECRET_KEY = "secret";
+    @Value("${ch.heigvd.easytools.secret_key}")
+    private String SECRET_KEY;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

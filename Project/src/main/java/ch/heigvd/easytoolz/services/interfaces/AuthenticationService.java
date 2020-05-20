@@ -2,7 +2,6 @@ package ch.heigvd.easytoolz.services.interfaces;
 
 import ch.heigvd.easytoolz.models.User;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.stereotype.Service;
 
 public interface AuthenticationService {
     /**
@@ -21,7 +20,7 @@ public interface AuthenticationService {
     boolean isTheCurrentUserAdmin();
 
     /**
-     * @return the details of the current user
+     * @return the details of the current user or null if nobody is connected
      */
     User getTheDetailsOfCurrentUser();
 

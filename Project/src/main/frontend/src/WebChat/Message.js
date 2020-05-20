@@ -1,9 +1,9 @@
 
 import React from "react"
+import * as moment from 'moment'
 
 class Message extends React.Component
 {
-
     constructor(props)
     {
         super(props)
@@ -19,7 +19,16 @@ class Message extends React.Component
         return (
             <>
                 <p>{this.state.content}</p>
-                <div>{this.state.date}</div>
+                <p>{
+                    moment().isAfter(moment().add(1, "days")) ?
+                        (
+                            moment(this.state.date).fromNow()
+                        ):
+                        (
+                            moment(this.state.date).format("HH:MM")
+                        )
+
+                }</p>
             </>
         )
     }

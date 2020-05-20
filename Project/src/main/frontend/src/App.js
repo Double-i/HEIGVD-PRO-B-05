@@ -1,27 +1,25 @@
 import React from 'react'
 import {useState} from 'react'
 import './App.css'
-import {Container} from 'react-bootstrap'
+import {Col, Row, Container, Image} from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
 import {
     BrowserRouter as Router,
     Switch,
     Route,
+    Link,
     useParams,
 } from 'react-router-dom'
 import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
 import SignIn from './signIn/SignIn'
-
 import Map from './searchTools/map'
 import ToolDetails from './searchTools/toolDetails'
 import AdminPage from "./admin/AdminPage";
 import UserToolsList from "./userDashboard/userTools/UserToolsList";
-
 import ConversationList from "./WebChat/ConversationList";
 import * as moment from 'moment'
-
 import {SESSION_DURATION, SessionContext, SessionHelper} from './common/SessionHelper'
 import EditProfilForm from "./userDashboard/editProfil/EditProfilForm";
 import {sendEzApiRequest} from "./common/ApiHelper";
@@ -30,6 +28,7 @@ import SearchTools from "./searchTools/searchTools";
 
 import ToolForm from "./toolsUtil/toolForm";
 import LoansManagement from "./userDashboard/loanManagement/LoansManagement";
+import AnonymousHome from "./Home/AnonymousHome";
 
 const SESSION_REFRESH_ENDPOINT = "/authrefresh"
 
@@ -43,7 +42,7 @@ function App() {
     const session = new SessionHelper(userSession, setUserSession)
 
     // Log out the user if his session has expired
-    if(session.isUserLogin()) {
+    if (session.isUserLogin()) {
 
         if (session.isExpired()) {
             session.logout()
@@ -89,106 +88,120 @@ function App() {
                     setLoggedUser={loginInfo => {
                         user.session.login(loginInfo)
                         setShowSignInForm(false)
+                        window.location.replace("/home")
                     }}
                 />
 
-                    <Container>
-                        <Switch>
-                            <Route exact path="/(home|accueil|)/">
+                <Container>
+                    <Switch>
+                        {/*The home page can be the reach with http://<DOMAIN>/home, http://<DOMAIN>/accueil or http://<DOMAIN>/  */}
+                        <Route exact path="/(home|accueil|)/">
+                            {user.session.isUserLogin() ? (
                                 <Home/>
-                            </Route>
-                            <Route exact path="/dashboard">
-                                {user.session.isUserLogin() ? (
-                                    <DashBoard/>
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
-                            <Route exact path="/disconnect"/>
-                            <Route exact path="/signup">
-                                {user.session.isUserLogin() ? (
-                                    <AlreadyConnect/>
-                                ) : (
-                                    <SignUp/>
-                                )}
-                            </Route>
-                            <Route exact path="/map" component={Map}/>
-                            <Route exact path="/toolDetails/:id" component = {ToolDetails}/>
-                            <Route exact path="/searchTools">
-                                <SearchTools/>
-                            </Route>
-                            <Route exact path="/tools/:toolId">
-                                <TmpToolDetails/>
-                            </Route>
-                            <Route exact path="/dashboard/myloans/:role">
-                                {user.session.isUserLogin() ? (
-                                    <LoansManagement />
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
-                            <Route exact path="/dashboard/addTool">
-                                {user.session.isUserLogin() ? (
-                                    <ToolForm
-                                        tool = {null}
-                                        formTitle={"Ajouter"}
-                                        action={"add"}
-                                    />
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
-                            <Route exact path="/dashboard/toolList">
-                                {user.session.isUserLogin() ? (
-                                    <UserToolsList/>
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
+                            ) : (
+                                <AnonymousHome/>
+                            )}
+                        </Route>
+                        <Route exact path="/dashboard">
+                            {user.session.isUserLogin() ? (
+                                <DashBoard/>
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
+                        <Route exact path="/disconnect"/>
+                        <Route exact path="/signup">
+                            {user.session.isUserLogin() ? (
+                                <AlreadyConnect/>
+                            ) : (
+                                <SignUp/>
+                            )}
+                        </Route>
+                        <Route exact path="/map" component={Map}/>
+                        <Route exact path="/toolDetails/:id" component={ToolDetails}/>
+                        <Route exact path="/searchTools">
+                            <SearchTools/>
+                        </Route>
+                        <Route exact path="/tools/:toolId">
+                            <TmpToolDetails/>
+                        </Route>
+                        <Route exact path="/dashboard/myloans/borrower">
+                            {user.session.isUserLogin() ? (
+                                <LoansManagement borrower={true}/>
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
+                        <Route exact path="/dashboard/myloans/owner">
+                            {user.session.isUserLogin() ? (
+                                <LoansManagement borrower={false}/>
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
+                        <Route exact path="/dashboard/addTool">
+                            {user.session.isUserLogin() ? (
+                                <ToolForm
+                                    tool={null}
+                                    formTitle={"Ajouter"}
+                                    action={"add"}
+                                />
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
+                        <Route exact path="/dashboard/toolList">
+                            {user.session.isUserLogin() ? (
+                                <UserToolsList/>
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
 
 
-                            <Route exact path="/dashboard/profil">
-                                {user.session.isUserLogin() ? (
-                                    <EditProfilForm />
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
+                        <Route exact path="/dashboard/profil">
+                            {user.session.isUserLogin() ? (
+                                <EditProfilForm/>
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
 
-                            <Route exact path="/AdminPage">
-                                {user.session.isUserAdmin() ? (
-                                    <AdminPage/>
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
+                        <Route exact path="/AdminPage">
+                            {user.session.isUserAdmin() ? (
+                                <AdminPage/>
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
 
-                            <Route exact path="/dashboard/profil/password">
-                                {user.session.isUserLogin() ? (
-                                    <EditProfilForm />
-                                ) : (
-                                    <NotRigthToBeHere/>
-                                )}
-                            </Route>
+                        <Route exact path="/dashboard/profil/password">
+                            {user.session.isUserLogin() ? (
+                                <EditProfilForm/>
+                            ) : (
+                                <NotRightToBeHere/>
+                            )}
+                        </Route>
 
-                            <Route component={UnkownPage} />
-                        </Switch>
-                    </Container>
-           
+                        <Route component={UnkownPage}/>
+                    </Switch>
+                </Container>
+
 
             </Router>
-
-            <ConversationList currentConnected ={user}/>
+            {/* Show conversation only if the user is logged in */}
+            {user.session.isUserLogin() && <ConversationList currentConnected={user}/> }
         </SessionContext.Provider>
     )
 }
+
 
 function TmpToolDetails() {
     let {toolId} = useParams()
     return <h1> Affichage de l'outil id: {toolId}</h1>
 }
 
-function NotRigthToBeHere() {
+function NotRightToBeHere() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
             <br/>

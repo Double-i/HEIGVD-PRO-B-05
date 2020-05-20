@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {Navbar, Nav, NavDropdown, NavItem} from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { SessionContext } from './SessionHelper'
 import NotificationDropdown from "./notification/NotificationDropdown";
 
@@ -24,7 +24,7 @@ function NavigationBar(props) {
                                 <>
                                 <Nav className="mr-auto">
                                     <Link to="/DashBoard" className="nav-link">
-                                        <NavItem>DashBoard</NavItem>
+                                        <NavItem>Tableau de bord</NavItem>
                                     </Link>
                                     <NotificationDropdown />
                                 </Nav>
@@ -61,12 +61,16 @@ function NavigationBar(props) {
                                                 className="dropdown-item"
                                                 to="/EditProfil"
                                             >
-                                                Edit profil
+                                                Edition du profil
                                             </Link>
 
                                             <NavDropdown.Divider />
-                                            <NavDropdown.Item onClick={session.logout}>
-                                                Deconnexion
+                                            <NavDropdown.Item onClick={()=>{
+                                                session.logout()
+                                                props.history.push("/home")
+
+                                            }}>
+                                                Déconnexion
                                             </NavDropdown.Item>
                                         </NavDropdown>
                                     </React.Fragment>
@@ -79,11 +83,11 @@ function NavigationBar(props) {
                                                 props.showSignInForm()
                                             }}
                                         >
-                                            Sign in
+                                            Connexion
                                         </Nav.Link>
 
                                         <Link to="/signup" className="nav-link">
-                                            <NavItem>Sign up</NavItem>
+                                            <NavItem>Inscription</NavItem>
                                         </Link>
                                     </React.Fragment>
                                 )
@@ -95,4 +99,4 @@ function NavigationBar(props) {
         </Navbar>
     )
 }
-export default NavigationBar
+export default withRouter(NavigationBar)

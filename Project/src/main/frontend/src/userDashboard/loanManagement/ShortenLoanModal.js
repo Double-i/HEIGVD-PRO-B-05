@@ -4,6 +4,7 @@ import * as moment from "moment";
 import {STATE, transformState} from "../../common/State";
 import {oppositeRole} from "../../common/Role";
 
+
 function ShortenLoanModal(props) {
     return (
         <Modal
@@ -19,6 +20,7 @@ function ShortenLoanModal(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
+
                 <h5>Mes demandes</h5>
                 <Table striped bordered hover>
                     <tbody>

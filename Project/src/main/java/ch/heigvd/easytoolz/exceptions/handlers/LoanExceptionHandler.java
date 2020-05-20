@@ -1,6 +1,5 @@
 package ch.heigvd.easytoolz.exceptions.handlers;
 
-import ch.heigvd.easytoolz.exceptions.address.AddressFailedStoreException;
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
 import ch.heigvd.easytoolz.exceptions.loan.*;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ public class LoanExceptionHandler extends DefaultExceptionHandler {
     @ExceptionHandler({LoanPeriodAlreadyPassedException.class})
     public ResponseEntity<ApiError> handleLoanAlreadyPassedException(LoanPeriodAlreadyPassedException ex, WebRequest request)
     {
-        return makeError(ex,request, HttpStatus.BAD_REQUEST);
+        return makeError(ex,request, HttpStatus.IM_USED);
     }
     @ExceptionHandler({LoanStateCantBeUpdatedException.class})
     public ResponseEntity<ApiError> handleLoanStateCantBeUpdatedException(LoanStateCantBeUpdatedException ex, WebRequest request)

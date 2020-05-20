@@ -13,7 +13,6 @@ import java.util.Date;
 import java.math.BigDecimal;
 import java.util.List;
 import ch.heigvd.easytoolz.models.State;
-import java.util.Set;
 
 /**
  *
@@ -51,7 +50,6 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
 
     /**
      * Return true if the tool is already (accepted) borrowed for a given period (between dateStart and dateEnd)
-     * TODO : add WHERE clause to exclude pending/refused query (but state must be defined)
      *
      * @param tool EZObject
      * @param dateStart Start Date

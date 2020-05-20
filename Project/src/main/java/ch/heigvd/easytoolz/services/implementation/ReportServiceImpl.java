@@ -1,10 +1,10 @@
 package ch.heigvd.easytoolz.services.implementation;
 
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.exceptions.report.ReportTypeIncorrectException;
 import ch.heigvd.easytoolz.models.*;
-import ch.heigvd.easytoolz.models.DTO.ReportRequest;
+import ch.heigvd.easytoolz.models.dto.ReportRequest;
 import ch.heigvd.easytoolz.repositories.EZObjectRepository;
-import ch.heigvd.easytoolz.repositories.NotificationRepository;
 import ch.heigvd.easytoolz.repositories.ReportRepository;
 import ch.heigvd.easytoolz.repositories.UserRepository;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
@@ -12,8 +12,6 @@ import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import ch.heigvd.easytoolz.services.interfaces.ReportService;
 import ch.heigvd.easytoolz.util.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +41,10 @@ public class ReportServiceImpl implements ReportService {
         if (obj == null)
             throw new EZObjectNotFoundException("Object not found " + newReport.getToolId() + " ");
 
-        //TODO : Check report type exists
+        String nameReportType = newReport.getReportType();
+
+        if(!checkReportType(nameReportType))
+            throw new ReportTypeIncorrectException();
 
         // Save report
         Report report = new Report(ReportType.valueOf(newReport.getReportType()),obj, authService.getTheDetailsOfCurrentUser());
@@ -69,8 +70,15 @@ public class ReportServiceImpl implements ReportService {
         else{
             return reportRepository.findReportByReporter_UserName(username);
         }
-
     }
 
+    private boolean checkReportType(String nameReportType){
+        for(ReportType reportType : ReportType.values()){
+            if(reportType.getReportType().equals(nameReportType)){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

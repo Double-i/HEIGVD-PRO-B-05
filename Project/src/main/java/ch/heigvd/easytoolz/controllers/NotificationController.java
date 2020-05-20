@@ -7,18 +7,17 @@ import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
 @RequestMapping("/notifications")
 public class NotificationController {
+
     // Use ConcurrentHashMap (thread-safe hashmap) to store the username with the corresponding emitter
     // to be able to notify only the right user
     private final ConcurrentHashMap<String, List<SseEmitter>> emitters = new ConcurrentHashMap<>();
@@ -53,9 +52,7 @@ public class NotificationController {
      */
     @GetMapping("/{username}")
     public SseEmitter subscribeToNotifications(@PathVariable String username) {
-
-        User user = authService.getTheDetailsOfCurrentUser();
-        System.out.println("Logged in user : " + user);
+              User user = authService.getTheDetailsOfCurrentUser();
         if (user == null || !user.getUserName().equals(username))
             throw new AccessDeniedException();
 
@@ -104,15 +101,15 @@ public class NotificationController {
 
             ArrayList<SseEmitter> deadEmitters = new ArrayList<>();
             // Send notification to all the emitters
-            for(int i = 0 ; i < userEmitters.size(); i++){
+            for (SseEmitter userEmitter : userEmitters) {
                 try {
-                    userEmitters.get(i).send(notification);
+                    userEmitter.send(notification);
                     //userEmitters.get(i).send(notification);
                     System.out.println("has been sent to user : " + username);
 
                 } catch (Exception e) {
                     // If the emitters seems dead, add it to the collection of emitters which will be deleted
-                    deadEmitters.add(userEmitters.get(i));
+                    deadEmitters.add(userEmitter);
                 }
             }
 
@@ -121,7 +118,6 @@ public class NotificationController {
             if(this.emitters.get(username).size() == 0){
                 this.emitters.remove(username);
             }
-
         }
     }
 }

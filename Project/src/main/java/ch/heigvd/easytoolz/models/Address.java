@@ -1,10 +1,7 @@
 package ch.heigvd.easytoolz.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.List;
 
 @Entity

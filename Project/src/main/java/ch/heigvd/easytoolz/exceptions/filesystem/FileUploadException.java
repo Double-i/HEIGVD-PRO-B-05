@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.exceptions.FileSystem;
+package ch.heigvd.easytoolz.exceptions.filesystem;
 
 public class FileUploadException extends StorageException{
     public FileUploadException(String message)

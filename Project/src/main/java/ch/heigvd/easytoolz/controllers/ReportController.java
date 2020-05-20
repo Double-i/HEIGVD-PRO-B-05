@@ -1,6 +1,6 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.models.DTO.ReportRequest;
+import ch.heigvd.easytoolz.models.dto.ReportRequest;
 import ch.heigvd.easytoolz.models.Report;
 import ch.heigvd.easytoolz.models.ReportType;
 import ch.heigvd.easytoolz.models.json.SuccessResponse;

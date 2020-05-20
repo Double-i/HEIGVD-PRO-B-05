@@ -1,7 +1,6 @@
 package ch.heigvd.easytoolz.exceptions.handlers;
 
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
-import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +45,6 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiError> handleDefaultException(Exception ex, WebRequest request)
     {
         ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), Now(),getURI(request) );
-        return new ResponseEntity<ApiError>(error, new HttpHeaders(),HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

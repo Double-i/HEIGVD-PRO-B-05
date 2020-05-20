@@ -96,28 +96,28 @@ export class SearchTools extends React.Component{
     loadPage(page)
     {
         let URL = this.SEARCH_URI
-
-        URL+='?page='+page;
+        let parameters ='?';
+        parameters+='page='+page;
 
         //Search by name
         if(this.state.search !== ''){
-            URL += '&' + this.state.search;
+            parameters += '&names='+ this.state.search;
             if(this.state.searchTags.length !== 0)
-                URL += '&';
+                parameters += '&';
         }
 
         if(this.state.searchTags.length !== 0){
             if(this.state.search === '')
-                URL += "/filter?"
-            URL += 'tags=';
+                URL += "/filter"
+            parameters += '&tags=';
             for(let i = 0; i < this.state.searchTags.length; ++i){
                 if(i > 0)
-                    URL += ",";
-                URL += this.state.searchTags[i];
+                    parameters += ",";
+                parameters += this.state.searchTags[i];
             }
         }
 
-        sendEzApiRequest(URL)
+        sendEzApiRequest(URL+parameters)
             .then(
                 (result) => {
                     if (result.status === 403) {
@@ -137,53 +137,72 @@ export class SearchTools extends React.Component{
         //Si le champ est vide, on affiche tout les objects
         let URL = this.SEARCH_URI;
 
+        let path = '';
+        let parameters = ''
         //Search by name
         if(this.state.search !== ''){
-            URL += '/filter?names=' + this.state.search;
+            parameters += '?names=' + this.state.search;
             if(this.state.searchTags.length !== 0)
-                URL += '&';
+                parameters += '&';
         }
 
         if(this.state.searchTags.length !== 0){
             if(this.state.search === '')
-                URL += "/filter?"
-            URL += 'tags=';
+                parameters += ""
+            parameters += '?tags=';
             for(let i = 0; i < this.state.searchTags.length; ++i){
                 if(i > 0)
-                    URL += ",";
-                URL += this.state.searchTags[i];
+                    parameters += ",";
+                parameters += this.state.searchTags[i];
             }
         }
+        if(parameters === '')
+            path = '/count'
+        else
+            path = '/filter/count'
+        sendRequestSimple(this.SEARCH_URI+path+parameters).then(
+            (result) =>
+            {
+                console.log(result)
+                let pages = []
+                let nbPages = result/10;
+                for(let i = 0; i < nbPages; i++)
+                {
+                    pages.push(
+                        <li className="page-item" key={`page-li-${i}`} onClick={() => {this.loadPage(i)}}>
+                            <a className = "page-link"  key={`page-link-${i}`} >
+                                {i}
+                            </a>
+                        </li>
+                    )
+                }
+
+                this.setState({nbTools:result,pages:pages})
+                console.log(this.state.pages)
+            }
+        )
 
         event.preventDefault();
-        sendEzApiRequest(URL)
+
+        if(parameters === '')
+            path = ''
+        else
+            path = '/filter'
+        sendEzApiRequest(this.SEARCH_URI+path+parameters)
             .then(
                 (result) => {
                     if (result.status === 403) {
                         console.log('No tools founded')
                     } else {
                         console.log('items founded')
-                        let pages = []
-                        let nbPages = result/10;
-                        for(let i = 0; i < nbPages; i++)
-                        {
-                            console.log("page "+i)
-                            pages.push(
-                                <span onClick={() => {this.loadPage(i)}}>{i}</span>
-                            )
-                        }
 
-                        this.setState({tools : result,nbTools:result.length,pages:pages})
+                        this.setState({tools : result})
                     }
                 },
                 error => {
                     console.log('Connection PAS ok', error)
                 })
-
-        //Pour éviter de "vraiment" appuyer sur le submit et refresh la page
-
     }
-
 
     //Dynaminc update of searched tags fields
     handleTagChange(e){
@@ -231,7 +250,6 @@ export class SearchTools extends React.Component{
     getMarkers()
     {
         return this.state.tools.map((tool, idx) => {
-            console.log('getting tool : '+tool.name+' at '+tool.owner.address);
             return <Marker onClick = {this.onMarkerClick}
                            key ={`search-tool-maps-marker-${idx}-${tool.name}`}
                            name = {tool.name}

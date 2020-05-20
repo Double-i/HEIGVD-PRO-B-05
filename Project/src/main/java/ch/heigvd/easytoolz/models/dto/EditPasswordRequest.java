@@ -1,4 +1,4 @@
-package ch.heigvd.easytoolz.models.DTO;
+package ch.heigvd.easytoolz.models.dto;
 
 public class EditPasswordRequest {
     public String getCurrentPassword() {

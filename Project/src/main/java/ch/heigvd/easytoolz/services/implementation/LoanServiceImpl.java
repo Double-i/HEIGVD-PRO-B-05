@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.services.implementation;
 
+import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedException;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectAlreadyUsed;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.exceptions.loan.LoanInvalidParameterException;
@@ -7,8 +8,8 @@ import ch.heigvd.easytoolz.exceptions.loan.LoanInvalidUserException;
 import ch.heigvd.easytoolz.exceptions.loan.LoanPeriodAlreadyPassedException;
 import ch.heigvd.easytoolz.exceptions.loan.LoanStateCantBeUpdatedException;
 import ch.heigvd.easytoolz.models.*;
-import ch.heigvd.easytoolz.models.DTO.LoanRequest;
-import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
+import ch.heigvd.easytoolz.models.dto.LoanRequest;
+import ch.heigvd.easytoolz.models.dto.PeriodRequest;
 import ch.heigvd.easytoolz.repositories.*;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.LoanService;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.List;
-import java.util.prefs.PreferenceChangeEvent;
 
 
 @Service
@@ -53,7 +53,10 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public ResponseEntity<String> store(LoanRequest newLoan) {
 
-        // TODO check the logged in user instead of the given user.
+
+        if(authService.getTheDetailsOfCurrentUser() == null)
+            throw new AccessDeniedException();
+
         // Check tool exists
         EZObject obj = ezObjectRepository.findByID(newLoan.getToolId());
         if (obj == null)
@@ -114,7 +117,7 @@ public class LoanServiceImpl implements LoanService {
 
         switch (newState) {
             case accepted:
-                Conversation conv = new Conversation(loan.getOwner(), loan.getBorrower().getUserName(), loan.getPkLoan());
+                Conversation conv = new Conversation(loan.getOwner().getUserName(), loan.getBorrower().getUserName(), loan.getPkLoan());
                 conversationRepository.save(conv);
                 done = updateLoanStateByOwner(loan, newState);
                 if(done){
@@ -156,18 +159,6 @@ public class LoanServiceImpl implements LoanService {
         // Check period date
         if (!isValidDate(periodRequest.getDateStart(), periodRequest.getDateEnd()))
             throw new LoanInvalidParameterException("Invalid parameters");
-
-
-        // TODO : a supprimer si pas utiliser - utile si on décide pouvoir rallonger une période
-/*        if (ezObjectRepository.isAlreadyBorrow(loan.getEZObject(), loan, periodRequest.getDateStart(), periodRequest.getDateEnd(), State.accepted, State.accepted))
-            throw new EZObjectAlreadyUsed("Invalid date, tool already used");*/
-
-/*
-        // TODO Pas à sa place ici doit être déplacer dans la méthode d'acceptation
-        Period currentValidPeriod = loan.getValidPeriod();
-        currentValidPeriod.setState(State.refused);
-        periodRepository.save(currentValidPeriod);
-*/
 
         // Check that the loan isn't passed and the new end date isn't passed too
         Date now = new Date();
@@ -308,7 +299,6 @@ public class LoanServiceImpl implements LoanService {
             specs = LoanSpecs.getLoanByOwner(username);
         }
 
-        ///////////////////////// TODO : A AMELIORER
         if (state != null) {
             Specification<Loan> states = LoanSpecs.getState(state.get(0));
 
@@ -327,7 +317,6 @@ public class LoanServiceImpl implements LoanService {
             }
             specs = specs.and(cities);
         }
-        ////////////////////////////////////
 
         if (dateStartLess != null)
             specs = specs.and(LoanSpecs.getDateStartLess(dateStartLess));
@@ -444,5 +433,4 @@ public class LoanServiceImpl implements LoanService {
 
 
 }
-
 

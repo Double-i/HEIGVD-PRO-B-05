@@ -1,8 +1,7 @@
 package ch.heigvd.easytoolz.services.interfaces;
 
-import ch.heigvd.easytoolz.models.DTO.ReportRequest;
+import ch.heigvd.easytoolz.models.dto.ReportRequest;
 import ch.heigvd.easytoolz.models.Report;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

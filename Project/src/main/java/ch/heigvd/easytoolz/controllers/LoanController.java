@@ -3,9 +3,9 @@ package ch.heigvd.easytoolz.controllers;
 
 import ch.heigvd.easytoolz.models.*;
 
-import ch.heigvd.easytoolz.models.DTO.LoanRequest;
-import ch.heigvd.easytoolz.models.DTO.PeriodRequest;
-import ch.heigvd.easytoolz.models.DTO.StateRequest;
+import ch.heigvd.easytoolz.models.dto.LoanRequest;
+import ch.heigvd.easytoolz.models.dto.PeriodRequest;
+import ch.heigvd.easytoolz.models.dto.StateRequest;
 import ch.heigvd.easytoolz.repositories.ChatRepository;
 import ch.heigvd.easytoolz.repositories.ConversationRepository;
 import ch.heigvd.easytoolz.repositories.LoanRepository;
@@ -16,7 +16,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 

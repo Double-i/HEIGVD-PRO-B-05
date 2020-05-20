@@ -1,6 +1,6 @@
 package ch.heigvd.easytoolz.controllers;
 
-import ch.heigvd.easytoolz.models.DTO.EditPasswordRequest;
+import ch.heigvd.easytoolz.models.dto.EditPasswordRequest;
 import ch.heigvd.easytoolz.models.Notification;
 import ch.heigvd.easytoolz.models.User;
 import ch.heigvd.easytoolz.models.json.SuccessResponse;

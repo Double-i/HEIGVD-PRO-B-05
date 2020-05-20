@@ -1,10 +1,9 @@
 package ch.heigvd.easytoolz.exceptions.handlers;
 
-import ch.heigvd.easytoolz.exceptions.FileSystem.FileNotFoundException;
-import ch.heigvd.easytoolz.exceptions.FileSystem.FileUploadException;
-import ch.heigvd.easytoolz.exceptions.FileSystem.StorageException;
+import ch.heigvd.easytoolz.exceptions.filesystem.FileNotFoundException;
+import ch.heigvd.easytoolz.exceptions.filesystem.FileUploadException;
+import ch.heigvd.easytoolz.exceptions.filesystem.StorageException;
 import ch.heigvd.easytoolz.exceptions.errors.ApiError;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

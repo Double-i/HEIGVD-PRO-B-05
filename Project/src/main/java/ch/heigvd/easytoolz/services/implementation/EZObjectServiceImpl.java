@@ -16,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.heigvd.easytoolz.models.EZObject_;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
@@ -25,7 +23,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class EZObjectServiceImpl implements EZObjectService {
@@ -167,12 +164,11 @@ public class EZObjectServiceImpl implements EZObjectService {
         if(files != null)
         {
             List<EZObjectImage>images = new ArrayList<>();
-            for(int i = 0; i < files.size(); i++)
-            {
-                EZObjectImage  img_path = new EZObjectImage();
+            for (MultipartFile file : files) {
+                EZObjectImage img_path = new EZObjectImage();
                 img_path.setObject(newObject);
 
-                storageService.store(files.get(i),newObject, img_path);
+                storageService.store(file, newObject, img_path);
                 images.add(img_path);
                 imagesRepository.save(img_path);
             }
@@ -198,11 +194,10 @@ public class EZObjectServiceImpl implements EZObjectService {
             if(images == null)
                 images = new ArrayList<>();
 
-            for(int i = 0; i < files.size(); i++)
-            {
-                EZObjectImage  img_path = new EZObjectImage();
+            for (MultipartFile file : files) {
+                EZObjectImage img_path = new EZObjectImage();
                 img_path.setObject(updated);
-                storageService.store(files.get(i),updated, img_path);
+                storageService.store(file, updated, img_path);
                 images.add(img_path);
                 imagesRepository.save(img_path);
             }

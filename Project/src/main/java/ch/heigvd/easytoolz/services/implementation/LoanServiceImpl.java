@@ -13,6 +13,7 @@ import ch.heigvd.easytoolz.models.dto.PeriodRequest;
 import ch.heigvd.easytoolz.repositories.*;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.LoanService;
+import ch.heigvd.easytoolz.services.interfaces.MailService;
 import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import ch.heigvd.easytoolz.specifications.LoanSpecs;
 import ch.heigvd.easytoolz.util.ServiceUtils;
@@ -48,13 +49,16 @@ public class LoanServiceImpl implements LoanService {
     private PeriodRepository periodRepository;
 
     @Autowired
+    private MailService mailService;
+
+    @Autowired
     private UserRepository user;
 
     @Override
     public ResponseEntity<String> store(LoanRequest newLoan) {
 
 
-        if(authService.getTheDetailsOfCurrentUser() == null)
+        if (authService.getTheDetailsOfCurrentUser() == null)
             throw new AccessDeniedException();
 
         // Check tool exists
@@ -121,7 +125,7 @@ public class LoanServiceImpl implements LoanService {
 
         switch (newState) {
             case accepted:
-                Conversation conv = new Conversation(loan.getOwner().getUserName(), loan.getBorrower().getUserName(), loan.getPkLoan(),loan.getEZObject().getName());
+                Conversation conv = new Conversation(loan.getOwner().getUserName(), loan.getBorrower().getUserName(), loan.getPkLoan(), loan.getEZObject().getName());
                 conversationRepository.save(conv);
                 done = updateLoanStateByOwner(loan, newState);
                 notifState = StateNotification.ACCEPTATION_DEMANDE_EMPRUNT;
@@ -131,22 +135,21 @@ public class LoanServiceImpl implements LoanService {
             case refused:
                 done = updateLoanStateByOwner(loan, newState);
                 notifState = StateNotification.REFUS_DEMANDE_EMPRUNT;
-                recipient =  loan.getBorrower();
-                messageParam =  loan.getEZObject().getName();
+                recipient = loan.getBorrower();
+                messageParam = loan.getEZObject().getName();
 
                 break;
             case cancel:
                 done = cancelLoan(loan);
-                if(done) {
-                    if(isOwner(loan)){
-                        notifState =  StateNotification.ANNULATION_RESERVATION_BORROWER;
-                        recipient =  loan.getBorrower();
-                        messageParam =  loan.getEZObject().getName();
-                    }
-                    else{
-                        notifState =  StateNotification.ANNULATION_RESERVATION_OWNER;
-                        recipient =   loan.getEZObject().getOwner();
-                        messageParam =  loan.getEZObject().getName();
+                if (done) {
+                    if (isOwner(loan)) {
+                        notifState = StateNotification.ANNULATION_RESERVATION_BORROWER;
+                        recipient = loan.getBorrower();
+                        messageParam = loan.getEZObject().getName();
+                    } else {
+                        notifState = StateNotification.ANNULATION_RESERVATION_OWNER;
+                        recipient = loan.getEZObject().getOwner();
+                        messageParam = loan.getEZObject().getName();
                     }
                 }
                 break;
@@ -216,7 +219,7 @@ public class LoanServiceImpl implements LoanService {
     /**
      * Update the state of a loan. Check that the user has the right to update (only the period creator can )
      *
-     * @param loanId loan id
+     * @param loanId   loan id
      * @param periodId period id
      * @param newState the new state
      * @return ResponseEntity
@@ -377,6 +380,32 @@ public class LoanServiceImpl implements LoanService {
 
     }
 
+    @Override
+    public ResponseEntity<String> askBack(int loanId) {
+        Loan loan = loanRepository.getOne(loanId);
+
+        if (!isOwner(loan))
+            throw new AccessDeniedException();
+
+        User borrower = loan.getBorrower();
+        User owner = loan.getOwner();
+        EZObject object = loan.getEZObject();
+
+
+
+        // Send a notification
+        notificationService.storeNotification(ServiceUtils
+                .createNotification(StateNotification.DEMANDE_RETOUR, borrower, object.getName(), owner.getUserName()));
+
+        // Send an email.
+        mailService.sendSimpleMessage(borrower.getEmail(), "Vous n'avez pas rendu un outil",
+                String.format("Vous n'avez pas rendu l'outil %s appartenant à %s (%s). Veuillez le contacter " +
+                                "le plus rapidement possible pour ne pas avoir de sanction", object.getName(),
+                        owner.getUserName(), owner.getEmail()));
+
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Ask back ok\"}", HttpStatus.OK);
+    }
+
     /**
      * Update the status to accept or refused of the given loan
      *
@@ -390,7 +419,7 @@ public class LoanServiceImpl implements LoanService {
             if (state.equals(State.accepted)) {
                 List<Loan> pendingLoans = ezObjectRepository.overlapLoans(loan.getEZObject(), loan,
                         loan.getValidPeriod().getDateStart(), loan.getValidPeriod().getDateEnd(), State.pending, State.accepted);
-                for (Loan currentLoan : pendingLoans){
+                for (Loan currentLoan : pendingLoans) {
                     currentLoan.setState(State.refused);
                     loanRepository.save(currentLoan);
                 }
@@ -404,7 +433,7 @@ public class LoanServiceImpl implements LoanService {
 
     /**
      * Cancel the given loan.
-     *
+     * <p>
      * It checks that the current logged in user is either the borrower or owner of the loan
      *
      * @param loan the loan to

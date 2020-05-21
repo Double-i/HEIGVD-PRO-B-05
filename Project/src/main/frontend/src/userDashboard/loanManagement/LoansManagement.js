@@ -15,6 +15,7 @@ import {formatString} from "../../common/Utils";
 const LOANS_REQUEST = "/loans/find/user/"
 const LOANS_UPDATE_STATE_REQUEST = "/loans/"
 
+
 // used to know which container should be update
 let containerToUpdate;
 let containerMethodtoUpdate;
@@ -30,19 +31,25 @@ function LoansManagement(props) {
 
     const session = useContext(SessionContext)
     const username = session.session.getUserName()
+
+    // These states are used to update mananage the different type of loan (passed, pending, incomming etc.)
     const [pendingLoans, setPendingLoans] = useState([]);
     const [inComingLoans, setInComingLoans] = useState([]);
     const [onGoingLoans, setOnGoingLoans] = useState([]);
     const [passedLoans, setPassedLoans] = useState([]);
     const [refusedLoans, setRefusedLoans] = useState([]);
+
+    // These states are used to show modal for ask a shorten or a new period
     const [showShortenLoansModal, setShowShortenLoansModal] = useState(false);
     const [showNewPeriodModal, setShowNewPeriodModal] = useState(false);
     const [receiveMessageResponse, setReceiveMessageResponse] = useState(false)
-    const [newPeriodResponse, setNewPeriodResponse] = useState({message:""})
+    const [newPeriodResponse, setNewPeriodResponse] = useState({message: ""})
+
 
     const [loan, setLoan] = useState({validPeriod: moment(), periods: []}); // should be defined because of ShortenLoanModal
-    const role = props.borrower ? ROLE.borrower : ROLE.owner
 
+    // Determine the user role
+    const role = props.borrower ? ROLE.borrower : ROLE.owner
 
     // If the url param isn't correct we redirect the user on the home page
     if (role !== ROLE.borrower && role !== ROLE.owner) {
@@ -50,8 +57,8 @@ function LoansManagement(props) {
 
     }
 
+    // Request to send to get the loans
     useEffect(() => {
-
         // Request for pending loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: isBorrower(role),
@@ -101,7 +108,7 @@ function LoansManagement(props) {
         // Request for refused loans
         sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
             borrower: isBorrower(role),
-            state: formatString("{0},{1}",STATE.refused, STATE.cancel),
+            state: formatString("{0},{1}", STATE.refused, STATE.cancel),
         }).then((result) => {
             sendEzApiRequest(LOANS_REQUEST + username, 'GET', {}, {
                 borrower: isBorrower(role),
@@ -120,9 +127,19 @@ function LoansManagement(props) {
 
     }, [props.borrower]);
 
+    /**
+     * Redirect the user on the object details page
+     *
+     * @param loan
+     */
     const btnDisplayToolClicked = (loan) => {
         props.history.push(`/tooldetails/${loan.ezobject.id}`)
     }
+    /**
+     * Triggered when the cancel button is clicked. It's cancel the loan, remove it from the current container
+     * (pending or incoming loans container) and add it to the refusedLoans container
+     * @param loan
+     */
     const btnCancelLoanClicked = (loan) => {
 
         sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/state`, 'PATCH', {
@@ -149,6 +166,12 @@ function LoansManagement(props) {
         })
     }
 
+    /**
+     * Update the loan state use to cancel, accepted or refused a loan
+     * @param loan
+     * @param state
+     * @returns {Promise<unknown>}
+     */
     const updateLoanState = (loan, state) => {
 
         return sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/state`, 'PATCH', {
@@ -183,6 +206,12 @@ function LoansManagement(props) {
             || startDateRLoan.isBetween(startDateLLoan, endDateRLoan, null, '[]'))
     }
 
+    /**
+     * Triggered when the owner accepts a loan. It changes the state of the loan and move it to the corresponding loans container
+     * NOTE: if a loan with the same object and an overlapping period it refused it.
+     *
+     * @param loan
+     */
     const btnAcceptedClicked = (loan) => {
         updateLoanState(loan, STATE.accepted).then((result) => {
             const newInComingLoans = [...inComingLoans]
@@ -218,13 +247,22 @@ function LoansManagement(props) {
         })
     };
 
-
+    /**
+     * Display periods loan.
+     *
+     * @param loan
+     */
     const btnShowPeriodClicked = (loan) => {
         // Show modal
         setLoan(loan)
         setShowShortenLoansModal(true)
     };
 
+    /**
+     * Refused the loan. Similar to accept method.
+     *
+     * @param loan
+     */
     const btnRefusedClicked = (loan) => {
         updateLoanState(loan, STATE.refused).then((result) => {
             const newRefusedLoans = [...refusedLoans]
@@ -235,13 +273,25 @@ function LoansManagement(props) {
             console.log(error)
         })
     };
-
+    /**
+     * This function is triggered when the owner click on asks for tool back when the loans has been accepted
+     * but the period is passed
+     *
+     * @param loan
+     */
     const btnPassBackClicked = (loan) => {
         setLoan(loan)
         setShowNewPeriodModal(true)
     };
 
-
+    /**
+     * Update the period state
+     *
+     * @param loan to update
+     * @param period to update
+     * @param state the new state
+     * @returns {Promise<>} the request send to eztool API
+     */
     const updatePeriodState = (loan, period, state) => {
 
         return sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/periods/${period.id}/state`, 'PATCH', {
@@ -255,10 +305,20 @@ function LoansManagement(props) {
         })
     };
 
+    /**
+     * This function is triggered when a user refuses shorten request of a user
+     * @param loan the loan that owns the period
+     * @param period id of the period
+     */
     const refusePeriod = (loan, period) => {
         updatePeriodState(loan, period, STATE.refused)
     };
 
+    /**
+     * This function is triggered when a user accepts shorten request of a user
+     * @param loan the loan that owns the period
+     * @param period id of the period
+     */
     const acceptPeriod = (loan, period) => {
         updatePeriodState(loan, period, STATE.accepted)
         const newContainerToUpdate = [...containerToUpdate]
@@ -270,9 +330,22 @@ function LoansManagement(props) {
 
     };
 
+    /**
+     * Use to cancel a period.
+     *
+     * @param loan the loan that own the period
+     * @param period the period to cancel
+     */
     const cancelPeriod = (loan, period) => {
-        updatePeriodState(loan, period, STATE.cancel)
+        updatePeriodState(loan, period, STATE.cancel).then(result => console.log(result), error => console.log(error))
     };
+
+    /**
+     * Function triggered when the user want to add a period shorten request
+     *
+     * @param loan the loan which owns the new period
+     * @param newEndDate the new end period
+     */
     const addPeriod = (loan, newEndDate) => {
         sendEzApiRequest(LOANS_UPDATE_STATE_REQUEST + `${loan.pkLoan}/periods/`, 'POST', {
             dateStart: loan.validPeriod.dateStart,
@@ -297,13 +370,20 @@ function LoansManagement(props) {
             })
 
             containerMethodtoUpdate(newContainerToUpdate)
-            setNewPeriodResponse({error: false, message: "Votre demande à bien été effectuée"})
+            setNewPeriodResponse({error: false, message: "Votre demande a bien été effectuée"})
 
         }, error => {
-            setNewPeriodResponse({error: true, message: "Votre demande n'est pas valide. Assurez-vous d'avoir bien fourni une date"})
+            setNewPeriodResponse({
+                error: true,
+                message: "Votre demande n'est pas valide. Assurez-vous d'avoir bien fourni une date"
+            })
             console.log(error)
         })
     };
+    /**
+     * Simple utility function to display different title on the page if the user is owner or borrower
+     * @returns {string}
+     */
     const getPageTitle = () => {
         if (role === "borrower") {
             return "Vos demande d'emprunts (coté emprunteur)"
@@ -313,6 +393,22 @@ function LoansManagement(props) {
 
     }
 
+    /**
+     * This function is triggered when the owner click on the button "demande retour" of accepted loan which the endDate
+     * has been passed. (In other words, the loan is finished but the borrower hasn't gave back the tool)
+     * @param loan
+     */
+    const askForComeBack = (loan)=> {
+        console.log(loan)
+        sendEzApiRequest(formatString("{0}{1}/askback", LOANS_UPDATE_STATE_REQUEST,loan.pkLoan),'GET')
+            .then(result => {
+            console.log(result)
+
+        },error => {
+            console.log(error)
+        })
+    }
+
     return (
         <Container>
             <h2>{getPageTitle()}</h2>
@@ -320,7 +416,7 @@ function LoansManagement(props) {
                             onHide={() => {
                                 setShowNewPeriodModal(false)
                                 setReceiveMessageResponse(false)
-                                setNewPeriodResponse({message:""})
+                                setNewPeriodResponse({message: ""})
                             }}
                             addPeriod={addPeriod}
                             loan={loan}
@@ -337,7 +433,7 @@ function LoansManagement(props) {
             />
             <h3>Demande d'emprunt en attente</h3>
             <LoansList
-                loansData={pendingLoans.map((value, number) => value)}
+                loansData={pendingLoans.map((value) => value)}
                 isOwner={isOwner(role)}
                 actionButtons={(isBorrower(role)) ? [
                     {
@@ -346,8 +442,8 @@ function LoansManagement(props) {
                     },
                     {
                         action: (loan) => {
-                            containerToUpdate=pendingLoans
-                            containerMethodtoUpdate=setPendingLoans
+                            containerToUpdate = pendingLoans
+                            containerMethodtoUpdate = setPendingLoans
                             btnCancelLoanClicked(loan)
                         },
                         label: 'Annuler',
@@ -382,23 +478,23 @@ function LoansManagement(props) {
                             containerMethodtoUpdate = setInComingLoans
                             btnShowPeriodClicked(loan)
                         },
-                        label: 'Voir retour',
+                        label: 'Racourcissement',
                     },
                     {
-                        action: (loan, newEndDate) => {
+                        action: (loan) => {
                             containerToUpdate = inComingLoans
                             containerMethodtoUpdate = setInComingLoans
                             btnPassBackClicked(loan)
                         },
-                        label: 'Demande retour'
+                        label: 'Demande raccourcissement'
                     },
                     {
-                        action : (loan) => {
+                        action: (loan) => {
                             containerToUpdate = inComingLoans
                             containerMethodtoUpdate = setInComingLoans
                             btnCancelLoanClicked(loan)
                         },
-                        label:"Annuler"
+                        label: "Annuler"
                     }
                 ]}
             />
@@ -418,7 +514,7 @@ function LoansManagement(props) {
                             containerMethodtoUpdate = setOnGoingLoans
                             btnShowPeriodClicked(loan)
                         },
-                        label: 'Voir retour',
+                        label: 'Voir raccourcissement',
                     },
                     {
                         action: (loan) => {
@@ -426,7 +522,7 @@ function LoansManagement(props) {
                             containerMethodtoUpdate = setOnGoingLoans
                             btnPassBackClicked(loan)
                         },
-                        label: 'Demande retour',
+                        label: 'Demande raccourcissement',
                     }
                 ]}
             />
@@ -435,7 +531,13 @@ function LoansManagement(props) {
             <LoansList
                 loansData={passedLoans}
                 isOwner={isOwner(role)}
-                actionButtons={[
+                actionButtons={(isOwner(role)) ? [{
+                    action: btnDisplayToolClicked,
+                    label: 'Afficher',
+                }, {
+                    action: askForComeBack,
+                    label: 'Demande retour'
+                }] : [
                     {
                         action: btnDisplayToolClicked,
                         label: 'Afficher',

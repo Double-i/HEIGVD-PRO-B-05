@@ -18,6 +18,12 @@ import {IMG_API_URL} from "../../common/ApiHelper";
 function formatAdress(address) {
     return `${address.address} ${address.city.city} (${address.district} - ${address.city.country.country})`
 }
+
+/**
+ * Return the url to used -
+ * @param tool
+ * @returns {string}
+ */
 function getThumbnail(tool){
     if(tool.images.length > 0 )
     {

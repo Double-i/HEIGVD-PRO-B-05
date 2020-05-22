@@ -13,6 +13,7 @@ import ch.heigvd.easytoolz.models.dto.PeriodRequest;
 import ch.heigvd.easytoolz.repositories.*;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
 import ch.heigvd.easytoolz.services.interfaces.LoanService;
+import ch.heigvd.easytoolz.services.interfaces.MailService;
 import ch.heigvd.easytoolz.services.interfaces.NotificationService;
 import ch.heigvd.easytoolz.specifications.LoanSpecs;
 import ch.heigvd.easytoolz.util.ServiceUtils;
@@ -48,13 +49,16 @@ public class LoanServiceImpl implements LoanService {
     private PeriodRepository periodRepository;
 
     @Autowired
+    private MailService mailService;
+
+    @Autowired
     private UserRepository user;
 
     @Override
     public ResponseEntity<String> store(LoanRequest newLoan) {
 
 
-        if(authService.getTheDetailsOfCurrentUser() == null)
+        if (authService.getTheDetailsOfCurrentUser() == null)
             throw new AccessDeniedException();
 
         // Check tool exists
@@ -93,7 +97,7 @@ public class LoanServiceImpl implements LoanService {
     }
 
     /**
-     * Update the state of a state which we gave the id with the given new state.
+     * Update the state of a loan  of the given loan with the given state
      *
      * @param loanId   the id of the loan we want to update the state
      * @param newState the new state
@@ -103,10 +107,10 @@ public class LoanServiceImpl implements LoanService {
     public ResponseEntity<String> updateState(int loanId, State newState) {
 
         // Get loan by id and check if exists
-        Loan loan = loanRepository.getOne(loanId); // it return
+        Loan loan = loanRepository.getOne(loanId);
 
         // Check the state. It has to be pending state to be : cancel - accepted or refused
-        if (!loan.getState().equals(State.pending))
+        if (!loan.getState().equals(State.pending) && !loan.getState().equals(State.accepted))
             throw new LoanStateCantBeUpdatedException("Loan has already been accepted/refused/canceled");
 
         // Check the loan hasn't started yet
@@ -115,37 +119,51 @@ public class LoanServiceImpl implements LoanService {
 
         boolean done = false;
 
+        StateNotification notifState = null;
+        User recipient = null;
+        String messageParam = null;
+
         switch (newState) {
             case accepted:
-                Conversation conv = new Conversation(loan.getOwner().getUserName(), loan.getBorrower().getUserName(), loan.getPkLoan(),loan.getEZObject().getName());
+                Conversation conv = new Conversation(loan.getOwner().getUserName(), loan.getBorrower().getUserName(), loan.getPkLoan(), loan.getEZObject().getName());
                 conversationRepository.save(conv);
                 done = updateLoanStateByOwner(loan, newState);
-                if(done){
-                    notificationService.storeNotification(ServiceUtils.createNotification(
-                            StateNotification.ACCEPTATION_DEMANDE_EMPRUNT,
-                            loan.getBorrower(),
-                            loan.getEZObject().getName()
-                    ));
-                }
+                notifState = StateNotification.ACCEPTATION_DEMANDE_EMPRUNT;
+                recipient = loan.getBorrower();
+                messageParam = loan.getEZObject().getName();
                 break;
             case refused:
-
                 done = updateLoanStateByOwner(loan, newState);
-                if(done){
-                    notificationService.storeNotification(ServiceUtils.createNotification(
-                            StateNotification.REFUS_DEMANDE_EMPRUNT,
-                            loan.getBorrower(),
-                            loan.getEZObject().getName()
-                    ));
-                }
+                notifState = StateNotification.REFUS_DEMANDE_EMPRUNT;
+                recipient = loan.getBorrower();
+                messageParam = loan.getEZObject().getName();
+
                 break;
             case cancel:
                 done = cancelLoan(loan);
+                if (done) {
+                    if (isOwner(loan)) {
+                        notifState = StateNotification.ANNULATION_RESERVATION_BORROWER;
+                        recipient = loan.getBorrower();
+                        messageParam = loan.getEZObject().getName();
+                    } else {
+                        notifState = StateNotification.ANNULATION_RESERVATION_OWNER;
+                        recipient = loan.getEZObject().getOwner();
+                        messageParam = loan.getEZObject().getName();
+                    }
+                }
                 break;
+            default:
+                throw new LoanStateCantBeUpdatedException("Cannot update loan");
         }
         if (!done)
             throw new RuntimeException("LoanService - Something went wrong while trying to update loan state");
-
+        else
+            notificationService.storeNotification(ServiceUtils.createNotification(
+                    notifState,
+                    recipient,
+                    messageParam
+            ));
 
         return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"The loans has been\"}", HttpStatus.OK);
     }
@@ -201,11 +219,11 @@ public class LoanServiceImpl implements LoanService {
     /**
      * Update the state of a loan. Check that the user has the right to update (only the period creator can )
      *
-     * @param loanId
-     * @param periodId
-     * @param newState
-     * @return
-     * @throws InvalidParameterException
+     * @param loanId   loan id
+     * @param periodId period id
+     * @param newState the new state
+     * @return ResponseEntity
+     * @throws InvalidParameterException can be thrown when the given params are wrong
      */
     @Override
     public ResponseEntity<String> updatePeriodState(int loanId, int periodId, State newState) throws InvalidParameterException {
@@ -362,6 +380,32 @@ public class LoanServiceImpl implements LoanService {
 
     }
 
+    @Override
+    public ResponseEntity<String> askBack(int loanId) {
+        Loan loan = loanRepository.getOne(loanId);
+
+        if (!isOwner(loan))
+            throw new AccessDeniedException();
+
+        User borrower = loan.getBorrower();
+        User owner = loan.getOwner();
+        EZObject object = loan.getEZObject();
+
+
+
+        // Send a notification
+        notificationService.storeNotification(ServiceUtils
+                .createNotification(StateNotification.DEMANDE_RETOUR, borrower, object.getName(), owner.getUserName()));
+
+        // Send an email.
+        mailService.sendSimpleMessage(borrower.getEmail(), "Vous n'avez pas rendu un outil",
+                String.format("Vous n'avez pas rendu l'outil %s appartenant à %s (%s). Veuillez le contacter " +
+                                "le plus rapidement possible pour ne pas avoir de sanction", object.getName(),
+                        owner.getUserName(), owner.getEmail()));
+
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"Ask back ok\"}", HttpStatus.OK);
+    }
+
     /**
      * Update the status to accept or refused of the given loan
      *
@@ -375,7 +419,7 @@ public class LoanServiceImpl implements LoanService {
             if (state.equals(State.accepted)) {
                 List<Loan> pendingLoans = ezObjectRepository.overlapLoans(loan.getEZObject(), loan,
                         loan.getValidPeriod().getDateStart(), loan.getValidPeriod().getDateEnd(), State.pending, State.accepted);
-                for (Loan currentLoan : pendingLoans){
+                for (Loan currentLoan : pendingLoans) {
                     currentLoan.setState(State.refused);
                     loanRepository.save(currentLoan);
                 }
@@ -390,14 +434,14 @@ public class LoanServiceImpl implements LoanService {
     /**
      * Cancel the given loan.
      * <p>
-     * It checks that the current logged in user is the borrower of the loan
+     * It checks that the current logged in user is either the borrower or owner of the loan
      *
      * @param loan the loan to
      * @return return true if the loan has been cancel
      */
     private boolean cancelLoan(Loan loan) {
         boolean updated = false;
-        if (isBorrower(loan)) {
+        if (isBorrower(loan) || isOwner(loan)) {
             loan.setState(State.cancel);
             loanRepository.save(loan);
             updated = true;

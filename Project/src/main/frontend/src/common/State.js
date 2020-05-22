@@ -10,6 +10,10 @@ import {
 } from 'react-icons/fa'
 import {GiCancel} from "react-icons/gi";
 
+/**
+ * Different state a loan or a period can have
+ * @type {{cancel: string, refused: string, pending: string, accepted: string, passed: string}}
+ */
 export const STATE ={
     cancel: "cancel",
     refused: "refused",
@@ -17,6 +21,14 @@ export const STATE ={
     pending:"pending",
     passed : "passed"
 }
+
+/**
+ * return the icon and the french name for a state.
+ *
+ * @param state we like to get
+ * @param idx use to give a key. See React key for component display in list
+ * @returns {[]} [0] => Icon, [1] => label
+ */
 export function transformState(state, idx){
     let stateInfo = [];
     switch(state){

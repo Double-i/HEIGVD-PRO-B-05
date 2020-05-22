@@ -77,11 +77,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editPassword(String username, EditPasswordRequest editPasswordRequest) {
+
         User connectedUser = authenticationService.getTheDetailsOfCurrentUser();
         // We check the user wants to edit his password and that his current password is correct
         if(!connectedUser.getUserName().equals(username) )
             throw new AccessDeniedException();
-
 
         if (! passwordEncoder.matches(editPasswordRequest.getCurrentPassword(), connectedUser.getPassword()))
             throw new AccessDeniedException();

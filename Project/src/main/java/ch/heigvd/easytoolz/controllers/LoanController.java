@@ -136,6 +136,11 @@ public class LoanController {
     {
         return chatRepository.findByFkConversation_IDAndFkConversation_Loan(conv,loan);
     }
+    @GetMapping("{loanId}/askback")
+    public ResponseEntity<String> askToolBack(@PathVariable int loanId){
+        return loanService.askBack(loanId);
+
+    }
 
 
 }

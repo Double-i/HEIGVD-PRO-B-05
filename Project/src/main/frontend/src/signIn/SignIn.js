@@ -8,28 +8,35 @@ import { sendEzApiRequest } from '../common/ApiHelper'
 const LOGIN_URI = '/authenticate'
 
 function SignInForm(props) {
-    // state var and states functions
+
+    // This state is used to know if the application is trying to signin
     const [isLogging, setIsLogging] = useState(false)
+
+    // this 3 states are used to display error message after the reponse of the request for login has been received
     const [hasConnectionProblem, setHasConnectionProblem] = useState(false)
     const [hasBeenLoggedIn, setHasBeenLoggedIn] = useState(false)
     const [hasWrongCredential, sethasWrongCredential] = useState(false)
 
+    /**
+     * This function is triggered when the user clicked on the login button
+     * @param username given by the user
+     * @param password given by the user
+     */
     const attemptLogin = (username, password) => {
 
-        // reset error message
+        // Reset error message, To avoid displaying previous error/success message
         setHasConnectionProblem(false)
         sethasWrongCredential(false)
         setHasBeenLoggedIn(false)
 
+        // Send a request
         sendEzApiRequest(LOGIN_URI, 'POST', {
             userName: username,
             password: password,
         }).then(
             result => {
+
                 setIsLogging(false)
-
-                console.log('So far so good')
-
                 props.setLoggedUser({
                     tokenDuration: result.tokenDuration,
                     username: result.user.userName,

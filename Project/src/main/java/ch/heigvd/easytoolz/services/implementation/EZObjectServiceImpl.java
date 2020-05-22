@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.services.implementation;
 
+import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectCurrentlyBorrowedException;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.repositories.EzObjectImageRepository;
@@ -217,8 +218,8 @@ public class EZObjectServiceImpl implements EZObjectService {
         if (toDelete == null)
             throw new EZObjectNotFoundException("" + id);
 
-        if(loanService.isObjectIsCurrentlyBorrowed(id)){
-            throw new RuntimeException("ta maman");
+        if (loanService.isObjectIsCurrentlyBorrowed(id)) {
+            throw new EZObjectCurrentlyBorrowedException(id);
         }
 
         toDelete.setActive(false);

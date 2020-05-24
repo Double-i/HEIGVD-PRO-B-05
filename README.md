@@ -15,7 +15,7 @@ Development team:
 | Name                                      | Email                         | Github        |
 |-------------------------------------------|-------------------------------|---------------|
 | Goujgali Ilias (project lead)             | ilias.goujgali@heig-vd.ch     | Double-i      |
-| Janssens Emmanuel (deputy project lead)   | emmanuel.janssens@heig-vd.ch  | kwenaw        |
+| Janssens Emmanuel (deputy project lead)   | emmanuel.janssens@heig-vd.ch  | emmanueljanssens        |
 | Vaz Afonzo Vitor                          | vitor.vazafonzo@heig-vd.ch    | vitorva       |   
 | Potet Bastien                             | bastien.potet@heig-vd.ch      | Bpotet        |
 | Lehmann Maurice                           | maurice.lehmann@heig-vd.ch    | mauricelehmann|
@@ -26,37 +26,34 @@ Development team:
 
 This software requires Java 11 or above and the following libraries:
 
-* Lorem v. 4.3
-* Ipsum v. 48.3.p1
-* Dolor v. 22-3
+* Spring Boot
+* Node JS
+* MySQL 8.0.17
 
 ## Build and install
 
-1. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-   nisi ut aliquip ex ea commodo consequat.
+1. Ouvrir le projet InteliJ
 
-2. Duis aute irure dolor in reprehenderit in voluptate velit esse
-   cillum dolore eu fugiat nulla pariatur.
+2. Laisser maven installer les dépendances
 
-3. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-   officia deserunt mollit anim id est laborum.
+3. Exécuter les buts maven
+   * Clean
+   * Package
 
 ## Run
+1. Après installation il faut se rendre dans le dossier ./Project/target/classes
+2. Dans le fichier application.properties vérifier les identifiants de connexion pour votre serveur MySQL et les remplir avec les valeurs correspondantes
+   * spring.datasource.username
+   * spring.datasource.password
 
-1. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-   nisi ut aliquip ex ea commodo consequat.
 
-2. Duis aute irure dolor in reprehenderit in voluptate velit esse
-   cillum dolore eu fugiat nulla pariatur.
-
-3. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-   officia deserunt mollit anim id est laborum.
+3. Exécuter le fichier .JAR dans ./Project/target
+4. Se rendre sur http://localhost:8080
 
 ## Documentation
 
-User manual: see file xxxxx.
+User manual: [Google drive](https://drive.google.com/open?id=10r6WXoMTXB07bD_PJGdk-7SYTzswoxOf)
 
-API documentation: see file yyyyy.
-
+API documentation: [Google drive](https://drive.google.com/open?id=1s5TqqvcQjYEM3pg4wM95_ZBjYta2-tKi)
 ### Liens utiles
 [Google Drive](https://drive.google.com/drive/folders/1h3pftY42kTYfaN2R6FOvPVxIEiGOpM0N)

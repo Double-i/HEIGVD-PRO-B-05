@@ -59,7 +59,7 @@ function NavigationBar(props) {
                                         >
                                             <Link
                                                 className="dropdown-item"
-                                                to="/EditProfil"
+                                                to="/dashboard/profil"
                                             >
                                                 Edition du profil
                                             </Link>

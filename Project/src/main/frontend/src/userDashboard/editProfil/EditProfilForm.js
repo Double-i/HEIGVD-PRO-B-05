@@ -46,7 +46,7 @@ function EditProfilForm(props) {
     useEffect(() => {
 
         // Send a request to get the user informations and fill the form with them
-        sendEzApiRequest(USER_ENDPOINT + `${username}`, 'GET').then(result => {
+        sendEzApiRequest(formatString(USER_ENDPOINT, username), 'GET').then(result => {
 
             setUserInfo({
                 userFirstname: result.firstName,

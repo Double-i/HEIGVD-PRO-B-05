@@ -96,8 +96,7 @@ function App() {
                         window.location.replace("/home")
                     }}
                 />
-
-                <Container>
+                <Container style={{marginTop: "20px"}}>
                     <Switch>
                         {/*The home page can be the reach with http://<DOMAIN>/home, http://<DOMAIN>/accueil or http://<DOMAIN>/  */}
                         <Route exact path="/(home|accueil|)/">

@@ -61,7 +61,7 @@ export class SearchTools extends React.Component{
                     pages.push(
                         <li className="page-item" key={`page-li-${i}`} onClick={() => {this.loadPage(i)}}>
                         <a className = "page-link"  key={`page-link-${i}`} >
-                            {i}
+                            {i + 1}
                         </a>
                         </li>
                     )
@@ -171,7 +171,7 @@ export class SearchTools extends React.Component{
                     pages.push(
                         <li className="page-item" key={`page-li-${i}`} onClick={() => {this.loadPage(i)}}>
                             <a className = "page-link"  key={`page-link-${i}`} >
-                                {i}
+                                {i + 1}
                             </a>
                         </li>
                     )
@@ -313,7 +313,7 @@ export class SearchTools extends React.Component{
                     />
                 </Row>
                 <Row className={"justify-content-md-center"}>
-                    <nav>
+                    <nav className={"paginationTools"} >
                         <ul className={"pagination"}>
                             {this.state.pages}
                         </ul>

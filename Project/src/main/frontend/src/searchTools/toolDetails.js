@@ -74,31 +74,27 @@ class ToolDetails extends React.Component{
     render()
     {
         return (
-
-        <Container class="align-content-center" style={{margin:"10px"}}>
+        <Container class="align-content-center">
+            <div className="detailsTitle" style={{
+                backgroundImage: `url(${this.state.images[0].src})`,
+                height: '400px'
+            }}>
+                <div className="tagsDetails">
+                {
+                    this.state.objectTags.map(tag =>(
+                        <Button class="btn-light">{tag.name}</Button>
+                    ))
+                }
+                </div>
+            </div>
              <Card style={
                         {
                             width:'100%',
                             margin: '0 auto',
                             float: 'none',
                             marginBottom: '10px'
-
                         }}>
-
                     <Card.Body>
-                        <Carousel>
-                            {
-                                this.state.images.map((values) =>
-                                    <Carousel.Item >
-                                        <img
-                                            className="d-block w-25"
-                                            src={values.src}
-                                            alt="first slide"
-                                        />
-                                    </Carousel.Item>
-                                )
-                            }
-                        </Carousel>
                         <Card.Title>
                             {this.state.name}
                         </Card.Title>
@@ -111,20 +107,6 @@ class ToolDetails extends React.Component{
                         </Card.Subtitle>
                         <Card.Text>
                             {this.state.description}
-                        </Card.Text>
-
-                        <Card.Subtitle>
-                            Catégories
-                        </Card.Subtitle>
-
-                        <Card.Text>
-                            <ListGroup>
-                                {
-                                    this.state.objectTags.map(tag =>(
-                                        <ListGroup.Item key={tag.id}>{tag.name}</ListGroup.Item>
-                                    ))
-                                }
-                            </ListGroup>
                         </Card.Text>
 
 
@@ -152,7 +134,8 @@ class ToolDetails extends React.Component{
                                 disabled={false} //TODO : avoir une props de l'item isBorrowable !
                                 key={"buttonId" + this.props.id}
                                 style={{
-                                    marginBottom: '10px'
+                                    marginBottom: '10px',
+                                    marginRight: '10px'
                                 }}
                                 onClick={() => this.setBorrowModalShow(true)}
                             >

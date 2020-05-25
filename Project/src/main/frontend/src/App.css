@@ -68,3 +68,21 @@
   min-width: 450px;
   overflow-y: auto;
 }
+
+.paginationTools{
+  margin-top: 10px;
+}
+
+.paginationTools li:hover a{
+  cursor: pointer;
+}
+
+.speechBubble{
+  cursor: pointer;
+}
+
+.tagsDetails{
+  position: relative;
+  top: 10px;
+  left: 10px;
+}

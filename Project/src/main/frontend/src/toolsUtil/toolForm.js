@@ -196,7 +196,7 @@ class ToolForm extends React.Component {
             .string()
             .required('Requis')
             .min(3, 'Minumum 3 caractères!')
-            .max(20),
+            .max(255),
         toolDescription: yup.string().min(0).max(200),
         toolTags: yup
             .array().of(yup.string())

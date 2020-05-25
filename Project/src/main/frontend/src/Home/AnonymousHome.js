@@ -5,9 +5,8 @@ import React from "react";
 /**
  * This anonymous page get no props. It's the default home page for an anonymous user.
  *
- * @param props
+ * @param props, no props
  * @returns {React.Component} return the page
- * @constructor
  */
 function AnonymousHome(props) {
     return <>

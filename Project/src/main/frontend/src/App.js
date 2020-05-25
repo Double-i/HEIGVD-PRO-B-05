@@ -32,6 +32,12 @@ import AnonymousHome from "./Home/AnonymousHome";
 
 const SESSION_REFRESH_ENDPOINT = "/authrefresh"
 
+/**
+ * App is the component React containing all the others pages / React Components.
+ *
+ * @returns {*}
+ * @constructor
+ */
 function App() {
     const userStorage = localStorage.getItem('user')
     const userObject = userStorage === null ? {} : JSON.parse(userStorage)
@@ -80,7 +86,6 @@ function App() {
     return (
         <SessionContext.Provider value={user}>
             <Router>
-
                 <NavigationBar showSignInForm={() => setShowSignInForm(true)}/>
                 <SignIn
                     showSignInForm={showSignInForm}
@@ -109,7 +114,6 @@ function App() {
                                 <NotRightToBeHere/>
                             )}
                         </Route>
-                        <Route exact path="/disconnect"/>
                         <Route exact path="/signup">
                             {user.session.isUserLogin() ? (
                                 <AlreadyConnect/>
@@ -121,9 +125,6 @@ function App() {
                         <Route exact path="/toolDetails/:id" component={ToolDetails}/>
                         <Route exact path="/searchTools">
                             <SearchTools/>
-                        </Route>
-                        <Route exact path="/tools/:toolId">
-                            <TmpToolDetails/>
                         </Route>
                         <Route exact path="/dashboard/myloans/borrower">
                             {user.session.isUserLogin() ? (
@@ -195,12 +196,12 @@ function App() {
     )
 }
 
-
-function TmpToolDetails() {
-    let {toolId} = useParams()
-    return <h1> Affichage de l'outil id: {toolId}</h1>
-}
-
+/**
+ * React component representing the page to show when the user's trying to access a page which cannot be access while
+ * he's an anonymous user (not logged in)
+ * @returns {*}
+ * @constructor
+ */
 function NotRightToBeHere() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
@@ -217,6 +218,11 @@ function NotRightToBeHere() {
     )
 }
 
+/**
+ * React component representing the page to show when the user access a page which cannot be displayed while logged in.
+ * (Sign up for example)
+ * @returns {React.Component}
+ */
 function AlreadyConnect() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
@@ -232,6 +238,10 @@ function AlreadyConnect() {
     )
 }
 
+/**
+ * React component representing the 404 page
+ * @returns {React.Component}
+ */
 function UnkownPage() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>

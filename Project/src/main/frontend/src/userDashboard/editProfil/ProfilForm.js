@@ -12,10 +12,9 @@ import {formatString} from "../../common/Utils";
 /**
  * ProfilForm is a form with the user info is used in the Edit profil and signup pages
  *
- * @param props contain: initialValues, a JS object,  containing the initial values for the form, editProfil a boolean
- *                       which is used to know if the form is used to edit or create an user.
- * @returns {*}
- * @constructor
+ * @param props: initialValues: a JS object containing the initial values for the form
+ *               editProfil a boolean which is used to know if the form is used to edit or create an user.
+ * @returns {React.Component}
  */
 function ProfilForm(props) {
 

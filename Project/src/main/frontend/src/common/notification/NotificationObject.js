@@ -1,3 +1,7 @@
+/**
+ * Javascript object representing the different kind of notification
+ * @type {{RACCOURCISSEMENT_OWNER: string, ACCEPTATION_DEMANDE_EMPRUNT: string, REFUS_DEMANDE_EMPRUNT: string, ANNULATION_RESERVATION_BORROWER: string, RESERVATION: string, REFUS_DEMANDE_RACOURCISSEMENT_BORROWER: string, MESSAGE: string, ANNULATION_RESERVATION_OWNER: string, RACCOURCISSEMENT_BORROWER: string, REFUS_DEMANDE_RACOURCISSEMENT_OWNER: string, ACCEPTATION_DEMANDE_RACOURCISSEMENT_BORROWER: string, SIGNALEMENT: string, ACCEPTATION_DEMANDE_RACOURCISSEMENT_OWNER: string, DEMANDE_RETOUR: string}}
+ */
 export const NOTIFICATION_STATE = {
     MESSAGE: "MESSAGE",
     SIGNALEMENT: "SIGNALEMENT",
@@ -14,15 +18,20 @@ export const NOTIFICATION_STATE = {
     ANNULATION_RESERVATION_BORROWER :"ANNULATION_RESERVATION_BORROWER",
     DEMANDE_RETOUR :"DEMANDE_RETOUR"
 }
+
+/**
+ * Used to know to what page redirect the user
+ *
+ * @param notification
+ * @returns {string}
+ */
 export function notificationRedirectUrl(notification){
     let url;
      switch(notification.state){
          case NOTIFICATION_STATE.MESSAGE:
-             // TODO que faire ?
              url = "/home"
              break;
          case NOTIFICATION_STATE.SIGNALEMENT:
-             // TODO que faire ?
              url = "/home"
              break;
          case NOTIFICATION_STATE.RESERVATION:

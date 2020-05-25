@@ -3,10 +3,7 @@ import {
     FaCheck,
     FaBan,
     FaRegClock,
-    FcCancel,
     FaCross
-
-
 } from 'react-icons/fa'
 import {GiCancel} from "react-icons/gi";
 

@@ -3,8 +3,15 @@ import ProfilForm from "../userDashboard/editProfil/ProfilForm";
 import {Container} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 
+// EzApi Endpoint for signup
 const SIGNUP_ENDPOINT = '/signup'
 
+/**
+ *
+ * @param props, no props
+ * @returns {React.Component}
+ * @constructor
+ */
 function SignUp(props){
 
     // Default value. Use to fill the signup form

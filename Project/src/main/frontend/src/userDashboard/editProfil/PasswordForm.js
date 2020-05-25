@@ -8,9 +8,8 @@ import {SessionContext} from "../../common/SessionHelper";
 
 /**
  * Change password form. It uses to change the user password
- * @param props
- * @returns {*}
- * @constructor
+ * @param props, no props
+ * @returns {React.Component}
  */
 function PasswordForm(props) {
     const session = useContext(SessionContext);
@@ -20,7 +19,6 @@ function PasswordForm(props) {
     const [hasError, setHasError] = useState(false)
 
     const attemptEditPassword = values => {
-        console.log("password ", values)
         setSavingPassword(false)
         sendEzApiRequest(`/users/${username}/password`,'POST', {
             currentPassword: values.currentPassword,

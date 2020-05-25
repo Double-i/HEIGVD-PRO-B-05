@@ -7,6 +7,15 @@ import { sendEzApiRequest } from '../common/ApiHelper'
 
 const LOGIN_URI = '/authenticate'
 
+/**
+ * Component containing the signin form. It's displayed in a modal.
+ * @param props : - setLoggedUser() function used to send the logged in user information to the parent component (App.js)
+ *                - setShowSignInForm() function used to show or not the form
+ *                - showSignInForm prop is the var used to know if it should display the modal. This is the var changed
+ *                when we call setShowSignInForm() function
+ *
+ * @returns {React.Component}
+ */
 function SignInForm(props) {
 
     // This state is used to know if the application is trying to signin

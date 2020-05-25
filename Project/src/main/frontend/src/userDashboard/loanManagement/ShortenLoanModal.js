@@ -4,7 +4,14 @@ import * as moment from "moment";
 import {STATE, transformState} from "../../common/State";
 import {oppositeRole} from "../../common/Role";
 
-
+/**
+ * Display the different periods proposals by the owner or the borrower
+ * It allows the user to accept/refuse the other user of the loan (borrower or owner) or to cancel his own proposal
+ *
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 function ShortenLoanModal(props) {
     return (
         <Modal
@@ -42,7 +49,8 @@ function ShortenLoanModal(props) {
                                                 }
                                             >Annuler</Button>
                                         </td>
-                                    </tr>)
+                                    </tr>
+                                )
                             })
                     }
                     </tbody>
@@ -53,7 +61,6 @@ function ShortenLoanModal(props) {
                     {
                         props.loan.periods.filter(period => period.creator === oppositeRole(props.role) && period.state !== STATE.accepted)
                             .map((period, idx) => {
-
                                 return (
                                     <tr>
                                         <td>{moment(period.dateStart).format("DD/MM/YYYY")}</td>
@@ -76,10 +83,10 @@ function ShortenLoanModal(props) {
                                             >Refuser</Button>
                                         </td>
 
-                                    </tr>)
+                                    </tr>
+                                )
                             })
                     }
-
                     </tbody>
                 </Table>
             </Modal.Body>

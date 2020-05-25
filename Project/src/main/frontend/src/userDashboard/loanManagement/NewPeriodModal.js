@@ -3,6 +3,11 @@ import {Alert, Button, Modal} from 'react-bootstrap'
 import * as moment from 'moment'
 import DatePicker from 'react-date-picker'
 
+/**
+ * A modal which show a calendar to choose the new end date
+ * @param props : loan: object containing the loan information
+ * @returns {React.Component}
+ */
 function NewPeriodModal(props) {
     const [selectedDate, setSelectedDate] = useState(new Date())
 

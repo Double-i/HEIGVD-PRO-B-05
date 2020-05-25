@@ -11,7 +11,7 @@ const USER_ENDPOINT = '/users/{0}'
 
 /**
  * Edit profil form.
- * @param props take no props
+ * @param props, no props
  * @returns {React.Component}
  * @constructor
  */

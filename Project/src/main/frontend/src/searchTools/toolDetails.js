@@ -75,14 +75,16 @@ class ToolDetails extends React.Component{
     {
         return (
         <Container class="align-content-center">
+            {}
             <div className="detailsTitle" style={{
-                backgroundImage: `url(${this.state.images[0].src})`,
+                backgroundImage: `url(${this.state.images.length > 0 ? this.state.images[0].src : "http://127.0.0.1:8080/api/image/default.png"})`,
+                backgroundRepeat: 'no-repeat',
                 height: '400px'
             }}>
                 <div className="tagsDetails">
                 {
                     this.state.objectTags.map(tag =>(
-                        <Button class="btn-light">{tag.name}</Button>
+                        <Button class="btn-light" style={{marginRight: "10px"}}>{tag.name}</Button>
                     ))
                 }
                 </div>

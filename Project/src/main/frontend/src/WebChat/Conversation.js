@@ -282,6 +282,7 @@ class Conversation extends React.Component
                 <div>
                     <input id = "message_content"type={"text"}/>
                     <span style={this.sendButton}
+                          className="onHoverCusor"
                           onClick=
                               { () =>
                                 {

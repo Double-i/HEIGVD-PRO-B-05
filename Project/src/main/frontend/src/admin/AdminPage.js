@@ -65,6 +65,7 @@ class AdminPage extends React.Component{
             <div className={'container'}>
                 <Button
                     onClick={() => this.setState({hideUsers : false, hideTools : true })}
+                    style={{marginRight: "10px"}}
                 >
                     Liste utilisateur
                 </Button>

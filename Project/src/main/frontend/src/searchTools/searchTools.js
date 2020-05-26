@@ -36,11 +36,6 @@ export class SearchTools extends React.Component{
             showingInfoWindow: false,
         }
 
-        sendEzApiRequest(this.SEARCH_URI)
-            .then((response) =>{
-                this.setState({tools:response});
-            })
-            .catch(err => alert(err));
 
         //Utilisé pour appeler this dans handleSubmit
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -52,10 +47,10 @@ export class SearchTools extends React.Component{
 
         //all the objects
         sendRequestSimple('/objects/count').then(
-            (result) =>
+            (count_result) =>
             {
                 let pages = []
-                let nbPages = result/10;
+                let nbPages = count_result/10;
                 for(let i = 0; i < nbPages; i++)
                 {
                     pages.push(
@@ -66,31 +61,26 @@ export class SearchTools extends React.Component{
                         </li>
                     )
                 }
-
-                this.setState({nbTools:result,pages:pages})
-
+                sendEzApiRequest(this.TAGS_URI)
+                    .then( (tag_response) => {
+                        //Get tags from db
+                        if(tag_response.status === 403) {
+                            console.log('pas reussi a fetch les tags...');
+                        }else{
+                            sendEzApiRequest(this.SEARCH_URI)
+                                .then((tool_response) =>{
+                                    this.setState({tools:tool_response,tags: tag_response.map((value) => value.name),nbTools:count_result,pages:pages})
+                                }, error => {
+                                    console.log(error)
+                                })
+                        }
+                    }, error => {
+                        console.log(error)
+                    })
             }
         )
 
-        sendEzApiRequest(this.SEARCH_URI)
-            .then((response) =>{
-                this.setState({tools:response})
-            }, error => {
-                console.log(error)
-            })
 
-
-        sendEzApiRequest(this.TAGS_URI)
-            .then( (response) => {
-                    //Get tags from db
-                    if(response.status === 403) {
-                        console.log('pas reussi a fetch les tags...');
-                    }else{
-                        this.setState({tags: response.map((value) => value.name)})
-                    }
-                }, error => {
-                    console.log(error)
-                })
     }
 
     loadPage(page)

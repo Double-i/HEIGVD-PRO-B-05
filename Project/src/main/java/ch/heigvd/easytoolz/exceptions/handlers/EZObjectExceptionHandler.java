@@ -39,10 +39,6 @@ public class EZObjectExceptionHandler extends DefaultExceptionHandler {
         return makeError(ex,request, HttpStatus.IM_USED);
     }
 
-    @ExceptionHandler({EZObjectCurrentlyBorrowedException.class})
-    public ResponseEntity<ApiError> handleEzObjectAlreadyUsed(EZObjectCurrentlyBorrowedException ex, WebRequest request)
-    {
-        return makeError(ex,request, HttpStatus.BAD_REQUEST);
-    }
+
 
 }

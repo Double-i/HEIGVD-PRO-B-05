@@ -362,7 +362,7 @@ public class LoanServiceImpl implements LoanService {
 
         List<Loan> loans = loanRepository.findAll(specs);
 
-        return loans.size() <= 0;
+        return loans.size() > 0;
     }
 
     @Override

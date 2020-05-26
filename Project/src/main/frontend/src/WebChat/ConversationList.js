@@ -95,7 +95,7 @@ class ConversationList  extends React.Component {
                                 this.state.ongoingConversations.map((conversation, idx)  =>
                                     (
                                     <li className="nav-item" key={idx}>
-                                        <a className="nav-link"
+                                        <a className="nav-link onHoverCusor"
                                             onClick=
                                             {
                                                 ()=>

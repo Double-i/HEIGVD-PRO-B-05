@@ -86,3 +86,7 @@
   top: 10px;
   left: 10px;
 }
+
+.onHoverCusor{
+  cursor: pointer;
+}

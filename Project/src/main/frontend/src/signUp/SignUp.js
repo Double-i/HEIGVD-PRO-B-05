@@ -3,9 +3,18 @@ import ProfilForm from "../userDashboard/editProfil/ProfilForm";
 import {Container} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 
+// EzApi Endpoint for signup
 const SIGNUP_ENDPOINT = '/signup'
+
+/**
+ *
+ * @param props, no props
+ * @returns {React.Component}
+ * @constructor
+ */
 function SignUp(props){
 
+    // Default value. Use to fill the signup form
     const userInfo = {
         userFirstname: '',
         userLastname :'',
@@ -16,6 +25,9 @@ function SignUp(props){
         userCity:'',
         userCountry:''
     }
+    /**
+     * Use to redirect the user after the signup has been done.
+     */
     const afterSignUp = () => {
         props.history.push("/home")
     }

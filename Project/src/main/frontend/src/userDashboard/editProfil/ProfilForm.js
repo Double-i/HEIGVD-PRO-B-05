@@ -9,23 +9,37 @@ import {sendEzApiRequest, sendRequest} from '../../common/ApiHelper'
 import {VALIDATION_MSG} from "../../common/ValidationMessages";
 import {formatString} from "../../common/Utils";
 
+/**
+ * ProfilForm is a form with the user info is used in the Edit profil and signup pages
+ *
+ * @param props: initialValues: a JS object containing the initial values for the form
+ *               editProfil a boolean which is used to know if the form is used to edit or create an user.
+ * @returns {React.Component}
+ */
 function ProfilForm(props) {
 
+    // This state is used to inform the user the app is sending the form
+    // by disabling the sending button
     const [isSendingForm, setIsSendingForm] = useState(false)
+
+    // States are used to display error/success message
     const [hasConnectionProblem, setHasConnectionProblem] = useState(false)
     const [hasBeenSaved, setHasBeenSaved] = useState(false)
     const [isValidAddress, setIsValidAddress] = useState(true)
 
     const attemptSignUp = values => {
+        // Reset previous message
         setIsValidAddress(true)
         setHasBeenSaved(false)
         setHasConnectionProblem(false)
+        // We check the address via Google
         checkAddress({
             address: values.userAddress,
             npa: values.userNpa,
             city: values.userCity,
             country: values.userCountry,
         }).then(([isValid, googleAddress]) => {
+
             if (isValid === 1) {
                 setIsValidAddress(true);
 
@@ -60,17 +74,15 @@ function ProfilForm(props) {
                 }
                 setIsValidAddress(true)
 
+                // send information to the API
                 sendEzApiRequest(props.endpoint, verb, profilData).then(
                     result => {
-                        // en principe seul les requete http 200 passe ici
-                        console.log('Connection ok et réponse du serveur, ' + values)
                         setIsSendingForm(false)
                         setHasBeenSaved(true)
-                        props.afterEditCb(values)
+                        props.afterEditCb(result)
                     },
                     error => {
                         console.log(error);
-                        // en principe requete à problemes ici => code http 400 & 500 ou pas de co au serveur
                         setIsSendingForm(false)
                         setHasConnectionProblem(true)
 
@@ -82,6 +94,7 @@ function ProfilForm(props) {
             }
         });
     }
+    // Validation schema used to validate the user form data
     const schemaSpec = {
 
         userEmail: yup
@@ -100,7 +113,6 @@ function ProfilForm(props) {
             .min(2, formatString(VALIDATION_MSG.min, 2))
             .max(20)
             .matches(regex.validName),
-
         userAddress: yup
             .string()
             .required(VALIDATION_MSG.requis)
@@ -128,7 +140,6 @@ function ProfilForm(props) {
     // If the form is used for signup we add spec for username and password
     // which are not needed for editing profil
     if (!props.editProfil) {
-
         schemaSpec.userName = yup
             .string()
             .required(VALIDATION_MSG.requis)

@@ -5,15 +5,27 @@ import {Button} from "react-bootstrap";
 import {SessionContext} from "../../common/SessionHelper";
 import {sendEzApiRequest} from "../../common/ApiHelper";
 import PasswordForm from "./PasswordForm";
+import {formatString} from "../../common/Utils";
 
-const USER_ENDPOINT = '/users/'
+const USER_ENDPOINT = '/users/{0}'
 
-
+/**
+ * Edit profil form.
+ * @param props, no props
+ * @returns {React.Component}
+ * @constructor
+ */
 function EditProfilForm(props) {
+    // This state is used to switch between editProfil form and the change password form
     const [showEditProfil, setShowEditProfil] = useState(true)
+
     const session = useContext(SessionContext);
     const username = session.session.getUserName();
-    const editProfilEndpoint = USER_ENDPOINT + username;
+
+    const editProfilEndpoint = formatString(USER_ENDPOINT, username)
+
+    // Default user info to fill the form. It's only used before the request to get user info has been received
+    // or the request failed
     const [userInfo, setUserInfo] = useState({
         userFirstname: '',
         userLastname: '',
@@ -27,12 +39,14 @@ function EditProfilForm(props) {
     })
 
     const updateSession = (info) => {
-        console.log("EDIT PROFIL INFO ", info)
+        // we update the session info with the new one
         session.session.update(info)
     }
 
     useEffect(() => {
-        sendEzApiRequest(USER_ENDPOINT + `${username}`, 'GET').then(result => {
+
+        // Send a request to get the user informations and fill the form with them
+        sendEzApiRequest(formatString(USER_ENDPOINT, username), 'GET').then(result => {
 
             setUserInfo({
                 userFirstname: result.firstName,

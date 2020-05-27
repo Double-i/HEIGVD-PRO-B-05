@@ -9,9 +9,6 @@ import {SessionContext} from "../SessionHelper";
 import {notificationRedirectUrl} from "./NotificationObject";
 
 
-// TODO ajouter ou supprimer les anciennes notifications...
-
-
 // Endpoint to get the notification - {0} = username
 const ENDPOINT_NOTIFICATION = "/users/{0}/notifications"
 
@@ -22,8 +19,7 @@ const ENDPOINT_LIVE_NOTIFICATION = "/notifications/{0}"
 const ENDPOINT_NOTIFICATION_READ = "/notifications/{0}/markRead"
 
 function NotificationDropdown(props) {
-   // TODO voir todo ci-dessus const
-    // const [showOldNotifications, setShowOldNotifications] = useState(false)
+
     const [showNotifcationsDropdown, setShowNotifcationsDropdown] = useState(false)
     const [unreadNotifications, _setUnreadNotifications] = useState([])
     const [oldNotifications, setOldNotifications] = useState([])
@@ -58,7 +54,7 @@ function NotificationDropdown(props) {
      * We load the unread/"new" notifications
      */
     useEffect(() => {
-        sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION, username), 'GET')
+       sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION, username), 'GET')
             .then(result => {
                 setUnreadNotifications(result)
             }, error => {
@@ -109,7 +105,7 @@ function NotificationDropdown(props) {
 
             sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION_READ, notification.id),'POST').then(
                 result => {
-                    console.log("Notification marked read")
+                    console.log("Notification dropdown: notification marked as read")
                 },
                 error => {
                     console.log(error)
@@ -151,38 +147,7 @@ function NotificationDropdown(props) {
                         </ul>
                     </Col>
                 </Row>
-               {/* // TODO afficher les anciennes notifications*/}
-               {/* <Row className={"notification-item-list"}>
-                    <Col className={"text-link"} onClick={(event) => {
-                        setShowOldNotifications(!showOldNotifications)
-                    }}>
-                        <p>
-                            {showOldNotifications ? "Afficher " : "Cacher "}
-                            les anciennes notifications
-                        </p>
-                    </Col>
-                </Row>
-                {showOldNotifications &&
-                <Row className={"notification-item-list"}>
-                    <Col>
-                        <h4>Anciennes notifications</h4>
-                        <ul className="list-unstyled">
-                            {
-                                oldNotifications.map((notification, idx) => {
-                                    return (<Media as="li" key={"oldnotification-id-" + idx}
-                                                   className={"notification-item"}>
-                                        <FaCalendarCheck size={30}/>
-                                        <Media.Body className={"notification-item-body"}>
-                                            <h6>{notification.message}</h6>
-                                        </Media.Body>
-                                    </Media>)
-                                })
-                            }
-                        </ul>
-                    </Col>
 
-                </Row>
-                }*/}
                 <Button variant="primary" size="lg" block
                         onClick={() => setShowNotifcationsDropdown(false)}>Fermer</Button>
             </Container>

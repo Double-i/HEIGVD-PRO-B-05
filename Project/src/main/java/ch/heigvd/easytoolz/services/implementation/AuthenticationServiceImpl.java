@@ -36,7 +36,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public boolean isTheCurrentUserAdmin() {
-        return getTheDetailsOfCurrentUser().isAdmin();
+        User currentUser = getTheDetailsOfCurrentUser();
+        if(currentUser != null)
+            return currentUser.isAdmin();
+        else
+            return false;
     }
 
     @Override

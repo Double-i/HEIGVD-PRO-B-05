@@ -31,6 +31,14 @@ public class ChatController {
     @Autowired
     UserRepository userRepository;
 
+    /**
+     * redirige les message envyé au canal /EZChat/loan/private
+     * vers les utilisateurs abonnés á /secured/user/queue/loan-room/loan
+     * @param message
+     * @param sha
+     * @param user
+     * @return
+     */
     @MessageMapping("/EZChat/{loan-conversation}/private")
     @SendTo("/secured/user/queue/loan-room/{loan-conversation}")
     public ChatMessage sendMessage(@Payload ChatMessage message,SimpMessageHeaderAccessor sha , @DestinationVariable("loan-conversation") String user)

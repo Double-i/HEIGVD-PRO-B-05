@@ -21,6 +21,7 @@ class ConversationList  extends React.Component {
             }
         this.style =
             {
+                paddingTop: 10,
                 paddingLeft: 20,
                 paddingRight: 20,
                 paddingBottom: 20,
@@ -69,7 +70,7 @@ class ConversationList  extends React.Component {
         }
         return (
             <div className = "container bg-secondary" style={this.style}>
-                <p>My conversations</p>
+                <p>Mes conversations</p>
                 <div className = "row">
                     <div className="col-sm-4">
                         {this.displayConversationsList()}
@@ -94,7 +95,7 @@ class ConversationList  extends React.Component {
                                 this.state.ongoingConversations.map((conversation, idx)  =>
                                     (
                                     <li className="nav-item" key={idx}>
-                                        <a className="nav-link"
+                                        <a className="nav-link onHoverCusor"
                                             onClick=
                                             {
                                                 ()=>
@@ -128,7 +129,7 @@ class ConversationList  extends React.Component {
         return (
             <div>
                 <span style={this.openButtonStyle} >
-                    <img src="https://img.icons8.com/color/48/000000/speech-bubble-with-dots.png" onClick ={() => {this.toggle()}}/>
+                    <div className="speechBubble"><img src="https://img.icons8.com/color/48/000000/speech-bubble-with-dots.png" onClick ={() => {this.toggle()}}/></div>
                     {
                         this.state.opened ?
                             (

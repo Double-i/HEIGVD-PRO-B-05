@@ -19,7 +19,7 @@ class ToolForm extends React.Component {
                 toolId: '',
                 toolName: '',
                 toolDescription: '',
-                toolTags: '',
+                toolTags: [],
                 toolImage:'',
                 displayImages : [],
                 tags: [],
@@ -50,7 +50,7 @@ class ToolForm extends React.Component {
 
         //Change the input format of the values -> we want [ { name : "name" } , { name : "name" }, ... ]
         for (let i = 0; i < values.toolTags.length ; i++) {
-            tags.push({ "name" : values.toolTags[i]})
+            tags.push( values.toolTags[i])
         }
 
         let data = {
@@ -67,41 +67,45 @@ class ToolForm extends React.Component {
             formData.append(`image`, values.toolImage[i])
         }
 
-        for (let p of formData.entries()){
-            console.log(p)
+
+
+        if(tags.length > 0)
+        {
+            // A voir en fonction de notre API
+            sendForm(this.state.ApiRequest, 'POST', formData
+            ).then(
+                (result) => {
+                    console.log("result  :")
+                    console.log(result)
+                    alert("Opération réussie!")
+                    this.props.history.push("./toolList")
+
+                },
+                (errors) => {
+                    console.log("errors  :")
+                    console.log(errors)
+                }
+            )
+        }
+        else
+        {
+            alert("Veuillez sélectionner une catégorie")
         }
 
-        console.log(this.state.imgToDelete)
         for (let i of this.state.imgToDelete)
         {
 
             if(i !== null)
             {
                 sendEzApiRequest("/objects/delete/image/"+i,'DELETE').then( result => {
-                    console.log("Image deleted")
-                },
-                error => {
-                console.log(error)
-                })
+                    },
+                    error => {
+                        console.log(error)
+                    })
             }
 
         }
-        // A voir en fonction de notre API
-        sendForm(this.state.ApiRequest, 'POST', formData
-        ).then(
-            (result) => {
-                console.log("result  :")
-                console.log(result)
-                this.props.history.pop()
 
-            },
-            (errors) => {
-                console.log("errors  :")
-                console.log(errors)
-            }
-        ).then(
-            alert("Opération réussie!")
-        )
     }
 
     componentDidMount() {
@@ -121,7 +125,6 @@ class ToolForm extends React.Component {
             let images = []
             for(let i  = 0; i < this.props.tool.images.length; i++)
             {
-                console.log(i)
                 let temp = this.props.tool.images[i];
                 images.push(
                     {
@@ -136,16 +139,7 @@ class ToolForm extends React.Component {
         }
     }
 
-    schema = yup.object().shape({
-        toolName: yup
-            .string()
-            .required('Requis')
-            .min(3, 'Minumum 3 caractères!')
-            .max(20),
-        toolDescription: yup.string().min(0).max(200),
-        toolTags: yup.array().of(yup.string())
-            .min(1, 'Minimum 1 catégorie!'),
-    })
+
     addNewImage(id,url,filename,state)
     {
         let images = this.state.displayImages;
@@ -197,6 +191,17 @@ class ToolForm extends React.Component {
             </Container>
         )
     }
+    schema = yup.object().shape({
+        toolName: yup
+            .string()
+            .required('Requis')
+            .min(3, 'Minumum 3 caractères!')
+            .max(255),
+        toolDescription: yup.string().min(0).max(200),
+        toolTags: yup
+            .array().of(yup.string())
+            .min(1, 'Minimum 1 catégorie!'),
+    })
     render() {
         return(
             <>
@@ -209,8 +214,8 @@ class ToolForm extends React.Component {
                     initialValues={{
                         toolName: this.state.toolName,
                         toolDescription: this.state.toolDescription,
-                        toolImage: this.state.toolImage,
                         toolTags: this.state.toolTags,
+                        toolImage: this.state.toolImage,
                     }}
                 >
                     {({
@@ -273,11 +278,18 @@ class ToolForm extends React.Component {
                                         touched.toolDescription && !errors.toolDescription
                                     }
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.toolDescription}
+                                </Form.Control.Feedback>
+                                <Form.Control.Feedback>
+                                    OK !
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId={'formToolTags'}>
                                 Tags (ctrl + click pour choisir plusieurs tags)
-                                <select
-                                    multiple="multiple"
+                                <Form.Control
+                                    as="select"
+                                    multiple
                                     className="form-control"
                                     name="toolTags"
                                     value={values.toolTags}
@@ -299,7 +311,13 @@ class ToolForm extends React.Component {
                                             {value}
                                         </option>
                                     ))}
-                                </select>
+                                </Form.Control>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.toolTags}
+                                </Form.Control.Feedback>
+                                <Form.Control.Feedback>
+                                    OK !
+                                </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formToolFile">
                                 <Form.Control
@@ -308,7 +326,6 @@ class ToolForm extends React.Component {
                                     placeholder="Photo de l'outil"
                                     onChange={(event) => {
                                         let paths = [];
-                                        let files =[];
                                         for( let i = 0; i < event.target.files.length; i++)
                                         {
                                             paths.push(URL.createObjectURL(event.target.files[i]));

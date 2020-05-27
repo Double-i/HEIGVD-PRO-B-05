@@ -17,35 +17,37 @@ function NavigationBar(props) {
             </Link>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <SessionContext.Consumer>
-                    {({ session }) => {
-                        if (session.isUserLogin()) {
-                            return (
-                                <>
-                                <Nav className="mr-auto">
-                                    <Link to="/DashBoard" className="nav-link">
-                                        <NavItem>Tableau de bord</NavItem>
-                                    </Link>
-                                    <NotificationDropdown />
-                                </Nav>
-                                </>
-                            )
-                        }
-                    }}
-                </SessionContext.Consumer>
-                <SessionContext.Consumer>
-                    {({ session }) => {
-                        if(session.isUserAdmin()){
-                            return (
-                                <Nav className="justify-content-end">
-                                    <Link to="/AdminPage" className="nav-link">
-                                        <NavItem>Admin</NavItem>
-                                    </Link>
-                                </Nav>
-                            )
-                        }
-                    }}
-                </SessionContext.Consumer>
+                <Nav className="mr-auto">
+                    <SessionContext.Consumer>
+                        {({ session }) => {
+                            if (session.isUserLogin()) {
+                                return (
+                                    <>
+
+                                        <Link to="/DashBoard" className="nav-link">
+                                            <NavItem>Tableau de bord</NavItem>
+                                        </Link>
+                                        <NotificationDropdown />
+
+                                    </>
+                                )
+                            }
+                        }}
+                    </SessionContext.Consumer>
+                    <SessionContext.Consumer>
+                        {({ session }) => {
+                            if(session.isUserAdmin()){
+                                return (
+                                    <Nav className="justify-content-end">
+                                        <Link to="/AdminPage" className="nav-link">
+                                            <NavItem>Admin</NavItem>
+                                        </Link>
+                                    </Nav>
+                                )
+                            }
+                        }}
+                    </SessionContext.Consumer>
+                </Nav>
                 <Nav className="ml-auto">
                     <SessionContext.Consumer>
                         {({ session }) => {
@@ -59,7 +61,7 @@ function NavigationBar(props) {
                                         >
                                             <Link
                                                 className="dropdown-item"
-                                                to="/EditProfil"
+                                                to="/dashboard/profil"
                                             >
                                                 Edition du profil
                                             </Link>

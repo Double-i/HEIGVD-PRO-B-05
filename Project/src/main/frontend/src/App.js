@@ -32,6 +32,12 @@ import AnonymousHome from "./Home/AnonymousHome";
 
 const SESSION_REFRESH_ENDPOINT = "/authrefresh"
 
+/**
+ * App is the component React containing all the others pages / React Components.
+ *
+ * @returns {*}
+ * @constructor
+ */
 function App() {
     const userStorage = localStorage.getItem('user')
     const userObject = userStorage === null ? {} : JSON.parse(userStorage)
@@ -41,35 +47,37 @@ function App() {
 
     const session = new SessionHelper(userSession, setUserSession)
 
-    // Log out the user if his session has expired
+    // If the user is logged in, we set a timeout to send a request to refresh the token
     if (session.isUserLogin()) {
 
-        if (session.isExpired()) {
-            session.logout()
-        } else {
-            const refreshMoment = moment(session.getExpirationDate()).subtract(3, "minutes")
-            const duration = moment.duration(refreshMoment.diff(moment()));
+        const expirationMoment = moment(session.getExpirationDate()).subtract(3, "minutes")
+        const diff = moment.duration(expirationMoment.diff(moment()));
 
-            // If the session hasn't yet expired we add a timeout to refresh the token right before expiration
-            // If the user quit the page session won't refresh but if the user stay enough time it will
-            setTimeout(() => {
-                const refreshTokenRequest = () => sendEzApiRequest(SESSION_REFRESH_ENDPOINT, 'GET').then(result => {
-                    console.log("Refresh token response", result)
-                    session.login({
-                        tokenDuration: result.tokenDuration,
-                        username: result.user.userName,
-                        admin: result.user.admin,
-                        lastname: result.user.lastName,
-                        firstname: result.user.firstName,
-                    })
-                    setTimeout(refreshTokenRequest, SESSION_DURATION)
-                }, error => {
-                    console.log("Refresh token error: ", error)
+        // Check that the diff is less than
+        const duration = diff.asMilliseconds() < 0 ? 3000 : diff.asMilliseconds();
+        console.log(duration, diff.asMilliseconds())
+
+        // If the session hasn't yet expired we add a timeout to refresh the token right before expiration
+        setTimeout(() => {
+            const refreshTokenRequest = () => sendEzApiRequest(SESSION_REFRESH_ENDPOINT, 'GET').then(result => {
+                console.log("Refresh token response", result)
+                session.login({
+                    tokenDuration: result.tokenDuration,
+                    username: result.user.userName,
+                    admin: result.user.admin,
+                    lastname: result.user.lastName,
+                    firstname: result.user.firstName,
+                    address: result.user.address
                 })
-                refreshTokenRequest()
+                setTimeout(refreshTokenRequest, SESSION_DURATION)
+            }, error => {
+                console.log("Refresh token error: ", error)
+            })
 
-            }, duration.asMilliseconds())
-        }
+            refreshTokenRequest()
+
+        }, duration)
+
     }
 
     const user = {
@@ -80,7 +88,6 @@ function App() {
     return (
         <SessionContext.Provider value={user}>
             <Router>
-
                 <NavigationBar showSignInForm={() => setShowSignInForm(true)}/>
                 <SignIn
                     showSignInForm={showSignInForm}
@@ -91,8 +98,7 @@ function App() {
                         window.location.replace("/home")
                     }}
                 />
-
-                <Container>
+                <Container style={{marginTop: "20px"}}>
                     <Switch>
                         {/*The home page can be the reach with http://<DOMAIN>/home, http://<DOMAIN>/accueil or http://<DOMAIN>/  */}
                         <Route exact path="/(home|accueil|)/">
@@ -109,7 +115,6 @@ function App() {
                                 <NotRightToBeHere/>
                             )}
                         </Route>
-                        <Route exact path="/disconnect"/>
                         <Route exact path="/signup">
                             {user.session.isUserLogin() ? (
                                 <AlreadyConnect/>
@@ -121,9 +126,6 @@ function App() {
                         <Route exact path="/toolDetails/:id" component={ToolDetails}/>
                         <Route exact path="/searchTools">
                             <SearchTools/>
-                        </Route>
-                        <Route exact path="/tools/:toolId">
-                            <TmpToolDetails/>
                         </Route>
                         <Route exact path="/dashboard/myloans/borrower">
                             {user.session.isUserLogin() ? (
@@ -195,12 +197,12 @@ function App() {
     )
 }
 
-
-function TmpToolDetails() {
-    let {toolId} = useParams()
-    return <h1> Affichage de l'outil id: {toolId}</h1>
-}
-
+/**
+ * React component representing the page to show when the user's trying to access a page which cannot be access while
+ * he's an anonymous user (not logged in)
+ * @returns {*}
+ * @constructor
+ */
 function NotRightToBeHere() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
@@ -217,6 +219,11 @@ function NotRightToBeHere() {
     )
 }
 
+/**
+ * React component representing the page to show when the user access a page which cannot be displayed while logged in.
+ * (Sign up for example)
+ * @returns {React.Component}
+ */
 function AlreadyConnect() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>
@@ -232,6 +239,10 @@ function AlreadyConnect() {
     )
 }
 
+/**
+ * React component representing the 404 page
+ * @returns {React.Component}
+ */
 function UnkownPage() {
     return (
         <Container className={"col-md-6 col-md-offset-3"}>

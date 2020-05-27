@@ -1,6 +1,6 @@
 /**
  * This JS object is used to store message displayed when there are mistake in a form
- * It could be used later to translate validation message in other language.
+ * It could be used later to translate validation messages in other language.
  * @type {{min: string, same: string, max: string, usernameRegex: string, requis: string}}
  */
 export const VALIDATION_MSG = {
@@ -10,6 +10,5 @@ export const VALIDATION_MSG = {
     same: "Ce champ doit être identique à {0}",
     usernameRegex: "Ce champ ne peut contenir que des caractères alphanumériques ainsi que . - '",
     email: "Ce champ doit être une adresse e-mail valide : example@eztool.ch"
-
 }
 

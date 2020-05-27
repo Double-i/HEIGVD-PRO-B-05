@@ -2,16 +2,10 @@ import DisplayTools from "../toolsUtil/displayTools";
 import React from "react";
 import {SessionContext} from "../common/SessionHelper";
 import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
-import {Form, Button, Container, Row, Col} from "react-bootstrap";
-import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
+import {Form, Button,  Row, Col} from "react-bootstrap";
+import {  GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 import MapContainer  from "./map";
 
-const containerStyle = {
-    position: 'relative',
-
-    width: '100%',
-    height: '100%'
-}
 
 export class SearchTools extends React.Component{
     SEARCH_URI = '/objects'
@@ -36,11 +30,6 @@ export class SearchTools extends React.Component{
             showingInfoWindow: false,
         }
 
-        sendEzApiRequest(this.SEARCH_URI)
-            .then((response) =>{
-                this.setState({tools:response});
-            })
-            .catch(err => alert(err));
 
         //Utilisé pour appeler this dans handleSubmit
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -52,45 +41,40 @@ export class SearchTools extends React.Component{
 
         //all the objects
         sendRequestSimple('/objects/count').then(
-            (result) =>
+            (count_result) =>
             {
                 let pages = []
-                let nbPages = result/10;
+                let nbPages = count_result/10;
                 for(let i = 0; i < nbPages; i++)
                 {
                     pages.push(
                         <li className="page-item" key={`page-li-${i}`} onClick={() => {this.loadPage(i)}}>
                         <a className = "page-link"  key={`page-link-${i}`} >
-                            {i}
+                            {i + 1}
                         </a>
                         </li>
                     )
                 }
-
-                this.setState({nbTools:result,pages:pages})
-
+                sendEzApiRequest(this.TAGS_URI)
+                    .then( (tag_response) => {
+                        //Get tags from db
+                        if(tag_response.status === 403) {
+                            console.log('pas reussi a fetch les tags...');
+                        }else{
+                            sendEzApiRequest(this.SEARCH_URI)
+                                .then((tool_response) =>{
+                                    this.setState({tools:tool_response,tags: tag_response.map((value) => value.name),nbTools:count_result,pages:pages})
+                                }, error => {
+                                    console.log(error)
+                                })
+                        }
+                    }, error => {
+                        console.log(error)
+                    })
             }
         )
 
-        sendEzApiRequest(this.SEARCH_URI)
-            .then((response) =>{
-                this.setState({tools:response})
-            }, error => {
-                console.log(error)
-            })
 
-
-        sendEzApiRequest(this.TAGS_URI)
-            .then( (response) => {
-                    //Get tags from db
-                    if(response.status === 403) {
-                        console.log('pas reussi a fetch les tags...');
-                    }else{
-                        this.setState({tags: response.map((value) => value.name)})
-                    }
-                }, error => {
-                    console.log(error)
-                })
     }
 
     loadPage(page)
@@ -171,7 +155,7 @@ export class SearchTools extends React.Component{
                     pages.push(
                         <li className="page-item" key={`page-li-${i}`} onClick={() => {this.loadPage(i)}}>
                             <a className = "page-link"  key={`page-link-${i}`} >
-                                {i}
+                                {i + 1}
                             </a>
                         </li>
                     )
@@ -204,7 +188,7 @@ export class SearchTools extends React.Component{
                 })
     }
 
-    //Dynaminc update of searched tags fields
+    //Dynamic update of searched tags fields
     handleTagChange(e){
         let options = e.target.options;
         let value = [];
@@ -313,7 +297,7 @@ export class SearchTools extends React.Component{
                     />
                 </Row>
                 <Row className={"justify-content-md-center"}>
-                    <nav>
+                    <nav className={"paginationTools"} >
                         <ul className={"pagination"}>
                             {this.state.pages}
                         </ul>

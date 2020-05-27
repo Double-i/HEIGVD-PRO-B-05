@@ -18,6 +18,12 @@ import {IMG_API_URL} from "../../common/ApiHelper";
 function formatAdress(address) {
     return `${address.address} ${address.city.city} (${address.district} - ${address.city.country.country})`
 }
+
+/**
+ * Return the url to used -
+ * @param tool
+ * @returns {string}
+ */
 function getThumbnail(tool){
     if(tool.images.length > 0 )
     {
@@ -28,6 +34,16 @@ function getThumbnail(tool){
 
 }
 
+/**
+ *
+ * @param props are the same that LoansList:
+ *              actionButtons: list of object containing a button which should be display for each loans with a function
+ *                              which should be call when we click on the button
+ *              isOwner : a boolean to know if the user is looking the owner of the tool or the borrower
+ *              loan: object containing the information of the loan
+ *
+ * @returns {React.Component}
+ */
 function LoansListItem(props) {
     return (
         <Fragment>
@@ -101,10 +117,10 @@ function LoansListItem(props) {
 
 /**
  * List of loans used in loans management (borrower and owner)
- * @param props are :
- *                  1) props.loansData: loans data
- *                  2) props.isOwner: a boolean to know if it should disaply a owner or a borrower version
- *                  3) props.actionButtons: the list of buttons for a loan.
+ * @param props  loansData: list of object containing a button which should be display for each loans with a function
+ *                              which should be call when we click on the button
+ *               isOwner: a boolean to know if it should disaply a owner or a borrower version
+ *               actionButtons: the list of buttons for a loan.
  * @returns {*}
  */
 function LoansList(props) {

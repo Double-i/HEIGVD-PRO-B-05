@@ -52,12 +52,15 @@ public class NotificationController {
      */
     @GetMapping("/{username}")
     public SseEmitter subscribeToNotifications(@PathVariable String username) {
-              User user = authService.getTheDetailsOfCurrentUser();
+        // cause JDBC unavailable lorsque que @Transactional est utilisé dans l'authentificationServiceImpl
+     /*   User user = authService.getTheDetailsOfCurrentUser();
         if (user == null || !user.getUserName().equals(username))
-            throw new AccessDeniedException();
+            throw new AccessDeniedException();*/
+
 
         // Create a new emitter for the user
         SseEmitter emitter = new SseEmitter();
+
 
         // Get the user list of emitters - the user might have several emitter if he has opened several tabs in his
         // web browser
@@ -70,7 +73,6 @@ public class NotificationController {
         // We add the emitter to his list
         userEmitters.add(emitter);
 
-        System.out.println("Subscribe user : " + username);
 
         emitter.onCompletion(() -> this.emitters.remove(emitter));
         emitter.onTimeout(() -> {

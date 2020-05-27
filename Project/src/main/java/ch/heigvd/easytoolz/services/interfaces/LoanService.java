@@ -30,4 +30,6 @@ public interface LoanService {
     boolean isObjectIsCurrentlyBorrowed(int objectId);
 
     List<Loan> getLoansRelatedTo(String username);
+
+    ResponseEntity<String> askBack(int loanId);
 }

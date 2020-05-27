@@ -6,6 +6,11 @@ import * as yup from 'yup'
 import {sendEzApiRequest} from "../../common/ApiHelper";
 import {SessionContext} from "../../common/SessionHelper";
 
+/**
+ * Change password form. It uses to change the user password
+ * @param props, no props
+ * @returns {React.Component}
+ */
 function PasswordForm(props) {
     const session = useContext(SessionContext);
     const username = session.session.getUserName();
@@ -14,7 +19,6 @@ function PasswordForm(props) {
     const [hasError, setHasError] = useState(false)
 
     const attemptEditPassword = values => {
-        console.log("password ", values)
         setSavingPassword(false)
         sendEzApiRequest(`/users/${username}/password`,'POST', {
             currentPassword: values.currentPassword,
@@ -27,7 +31,8 @@ function PasswordForm(props) {
             setSavingPassword(false)
         })
     }
-
+    // Validation rules for the forms.
+    // it only check the different input are filled with at least 8 char max 32. and that the password and repeat password are the same
     const schema = yup.object({
         currentPassword: yup.string().required("Champ requis"),
         newPassword: yup

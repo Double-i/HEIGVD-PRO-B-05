@@ -2,6 +2,12 @@ import {Col, Image, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import React from "react";
 
+/**
+ * This anonymous page get no props. It's the default home page for an anonymous user.
+ *
+ * @param props, no props
+ * @returns {React.Component} return the page
+ */
 function AnonymousHome(props) {
     return <>
         <br/>

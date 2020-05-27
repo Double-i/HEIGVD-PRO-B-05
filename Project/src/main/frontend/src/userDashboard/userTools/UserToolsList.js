@@ -36,6 +36,8 @@ class UserToolsList extends React.Component {
                     console.log(response)
                     this.setState({tools: response})
                 }
+            }, error => {
+                console.log(error)
             })
 
     }

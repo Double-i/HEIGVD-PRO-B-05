@@ -1,6 +1,8 @@
 package ch.heigvd.easytoolz.services.implementation;
 
+import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectCurrentlyBorrowedException;
 import ch.heigvd.easytoolz.exceptions.ezobject.EZObjectNotFoundException;
+import ch.heigvd.easytoolz.exceptions.ezobject.UserHasNoObjectException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.repositories.EzObjectImageRepository;
 import ch.heigvd.easytoolz.services.interfaces.*;
@@ -82,8 +84,10 @@ public class EZObjectServiceImpl implements EZObjectService {
                 predicates.add( cb.like(root.get(EZObject_.DESCRIPTION),ServiceUtils.transformLike(s)));
             }
         }
-        Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS);
+
+        //jointure avec les catégories
         if(tagList != null && tagList.size() > 0) {
+            Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS);
             for(Tag t : tagList) {
                 tagPredicates.add( cb.equal(objectJoin.get("name").as(String.class),t.getName()));
             }
@@ -98,6 +102,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         return finalQuery;
     }
+
 
     public int getFilteredCount( List<String> namesList,
                                        List<String> ownersList,
@@ -114,6 +119,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         return count.intValue();
     }
+
 
     public List<EZObject> getFiltered( List<String> namesList,
                                            List<String> ownersList,
@@ -132,6 +138,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         return objects;
     }
+
     public boolean exists(EZObject obj) {
         return obj.isActive();
     }
@@ -152,7 +159,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         List<EZObjectView> res = ezObjectRepository.getByOwner_UserName(username);
 
         if (res.size() == 0)
-            throw new EZObjectNotFoundException("No Objects where found for user " + username);
+            throw new UserHasNoObjectException( username);
 
         return res;
     }
@@ -162,7 +169,6 @@ public class EZObjectServiceImpl implements EZObjectService {
         User owner = authenticationService.getTheDetailsOfCurrentUser();
 
         newObject.setOwner(owner);
-
         ezObjectRepository.save(newObject);
 
         if(files != null)
@@ -217,8 +223,8 @@ public class EZObjectServiceImpl implements EZObjectService {
         if (toDelete == null)
             throw new EZObjectNotFoundException("" + id);
 
-        if(loanService.isObjectIsCurrentlyBorrowed(id)){
-            throw new RuntimeException("ta maman");
+        if (loanService.isObjectIsCurrentlyBorrowed(id)) {
+            throw new EZObjectCurrentlyBorrowedException(id);
         }
 
         toDelete.setActive(false);

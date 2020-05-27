@@ -1,8 +1,9 @@
 import {RequestError} from "./Errors";
 import {formatString} from "./Utils";
 
-export const EZT_API = 'http://192.168.169.232:8080/api'
-export const IMG_API_URL = formatString("{0}/image",EZT_API)
+const EZT_API_DOMAIN = "127.0.0.1:8080"
+export const EZT_API = formatString('http://{0}/api', EZT_API_DOMAIN)
+export const IMG_API_URL = formatString("{0}/image", EZT_API)
 
 
 /**

@@ -3,7 +3,7 @@
  * respectively String.format("Here is % example", "the") or printf("Here is % example", "the")
  *
  * based on https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format/4673436#4673436
- * we use it as a function since extending native prototype is considered anti-pattern
+ * we use it as a function since extending native prototype is considered anti-pattern for some.
  *  (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain#Bad_practice_Extension_of_native_prototypes)
  *
  * The string to format should integrate placeholder like {0} which will be replace by the args

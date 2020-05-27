@@ -91,36 +91,82 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
     List<Loan> overlapLoans(EZObject tool, Loan loan, Date dateStart, Date dateEnd, State toolState, State periodState);
 
 
-    //EZObject findByLocalisation(int localisation);
+
+
+
+    //REQUETES SUR DES PROJECTIONS(VUES)
+
     /**
-     * Find an object by its coordinates
+     * permet de récuperer un objet via son ID
+     * @param id
+     * @return
+     */
+    EZObjectView getEZObjectByID(int id);
+
+    /**
+     * Permet de récuperer une liste d'objet qui sont actif
+     * @param active
+     * @param page
+     * @return
+     */
+    Page<EZObjectView> getAllByIsActive(boolean active, Pageable page);
+
+    /**
+     * permet de récuperer une liste d'objets filtré par utilisateur
+     * @param username
+     * @return
+     */
+    List<EZObjectView> getByOwner_UserName(String username);
+
+    /**
+     * permet de récupérer une liste d'objet filtré par contenu de leurs noms
+     * @param name
+     * @return
+     */
+    List<EZObjectView> getAllByNameContaining(String name);
+
+    /**
+     * permet de récuperer une liste d'objet filtré par contenu de leurs description
+     * @param name
+     * @return
+     */
+    List<EZObjectView> getAllByDescriptionContaining(String name);
+
+    /**
+     * permet de récuperer un objet grace aux coordonées géographique de l'objet
      * @param lat
      * @param lng
      * @return
      */
-    List<EZObject> findByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat, BigDecimal lng);
-
-    List<EZObject> findByObjectTagsIn(List<Tag> tags);
-
-
-    EZObjectView getEZObjectByID(int id);
-
-    Page<EZObjectView> getAllByIsActive(boolean active, Pageable page);
-    List<EZObjectView> getByOwner_UserName(String username);
-
-    List<EZObjectView> getAllByNameContaining(String name);
-    List<EZObjectView> getAllByDescriptionContaining(String name);
     List<EZObjectView> getAllByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat,BigDecimal lng);
+
+    /**
+     * Permet de récuperer une liste d'objet grace a leurs catégories
+     * @param tags
+     * @return
+     */
     List<EZObjectView> getAllByObjectTagsIn(List<Tag> tags);
 
-
+    /**
+     * permet de récuprer une liste  d'ID des objet signalés
+     * @return
+     */
     @Query("SELECT e.ID FROM EZObject e" +
             " WHERE e.ID IN (SELECT r.EZObject FROM Report r)")
     List<Integer> getReportedObject();
 
-
+    /**
+     * permet de récuperer une liste d'objets
+     * @param ezObjectListID
+     * @return
+     */
     List<EZObjectView> getAllByIDIn(List<Integer> ezObjectListID);
 
+    /**
+     * Compte tout les objet actif
+     * @param active
+     * @return
+     */
     int countAllByIsActive(boolean active);
 
 }

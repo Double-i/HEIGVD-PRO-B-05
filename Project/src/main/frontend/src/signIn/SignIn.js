@@ -52,6 +52,7 @@ function SignInForm(props) {
                     admin: result.user.admin,
                     lastname: result.user.lastName,
                     firstname: result.user.firstName,
+                    address: result.user.address
                 })
             },
             error => {

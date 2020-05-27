@@ -3,13 +3,15 @@ import React from "react"
 import {sendEzApiRequest} from "../common/ApiHelper";
 import { usePosition } from 'use-position';
 import MarkerClusterer from 'node-js-marker-clusterer';
+import {SessionContext} from '../common/SessionHelper'
+
 
 const mapStyles = {
     width :  '80%'
 }
 
 class MapContainer extends React.Component {
-
+    static contextType = SessionContext
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
 
@@ -31,7 +33,8 @@ class MapContainer extends React.Component {
     }
 
     componentDidMount() {
-        if (!navigator.geolocation) {
+
+       /* if (!navigator.geolocation) {
             alert("Geolocaton is not supported by your browser");
         } else {
             navigator.geolocation.getCurrentPosition(
@@ -43,7 +46,7 @@ class MapContainer extends React.Component {
                 (error) => console.log("Geolocation : "+error.message),
                 { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
             );
-        }
+        }*/
 
     }
 
@@ -123,7 +126,7 @@ class MapContainer extends React.Component {
                  google={this.props.google}
                  zoom={8}
                  style={mapStyles}
-                 initialCenter={{ lat: this.state.initialPos.lat, lng: this.state.initialPos.lng}}
+                 initialCenter={{ lat: this.context.userInfo.address.lat, lng: this.context.userInfo.address.lng}}
                  onClick={this.onMapClicked}
                >
                {this.getMarkers()}

@@ -93,7 +93,7 @@ public class LoanServiceImpl implements LoanService {
 
         periodRepository.save(period);
 
-        return new ResponseEntity<>(" {\"status\": \"ok\",\"msg\": \"The loans has been stored\"}", HttpStatus.OK);
+        return new ResponseEntity<>("{\"status\": \"ok\",\"msg\": \"The loans has been stored\"}", HttpStatus.OK);
     }
 
     /**
@@ -428,6 +428,11 @@ public class LoanServiceImpl implements LoanService {
                 for (Loan currentLoan : pendingLoans) {
                     currentLoan.setState(State.refused);
                     loanRepository.save(currentLoan);
+                    notificationService.storeNotification(ServiceUtils.createNotification(
+                            StateNotification.REFUS_DEMANDE_EMPRUNT,
+                            currentLoan.getBorrower(),
+                            currentLoan.getEZObject().getName()));
+
                 }
             }
             loan.setState(state);
@@ -494,7 +499,5 @@ public class LoanServiceImpl implements LoanService {
         }
         return creator;
     }
-
-
 }
 

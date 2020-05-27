@@ -54,7 +54,7 @@ function NotificationDropdown(props) {
      * We load the unread/"new" notifications
      */
     useEffect(() => {
-        sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION, username), 'GET')
+       sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION, username), 'GET')
             .then(result => {
                 setUnreadNotifications(result)
             }, error => {

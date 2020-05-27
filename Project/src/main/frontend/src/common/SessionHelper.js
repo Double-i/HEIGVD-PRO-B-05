@@ -3,7 +3,7 @@ import * as moment from 'moment'
 import {sendEzApiRequest} from "./ApiHelper";
 
 // Session duration in miliseconds should be the same that the server
-export const SESSION_DURATION = 1000000
+export const SESSION_DURATION = 600000
 /**
  * Class wrapping the managment of the user session
  */
@@ -62,11 +62,13 @@ export class SessionHelper {
      * Log the user out by calling the react dispatcher and by removing the session storage cookie
      */
     logout = () => {
-        sendEzApiRequest('/logout', 'GET').then( result=> {
-            console.log(result)
-        }, error => {
-            console.log(error)
-        })
+        if(!this.isExpired){
+            sendEzApiRequest('/logout', 'GET').then( result=> {
+                console.log(result)
+            }, error => {
+                console.log(error)
+            })
+        }
         this.setUserSession({})
         localStorage.removeItem('user')
     }
@@ -79,12 +81,18 @@ export class SessionHelper {
     }
 
     update = info => {
+        console.log("UPDATE", info)
         const newUserInfo = {...this.userSession}
-        if(info.userFirstname !== 'undefined') newUserInfo.firstname =  info.userFirstname
-        if(info.userLastname !== 'undefined') newUserInfo.lastname = info.userLastname
+
+        newUserInfo.username =  info.userName
+        newUserInfo.admin =  info.admin
+        newUserInfo.lastname =  info.lastName
+        newUserInfo.firstname =  info.firstName
+        newUserInfo.address =  info.address
+
         this.setUserSession(newUserInfo)
 
-        //localStorage.setItem('user', JSON.stringify(newUserInfo))
+        localStorage.setItem('user', JSON.stringify(newUserInfo))
     }
     isExpired = () => {
         return !(moment(this.userSession.tokenDuration).isAfter(moment()))

@@ -79,7 +79,7 @@ function ProfilForm(props) {
                     result => {
                         setIsSendingForm(false)
                         setHasBeenSaved(true)
-                        props.afterEditCb(values)
+                        props.afterEditCb(result)
                     },
                     error => {
                         console.log(error);

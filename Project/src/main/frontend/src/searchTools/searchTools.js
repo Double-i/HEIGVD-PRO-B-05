@@ -2,16 +2,10 @@ import DisplayTools from "../toolsUtil/displayTools";
 import React from "react";
 import {SessionContext} from "../common/SessionHelper";
 import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
-import {Form, Button, Container, Row, Col} from "react-bootstrap";
-import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
+import {Form, Button,  Row, Col} from "react-bootstrap";
+import {  GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 import MapContainer  from "./map";
 
-const containerStyle = {
-    position: 'relative',
-
-    width: '100%',
-    height: '100%'
-}
 
 export class SearchTools extends React.Component{
     SEARCH_URI = '/objects'
@@ -194,7 +188,7 @@ export class SearchTools extends React.Component{
                 })
     }
 
-    //Dynaminc update of searched tags fields
+    //Dynamic update of searched tags fields
     handleTagChange(e){
         let options = e.target.options;
         let value = [];

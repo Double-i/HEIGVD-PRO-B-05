@@ -47,35 +47,37 @@ function App() {
 
     const session = new SessionHelper(userSession, setUserSession)
 
-    // Log out the user if his session has expired
+    // If the user is logged in, we set a timeout to send a request to refresh the token
     if (session.isUserLogin()) {
 
-        if (session.isExpired()) {
-            session.logout()
-        } else {
-            const refreshMoment = moment(session.getExpirationDate()).subtract(3, "minutes")
-            const duration = moment.duration(refreshMoment.diff(moment()));
+        const expirationMoment = moment(session.getExpirationDate()).subtract(3, "minutes")
+        const diff = moment.duration(expirationMoment.diff(moment()));
 
-            // If the session hasn't yet expired we add a timeout to refresh the token right before expiration
-            // If the user quit the page session won't refresh but if the user stay enough time it will
-            setTimeout(() => {
-                const refreshTokenRequest = () => sendEzApiRequest(SESSION_REFRESH_ENDPOINT, 'GET').then(result => {
-                    console.log("Refresh token response", result)
-                    session.login({
-                        tokenDuration: result.tokenDuration,
-                        username: result.user.userName,
-                        admin: result.user.admin,
-                        lastname: result.user.lastName,
-                        firstname: result.user.firstName,
-                    })
-                    setTimeout(refreshTokenRequest, SESSION_DURATION)
-                }, error => {
-                    console.log("Refresh token error: ", error)
+        // Check that the diff is less than
+        const duration = diff.asMilliseconds() < 0 ? 3000 : diff.asMilliseconds();
+        console.log(duration, diff.asMilliseconds())
+
+        // If the session hasn't yet expired we add a timeout to refresh the token right before expiration
+        setTimeout(() => {
+            const refreshTokenRequest = () => sendEzApiRequest(SESSION_REFRESH_ENDPOINT, 'GET').then(result => {
+                console.log("Refresh token response", result)
+                session.login({
+                    tokenDuration: result.tokenDuration,
+                    username: result.user.userName,
+                    admin: result.user.admin,
+                    lastname: result.user.lastName,
+                    firstname: result.user.firstName,
+                    address: result.user.address
                 })
-                refreshTokenRequest()
+                setTimeout(refreshTokenRequest, SESSION_DURATION)
+            }, error => {
+                console.log("Refresh token error: ", error)
+            })
 
-            }, duration.asMilliseconds())
-        }
+            refreshTokenRequest()
+
+        }, duration)
+
     }
 
     const user = {

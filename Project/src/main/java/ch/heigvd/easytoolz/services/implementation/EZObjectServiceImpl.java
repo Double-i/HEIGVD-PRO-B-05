@@ -84,8 +84,9 @@ public class EZObjectServiceImpl implements EZObjectService {
                 predicates.add( cb.like(root.get(EZObject_.DESCRIPTION),ServiceUtils.transformLike(s)));
             }
         }
-        Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS);
+
         if(tagList != null && tagList.size() > 0) {
+            Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS);
             for(Tag t : tagList) {
                 tagPredicates.add( cb.equal(objectJoin.get("name").as(String.class),t.getName()));
             }

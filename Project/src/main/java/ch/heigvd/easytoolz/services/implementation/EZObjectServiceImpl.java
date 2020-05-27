@@ -85,6 +85,7 @@ public class EZObjectServiceImpl implements EZObjectService {
             }
         }
 
+        //jointure avec les catégories
         if(tagList != null && tagList.size() > 0) {
             Join<Tag,EZObject> objectJoin = root.join(EZObject_.OBJECT_TAGS);
             for(Tag t : tagList) {
@@ -102,6 +103,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         return finalQuery;
     }
 
+
     public int getFilteredCount( List<String> namesList,
                                        List<String> ownersList,
                                        List<String> descriptionList,
@@ -117,6 +119,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         return count.intValue();
     }
+
 
     public List<EZObject> getFiltered( List<String> namesList,
                                            List<String> ownersList,
@@ -135,6 +138,7 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         return objects;
     }
+
     public boolean exists(EZObject obj) {
         return obj.isActive();
     }
@@ -165,7 +169,6 @@ public class EZObjectServiceImpl implements EZObjectService {
         User owner = authenticationService.getTheDetailsOfCurrentUser();
 
         newObject.setOwner(owner);
-
         ezObjectRepository.save(newObject);
 
         if(files != null)

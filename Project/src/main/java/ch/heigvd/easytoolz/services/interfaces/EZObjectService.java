@@ -12,87 +12,134 @@ import java.util.List;
 
 public interface EZObjectService {
     /**
-     * Add an object into the database
+     * Ajouter un objet dans la base de données
      *
-     * @param newObject
+     * @param newObject objet a rajouter dans la base de données
+     * @param files fichier a uploads dans le système
      * @return
      */
     void addObject(EZObject newObject, List<MultipartFile> files ) throws Exception;
 
     /**
-     * Updates an object into the database
+     * Mise  ajour d'un objet dans la base de données
      *
-     * @param o
+     * @param object objet à mettre a jour
      * @return
      */
-    void updateObject(EZObject o, List<MultipartFile> files) throws Exception;
+    void updateObject(EZObject object, List<MultipartFile> files) throws Exception;
 
+    /**
+     * Supprime un objet de la base de donnée (soft delete)
+     * @param id id de l'objet a supprimer
+     * @throws Exception
+     */
     void deleteObject(int id) throws Exception;
     void deleteImage(int id) throws Exception;
+
+
     /**
-     * Get the list of all the objects
-     *
-     * @return
+     * Récupère une liste de tout les objets présent dans la base de donnée selon une pagination
+     * @param page la page désirée
+     * @param pageLength le nombre d'objet affiché par page
+     * @return liste d'objet
      */
     List<EZObjectView> getAll(int page, int pageLength);
 
 
     /**
-     * Find objects by owner
-     * url: api/objects/find/{username}
+     * Trouver un objet grâce a son nom d'utilisateur
      *
-     * @param username
-     * @return
+     *
+     * @param username nom d'utilisateur
+     * @return liste d'objet
      */
     List<EZObjectView> getObjectByOwner(String username) throws UserHasNoObjectException;
 
     /**
-     * Find an object by its ID
+     * Retrouve un objet unique via son ID
      *
-     * @param id
+     * @param id id de l'objet a trouver
      * @return
      */
     EZObjectView getObject(int id);
 
     /**
-     * Find an object from the database
+     * Retrouver  une liste  d'objets grâce au contenu de leurs noms
      *
      * @param objectName
-     * @return
+     * @return liste d'objet
      */
 
     List<EZObjectView> getObjectByName(String objectName);
 
     /**
-     * Find objects via description content
+     * Trouver  une liste  d'objets grace au contenu de leurs description
      *
      * @param content
      * @return
      */
-
     List<EZObjectView> getObjectByDescription(String content);
 
-
+    /**
+     * Trouver  une liste  d'objets grâce a leurs localisation
+     *
+     * @param lat
+     * @param lng
+     * @return
+     */
     List<EZObjectView> getObjectsByLocalisation(BigDecimal lat, BigDecimal lng);
 
-
+    /**
+     * Trouver une liste  d'objets grace a leurs categorie
+     *
+     * @param content
+     * @return
+     */
     List<EZObjectView> getObjectsByTag(List<Tag> tags);
 
-
+    /**
+     * Permet de retrouver le total d'objet correspondant aux filtres passé en paramètre
+     *
+     * @param namesList liste des noms qui pourront etre utilise pour filtrer
+     * @param ownersList liste des utilsiateurs qui pourront etre utilise pour filtrer
+     * @param descriptionList liste  de mot qui peuvent etre utilise pour filtrer
+     * @param tags liste des tags qui peuvent etre utilise pour filtrer
+     * @param page la page désirée
+     * @return
+     */
     int getFilteredCount(List<String> namesList,
                          List<String> ownersList,
                          List<String> descriptionList,
                          List<Tag> tags ,int page);
-
+    /**
+     * Permet de retrouver une liste d'objet correspondant aux filtres passé en paramètre
+     *
+     * @param namesList liste des noms qui pourront etre utilise pour filtrer
+     * @param ownersList liste des utilsiateurs qui pourront etre utilise pour filtrer
+     * @param descriptionList liste  de mot qui peuvent etre utilise pour filtrer
+     * @param tags liste des tags qui peuvent etre utilise pour filtrer
+     * @param page la page désirée
+     * @return
+     */
      List<EZObject> getFiltered(List<String> namesList,
                                 List<String> ownersList,
                                 List<String> descriptionList,
                                 List<Tag> tags ,int page);
-
+    /**
+     * Récupere les images liés a un id
+     *
+     * @param id de l'image désiré
+     * @return liste de noms de fichier
+     */
     List<EZObjectImage> getObjectImages(int id);
+
+    /**
+     * Récupere les objet signalé
+     *
+     * @return liste d'objets
+     */
     List<EZObjectView> getReportedObject();
 
 
-    int getNbObjects();
 
 }

@@ -29,7 +29,7 @@ public class EZObjectImage {
     public int getID(){return ID;}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int ID;
     String pathToImage;
 

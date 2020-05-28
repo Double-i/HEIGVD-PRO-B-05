@@ -47,6 +47,7 @@ public class EZObjectServiceImpl implements EZObjectService {
     @PersistenceContext
     EntityManager entityManager;
 
+
     public Predicate buildPredicates(List<String> namesList,
                                      List<String> ownersList,
                                      List<String> descriptionList,

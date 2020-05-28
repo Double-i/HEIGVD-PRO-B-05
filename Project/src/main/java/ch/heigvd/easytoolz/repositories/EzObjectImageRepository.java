@@ -8,14 +8,14 @@ import java.util.List;
 public interface EzObjectImageRepository extends JpaRepository<EZObjectImage,Integer> {
 
     /**
-     * permet de récuperer une liste de noms de fichier lié a un objet
+     * get all image files by ID
      * @param id
      * @return
      */
     List<EZObjectImage> findByEzObject_ID(int id);
 
     /**
-     * permet de récuperer un nom de fichier via son ID
+     * get image by ID
      * @param id
      * @return
      */

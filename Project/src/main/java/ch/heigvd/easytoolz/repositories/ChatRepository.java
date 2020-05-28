@@ -8,7 +8,7 @@ import java.util.List;
 public interface ChatRepository extends JpaRepository<ChatMessage,Integer> {
 
     /**
-     * permet de trouver une liste de message concernant une conversation et un prêt
+     * get all Messages by conversation/loan
      * @param conv
      * @param loan
      * @return

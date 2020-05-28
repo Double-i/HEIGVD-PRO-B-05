@@ -32,28 +32,28 @@ This software requires Java 11 or above and the following libraries:
 
 ## Build and install
 
-1. Ouvrir le projet InteliJ
+1. Open the project
 
-2. Laisser maven installer les dépendances
+2. Use maven to install dependencies
 
-3. Exécuter les buts maven
-   * Clean
-   * Package
+3. run "mvn clean package" or "mvn clean install"
 
 ## Run
-1. Après installation il faut se rendre dans le dossier ./Project/target/classes
-2. Dans le fichier application.properties vérifier les identifiants de connexion pour votre serveur MySQL et les remplir avec les valeurs correspondantes
+1. After the installation, go to ./Project/target/classes
+2. In the file "application.properties", use your MySQL server's credentials at :
    * spring.datasource.username
    * spring.datasource.password
 
 
-3. Exécuter le fichier .JAR dans ./Project/target
-4. Se rendre sur http://localhost:8080
+3. Execute the .JAR file in ./Project/target
+4. Connect to http://localhost:8080 in your browser
 
 ## Documentation
 
 User manual: [Google drive](https://drive.google.com/open?id=10r6WXoMTXB07bD_PJGdk-7SYTzswoxOf)
 
 API documentation: [Google drive](https://drive.google.com/open?id=1s5TqqvcQjYEM3pg4wM95_ZBjYta2-tKi)
-### Liens utiles
+
+### Useful links
+
 [Google Drive](https://drive.google.com/drive/folders/1h3pftY42kTYfaN2R6FOvPVxIEiGOpM0N)

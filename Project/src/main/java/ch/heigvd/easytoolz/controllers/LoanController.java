@@ -69,13 +69,6 @@ public class LoanController {
                                     @RequestParam(required = false, name = "startGT") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateStartGreater,
                                     @RequestParam(required = false, name = "endGT") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateEndGreater)
     {
-        System.out.println("borrower: "+borrower);
-        System.out.println("startLT "+dateStartLess);
-        System.out.println("endLT "+dateEndLess);
-        System.out.println("startGT "+dateStartGreater);
-        System.out.println("endGT "+dateEndGreater);
-        System.out.println("-----");
-
         return loanService.getLoan(username, borrower, state, city, dateStartLess, dateEndLess,dateStartGreater,dateEndGreater);
     }
 
@@ -88,7 +81,6 @@ public class LoanController {
      */
     @PostMapping
     public ResponseEntity<String> addLoan(@RequestBody LoanRequest newLoan) {
-        System.out.println(newLoan);
         return loanService.store(newLoan);
     }
 

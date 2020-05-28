@@ -16,7 +16,6 @@ public interface EZObjectService {
      *
      * @param newObject objet a rajouter dans la base de données
      * @param files fichier a uploads dans le système
-     * @return
      */
     void addObject(EZObject newObject, List<MultipartFile> files ) throws Exception;
 
@@ -24,7 +23,6 @@ public interface EZObjectService {
      * Mise  ajour d'un objet dans la base de données
      *
      * @param object objet à mettre a jour
-     * @return
      */
     void updateObject(EZObject object, List<MultipartFile> files) throws Exception;
 
@@ -92,8 +90,8 @@ public interface EZObjectService {
     /**
      * Trouver une liste  d'objets grace a leurs categorie
      *
-     * @param content
-     * @return
+     * @param tags
+     * @return une liste de vue d'objets
      */
     List<EZObjectView> getObjectsByTag(List<Tag> tags);
 
@@ -105,7 +103,7 @@ public interface EZObjectService {
      * @param descriptionList liste  de mot qui peuvent etre utilise pour filtrer
      * @param tags liste des tags qui peuvent etre utilise pour filtrer
      * @param page la page désirée
-     * @return
+     * @return nombre d'objet correspondant au filtres passés en paramètre
      */
     int getFilteredCount(List<String> namesList,
                          List<String> ownersList,

@@ -22,6 +22,11 @@ public class EasyAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * @param authentication the authentication request
+     * @return a new authentification token if the authentication is correct
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String userName = authentication.getName();
@@ -38,6 +43,10 @@ public class EasyAuthenticationProvider implements AuthenticationProvider {
         throw new BadCredentialsException("The password or the username is incorrect");
     }
 
+    /**
+     * @param authentication
+     * @return does the class support the authentication ?
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);

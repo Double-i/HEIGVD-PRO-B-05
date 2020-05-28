@@ -187,8 +187,6 @@ public class EZObjectServiceImpl implements EZObjectService {
                 imagesRepository.save(img_path);
             }
         }
-
-
     }
 
     public void updateObject(EZObject o, List<MultipartFile> files) throws Exception

@@ -1,10 +1,5 @@
 import React from "react";
-import {
-    FaCheck,
-    FaBan,
-    FaRegClock,
-    FaCross
-} from 'react-icons/fa'
+import {FaBan, FaCheck, FaCross, FaRegClock} from 'react-icons/fa'
 import {GiCancel} from "react-icons/gi";
 
 /**

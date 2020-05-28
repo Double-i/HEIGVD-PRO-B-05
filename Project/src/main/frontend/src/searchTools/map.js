@@ -1,8 +1,5 @@
-import { Map, GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
+import {GoogleApiWrapper, InfoWindow, Map, Marker} from 'google-maps-react';
 import React from "react"
-import {sendEzApiRequest} from "../common/ApiHelper";
-import { usePosition } from 'use-position';
-import MarkerClusterer from 'node-js-marker-clusterer';
 import {SessionContext} from '../common/SessionHelper'
 
 
@@ -24,8 +21,7 @@ class MapContainer extends React.Component {
      */
     constructor(props)
     {
-        console.log(props);
-        super(props);
+         super(props);
 
         this.state = {
             search : '',
@@ -45,7 +41,6 @@ class MapContainer extends React.Component {
      * @param e Event (unused)
      */
     onMarkerClick = (props, marker, e) => {
-        console.log("Clicked on marker !");
         this.setState({
             selectedTool: this.props.tools.find(tool => tool.name === props.name),
             activeMarker: marker,
@@ -75,7 +70,6 @@ class MapContainer extends React.Component {
      */
     getToolsFromMarker(selectedTool)
     {
-        console.log(selectedTool);
         if(selectedTool.owner !== undefined)
         {
             let tools = this.props.tools.filter(tool => {
@@ -84,7 +78,6 @@ class MapContainer extends React.Component {
                 return tool.owner.address.lat == selectedTool.owner.address.lat &&
                     tool.owner.address.lng == selectedTool.owner.address.lng
             })
-            console.log(tools);
             return tools.map(tool => {
                 return <div>
                     <h2>{tool === undefined ? "" : tool.name}</h2>
@@ -103,7 +96,6 @@ class MapContainer extends React.Component {
      */
     getInfoWindow()
     {
-        console.log("Reloading InfoWindow")
         return <InfoWindow
         marker = {this.state.activeMarker}
         visible = {this.state.showingInfoWindow}>
@@ -120,7 +112,6 @@ class MapContainer extends React.Component {
     getMarkers()
     {
         return this.props.tools.map(tool => {
-            console.log('getting tool : '+tool.name+' at '+tool.owner.address);
             return <Marker onClick = {this.onMarkerClick}
                            key = {tool.name}
                            name = {tool.name}

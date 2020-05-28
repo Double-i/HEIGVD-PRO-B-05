@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {Navbar, Nav, NavDropdown, NavItem} from 'react-bootstrap'
-import { Link, withRouter } from 'react-router-dom'
-import { SessionContext } from './SessionHelper'
+import {Nav, Navbar, NavDropdown, NavItem} from 'react-bootstrap'
+import {Link, withRouter} from 'react-router-dom'
+import {SessionContext} from './SessionHelper'
 import NotificationDropdown from "./notification/NotificationDropdown";
 
 /**

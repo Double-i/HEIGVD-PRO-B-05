@@ -73,6 +73,7 @@ class DisplayTool extends React.Component {
                     this.props.deleteButtonCB(this.props.tool)
                 }, error => {
                     alert("Impossible de suprimer l'outil")
+
                     console.log(error)
                 })
         }

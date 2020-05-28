@@ -106,8 +106,6 @@ public class NotificationController {
             for (SseEmitter userEmitter : userEmitters) {
                 try {
                     userEmitter.send(notification);
-                    //userEmitters.get(i).send(notification);
-                    System.out.println("has been sent to user : " + username);
 
                 } catch (Exception e) {
                     // If the emitters seems dead, add it to the collection of emitters which will be deleted

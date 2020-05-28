@@ -1,5 +1,5 @@
 import {default as React} from "react";
-import {Button, Modal, Alert, Form, Col,Dropdown} from "react-bootstrap";
+import {Button, Dropdown, Modal} from "react-bootstrap";
 import 'react-calendar/dist/Calendar.css';
 import {sendEzApiRequest} from "../common/ApiHelper";
 
@@ -21,8 +21,6 @@ class ReportPanel extends React.Component {
 
         }
         this.handleSubmit = this.handleSubmit.bind(this)
-
-        console.log(props)
     }
 
     handleSubmit()
@@ -34,14 +32,10 @@ class ReportPanel extends React.Component {
         })
             .then(
                 (result) => {
-                    if (result.status === 403) {
-                        console.log('No tools found')
-                    } else {
-                        this.setState({tools : result})
-                    }
+                    this.setState({tools : result})
                 },
                 error => {
-                    console.log('Connection PAS ok', error)
+                    console.log('Error occurs ', error)
                 })
     }
 

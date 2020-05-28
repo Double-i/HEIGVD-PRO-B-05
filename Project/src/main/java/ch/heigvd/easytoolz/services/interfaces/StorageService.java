@@ -40,10 +40,4 @@ public interface StorageService {
      * @throws Exception
      */
     void store(MultipartFile file, EZObject ezObject, EZObjectImage img) throws Exception;
-
-    /**
-     * delete the resource which stored to "filename"
-     * @param filename the name of the file
-     */
-    void delete(String filename);
 }

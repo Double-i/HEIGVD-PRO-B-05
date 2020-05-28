@@ -81,7 +81,6 @@ export class SessionHelper {
     }
 
     update = info => {
-        console.log("UPDATE", info)
         const newUserInfo = {...this.userSession}
 
         newUserInfo.username =  info.userName

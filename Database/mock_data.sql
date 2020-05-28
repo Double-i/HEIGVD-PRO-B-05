@@ -21,7 +21,12 @@
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES (1,'Route de valmont','Vaud',46.43,6.92,'1823',1),(2,'Rue des Laurelles 5','Vaud',46.61,6.51,'1304',5),(3,'Maison rouget','Vaud',46.78,6.64,'1400',4),(4,'Place de la Cathédrale','Vaud',46.52,6.64,'1005',2),(5,'Avanue de la Gare 5','Valais',46.10,7.07,'1920',3),(6,'Allée de la Petite Prairie 14','Vaud',46.39,6.22,'1260',6);
+INSERT INTO easytools.address (id, address, district, lat, lng, postalcode, fk_city) VALUES (1, 'Route de Valmont 12', 'Vaud', 46.43081, 6.92634, '1823', 1);
+INSERT INTO easytools.address (id, address, district, lat, lng, postalcode, fk_city) VALUES (2, 'Rue des Laurelles 5', 'Vaud', 46.61298, 6.50762, '1304', 5);
+INSERT INTO easytools.address (id, address, district, lat, lng, postalcode, fk_city) VALUES (3, 'Rue de la Maison Rouge', 'Vaud', 46.77881, 6.64282, '1400', 4);
+INSERT INTO easytools.address (id, address, district, lat, lng, postalcode, fk_city) VALUES (4, 'Place de la Cathédrale', 'Vaud', 46.52240, 6.63513, '1005', 2);
+INSERT INTO easytools.address (id, address, district, lat, lng, postalcode, fk_city) VALUES (5, 'Avenue de la Gare 5', 'Valais', 46.10221, 7.07382, '1920', 3);
+INSERT INTO easytools.address (id, address, district, lat, lng, postalcode, fk_city) VALUES (6, 'Allée de la Petite Prairie 14', 'Vaud', 46.39053, 6.22264, '1260', 6);
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 

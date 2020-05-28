@@ -1,7 +1,7 @@
 import React from "react"
 import Message from "./Message";
-import Button from "react-bootstrap/Button";
 import {sendEzApiRequest} from "../common/ApiHelper";
+
 const SockJS = require("sockjs-client")
 const Stomp = require( "@stomp/stompjs")
 
@@ -67,7 +67,6 @@ class Conversation extends React.Component
         this.sendMessage = this.sendMessage.bind(this)
 
         this.messageRefs = []
-        console.log(props)
     }
 
     /**
@@ -264,7 +263,6 @@ class Conversation extends React.Component
             fkConversation : this.props.conversation,
             date:Date.now()
         }
-        console.log(Date.now())
         this.client.send('/EZChat/'+message.fkConversation.id+'/private',{},JSON.stringify(message))
     }
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import SearchTools  from "../searchTools/searchTools";
+import SearchTools from "../searchTools/searchTools";
 
 /**
  * Main page

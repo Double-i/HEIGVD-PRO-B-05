@@ -1,5 +1,5 @@
 import {default as React} from "react";
-import {Button, Modal, Alert} from "react-bootstrap";
+import {Alert, Button, Modal} from "react-bootstrap";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import {sendEzApiRequest} from "../common/ApiHelper";

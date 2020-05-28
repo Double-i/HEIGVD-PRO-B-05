@@ -1,4 +1,4 @@
-import { prepareUrl, sendRequest } from "./ApiHelper"
+import {prepareUrl} from "./ApiHelper"
 
 const GOOGLE_API_KEY = "AIzaSyCDaaFc6krVmxR43Be81BVgYuXIbXLE1r8"; // voir telegrame
 const GOOGLE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
@@ -33,7 +33,6 @@ export function checkAddress(addressData) {
                     return [isValid, address]
                 }
             }
-            console.log("Adresse Invalide")
             return [0, address]
 
         });

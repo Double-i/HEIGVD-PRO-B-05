@@ -117,7 +117,6 @@ public class UserServiceImpl implements UserService {
             if (!authenticationService.getTheDetailsOfCurrentUser().getUserName().equals(username))
                 throw new AccessDeniedNotAdminException();
         }
-        System.out.println(newUser);
 
         return userRepository.findById(username)
             .map(oldUser -> {

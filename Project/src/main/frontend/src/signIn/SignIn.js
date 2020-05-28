@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container, Form, Button, Spinner, Modal, Alert } from 'react-bootstrap'
-import { Formik } from 'formik'
+import {Alert, Button, Container, Form, Modal, Spinner} from 'react-bootstrap'
+import {Formik} from 'formik'
 import * as yup from 'yup'
-import { sendEzApiRequest } from '../common/ApiHelper'
+import {sendEzApiRequest} from '../common/ApiHelper'
 
 const LOGIN_URI = '/authenticate'
 
@@ -59,10 +59,9 @@ function SignInForm(props) {
                 setIsLogging(false)
 
                 if(error.errorCode === 401){
-                    console.log('Bad credential amigo')
                     sethasWrongCredential(true)
                 }else{
-                    console.log('Connection PAS ok', error)
+                    console.log('Error occurs', error)
                     setHasConnectionProblem(true)
 
                 }

@@ -70,7 +70,11 @@ public class Address {
     String address;
     String district;
     String postalcode;
+
+    @Column(precision = 10, scale = 5)
     BigDecimal lat;
+
+    @Column(precision = 10, scale = 5)
     BigDecimal lng;
 
     @OneToMany(mappedBy = "address")
@@ -81,6 +85,7 @@ public class Address {
     private City city;
 
     public Address() {
+
     }
 
     public Address(String address, String district, String postalCode, BigDecimal lat, BigDecimal lng, City city) {

@@ -1,15 +1,8 @@
-import React from 'react'
-import {useState} from 'react'
+import React, {useState} from 'react'
 import './App.css'
-import {Col, Row, Container, Image} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import NavigationBar from './common/NavigationBar.js'
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    useParams,
-} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import Home from './Home/Home'
 import DashBoard from './userDashboard/DashBoard'
 import SignUp from './signUp/SignUp'
@@ -55,12 +48,10 @@ function App() {
 
         // Check that the diff is less than
         const duration = diff.asMilliseconds() < 0 ? 3000 : diff.asMilliseconds();
-        console.log(duration, diff.asMilliseconds())
 
         // If the session hasn't yet expired we add a timeout to refresh the token right before expiration
         setTimeout(() => {
             const refreshTokenRequest = () => sendEzApiRequest(SESSION_REFRESH_ENDPOINT, 'GET').then(result => {
-                console.log("Refresh token response", result)
                 session.login({
                     tokenDuration: result.tokenDuration,
                     username: result.user.userName,

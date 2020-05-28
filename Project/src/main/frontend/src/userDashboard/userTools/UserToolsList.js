@@ -31,7 +31,7 @@ class UserToolsList extends React.Component {
         sendEzApiRequest(this.GET_TOOLS_URI)
             .then((response) => {
                 if (response.status === "403") {
-                    console.log("Pas réussi a fetch les outils utilisateur");
+                    console.log("Pas réussi à fetch les outils utilisateur");
                 } else {
                     console.log(response)
                     this.setState({tools: response})

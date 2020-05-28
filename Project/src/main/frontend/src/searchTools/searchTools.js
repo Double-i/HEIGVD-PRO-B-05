@@ -1,10 +1,10 @@
 import DisplayTools from "../toolsUtil/displayTools";
 import React from "react";
 import {SessionContext} from "../common/SessionHelper";
-import {sendEzApiRequest,  sendRequestSimple} from "../common/ApiHelper";
-import {Form, Button,  Row, Col} from "react-bootstrap";
-import {  GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
-import MapContainer  from "./map";
+import {sendEzApiRequest, sendRequestSimple} from "../common/ApiHelper";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {GoogleApiWrapper} from 'google-maps-react';
+import MapContainer from "./map";
 
 /**
  * The component for the home page, containing a list of tools
@@ -179,7 +179,6 @@ export class SearchTools extends React.Component{
                 }
 
                 this.setState({nbTools:result,pages:pages})
-                console.log(this.state.pages)
             }
         )
 
@@ -201,7 +200,7 @@ export class SearchTools extends React.Component{
                     }
                 },
                 error => {
-                    console.log('Connection PAS ok', error)
+                    console.log('Error occurs', error)
                 })
     }
 

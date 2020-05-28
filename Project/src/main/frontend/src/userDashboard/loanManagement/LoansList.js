@@ -1,10 +1,6 @@
 import React, {Fragment} from 'react'
-import {Image, Media, Button, Row, Col} from 'react-bootstrap'
-import {
-    FaUser,
-    FaRegCalendarAlt,
-    FaLocationArrow,
-} from 'react-icons/fa'
+import {Button, Col, Image, Row} from 'react-bootstrap'
+import {FaLocationArrow, FaRegCalendarAlt, FaUser,} from 'react-icons/fa'
 import * as moment from 'moment'
 import {transformState} from "../../common/State";
 import {formatString} from "../../common/Utils";

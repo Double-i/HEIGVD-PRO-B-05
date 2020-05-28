@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Container} from 'react-bootstrap'
 import {withRouter} from 'react-router-dom'
@@ -399,7 +399,6 @@ function LoansManagement(props) {
      * @param loan
      */
     const askForComeBack = (loan)=> {
-        console.log(loan)
         sendEzApiRequest(formatString("{0}{1}/askback", LOANS_UPDATE_STATE_REQUEST,loan.pkLoan),'GET')
             .then(result => {
             console.log(result)

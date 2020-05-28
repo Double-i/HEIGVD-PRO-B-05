@@ -397,8 +397,6 @@ public class LoanServiceImpl implements LoanService {
         User owner = loan.getOwner();
         EZObject object = loan.getEZObject();
 
-
-
         // Send a notification
         notificationService.storeNotification(ServiceUtils
                 .createNotification(StateNotification.DEMANDE_RETOUR, borrower, object.getName(), owner.getUserName()));
@@ -426,6 +424,7 @@ public class LoanServiceImpl implements LoanService {
                 List<Loan> pendingLoans = ezObjectRepository.overlapLoans(loan.getEZObject(), loan,
                         loan.getValidPeriod().getDateStart(), loan.getValidPeriod().getDateEnd(), State.pending, State.accepted);
                 for (Loan currentLoan : pendingLoans) {
+
                     currentLoan.setState(State.refused);
                     loanRepository.save(currentLoan);
                     notificationService.storeNotification(ServiceUtils.createNotification(

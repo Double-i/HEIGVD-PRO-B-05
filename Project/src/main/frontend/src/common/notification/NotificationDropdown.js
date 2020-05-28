@@ -1,7 +1,7 @@
-import {Container, Row, Col, Media, NavDropdown, Button, Badge} from "react-bootstrap";
+import {Badge, Button, Col, Container, Media, NavDropdown, Row} from "react-bootstrap";
 import {withRouter} from 'react-router-dom'
 import * as React from "react"
-import {useContext, useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from "react"
 import {FaCalendarCheck} from 'react-icons/fa'
 import {EZT_API, sendEzApiRequest} from "../ApiHelper";
 import {formatString} from "../Utils";
@@ -90,7 +90,7 @@ function NotificationDropdown(props) {
      * @param notification
      */
     const notificationClicked = (notification) => {
-        console.log("click notif id : ", notification)
+
         const newNotification = [...unreadNotifications]
         const idxNotification = newNotification.indexOf(notification)
         if (idxNotification !== -1) {
@@ -105,7 +105,7 @@ function NotificationDropdown(props) {
 
             sendEzApiRequest(formatString(ENDPOINT_NOTIFICATION_READ, notification.id),'POST').then(
                 result => {
-                    console.log("Notification dropdown: notification marked as read")
+                    console.log(result)
                 },
                 error => {
                     console.log(error)

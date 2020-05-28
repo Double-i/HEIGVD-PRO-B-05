@@ -1,8 +1,7 @@
 import {sendEzApiRequest} from "../common/ApiHelper"
 import React from "react"
-import ImageGallery from 'react-image-gallery'
 import Gallery from 'react-grid-gallery';
-import {Container, Row, Col, ListGroup, Card, Carousel} from "react-bootstrap";
+import {Card, Container} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import BorrowPanel from "./BorrowPanel";
 import ReportPanel from "./reportPanel";

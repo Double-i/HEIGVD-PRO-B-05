@@ -25,17 +25,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public JwtRequestFilter jwtRequestFilter;
 
-
+    /**
+     * updates the authentification with a new authentication provider
+     * @param auth the manager which must be updated
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(easyAuthenticationProvider);
     }
 
+    /**
+     * @return the bean for the password encoder (BCryptPasswordEncoder())
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * configures the URL allowed by the application without authorization
+     * @param httpSecurity the security HTTP
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and().csrf().disable()

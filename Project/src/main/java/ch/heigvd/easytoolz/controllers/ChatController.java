@@ -32,12 +32,12 @@ public class ChatController {
     UserRepository userRepository;
 
     /**
-     * redirige les message envyé au canal /EZChat/loan/private
-     * vers les utilisateurs abonnés á /secured/user/queue/loan-room/loan
-     * @param message
+     * redirect the sent message to canal /EZChat/loan/private to subscribed users to
+     * /secured/user/queue/loan-room/loan
+     * @param message the message to send
      * @param sha
      * @param user
-     * @return
+     * @return the message sent
      */
     @MessageMapping("/EZChat/{loan-conversation}/private")
     @SendTo("/secured/user/queue/loan-room/{loan-conversation}")

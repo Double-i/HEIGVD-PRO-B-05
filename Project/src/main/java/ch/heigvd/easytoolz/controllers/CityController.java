@@ -18,6 +18,11 @@ public class CityController {
     @Autowired
     private CityRepository cityRepository;
 
+    /**
+     * @param name name of the city
+     * @param country name of the country
+     * @return the list of the city filtered by the parameter
+     */
     @GetMapping
     public List<City> index(
             @RequestParam(name = "name", required = false) String name,

@@ -14,6 +14,11 @@ public class StorageController {
     @Autowired
     StorageService storageService;
 
+    /**
+     * @param filename the filename of the image
+     * @return the image stored on the server
+     * @throws Exception
+     */
     @GetMapping(value = "/{filename}",
             produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE})
     @ResponseBody

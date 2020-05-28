@@ -1,5 +1,6 @@
 package ch.heigvd.easytoolz.controllers;
 
+import ch.heigvd.easytoolz.exceptions.authentication.AccessDeniedException;
 import ch.heigvd.easytoolz.models.*;
 import ch.heigvd.easytoolz.models.json.SuccessResponse;
 import ch.heigvd.easytoolz.services.interfaces.AuthenticationService;
@@ -37,14 +38,21 @@ public class EZObjectController {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    
-    @GetMapping()
+    /**
+     * @param nbItems nb.items wanted
+     * @param pageno number of the page
+     * @return all objects
+     */
+    @GetMapping
     public List<EZObjectView> index( @RequestParam(value = "nbItems", defaultValue = "10") int nbItems, @RequestParam(name = "page", defaultValue="0") int pageno)
     {
         List<EZObject> objects = ezObjectService.getFiltered(null,null,null,null, pageno);
         return objects.stream().map(this::convertToView).collect(Collectors.toList());
     }
 
+    /**
+     * @return nb. total of the objects in database
+     */
     @GetMapping("/count")
     public ResponseEntity<Integer> getNbObjects()
     {
@@ -52,9 +60,8 @@ public class EZObjectController {
     }
 
     /**
-     * Returns all the objects in the database
      * @param id
-     * @return
+     * @return the object with the id "id"
      */
     @GetMapping("/{id}")
     public EZObjectView get(@PathVariable int id )
@@ -63,13 +70,25 @@ public class EZObjectController {
     }
 
 
+    /**
+     * @param pageno number of the page
+     * @return the object of the current user
+     */
     @GetMapping("/myObjects")
     @ResponseBody
     public List<EZObjectView> getMyBObjects(@RequestParam(name = "page", defaultValue="0") int pageno)
     {
-        return ezObjectService.getObjectByOwner(authenticationService.getTheDetailsOfCurrentUser().getUserName());
+        User currentUser = authenticationService.getTheDetailsOfCurrentUser();
+        if(currentUser == null)
+            throw new AccessDeniedException();
+        return ezObjectService.getObjectByOwner(currentUser.getUserName());
     }
 
+    /**
+     * @param username username of the owner
+     * @param pageno number of the page
+     * @return the object of the owner
+     */
     @GetMapping("/owner/{username}")
     @ResponseBody
     public List<EZObjectView> getByOwner(@PathVariable String username, @RequestParam(name = "page", defaultValue="0") int pageno)
@@ -77,6 +96,13 @@ public class EZObjectController {
         return ezObjectService.getObjectByOwner(username);
     }
 
+    /**
+     * adds an object with its images
+     * @param newObject the new object
+     * @param files the images of the object
+     * @return a success message if everything is ok
+     * @throws Exception
+     */
     @PostMapping(value="/add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse> add(@RequestParam(name = "object") String newObject,
                                       @RequestParam(name = "image") List<MultipartFile> files) throws Exception {
@@ -87,6 +113,13 @@ public class EZObjectController {
         return ResponseEntity.ok().body(new SuccessResponse("The object has been stored"));
     }
 
+    /**
+     * update the object with its images
+     * @param newObject the new Object
+     * @param files the images of the object
+     * @return a success message if everything is ok
+     * @throws Exception
+     */
     @PostMapping(value="/update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse> update(@RequestParam(name = "object") String newObject,
                                          @RequestParam(name = "image") List<MultipartFile> files) throws Exception {
@@ -97,12 +130,24 @@ public class EZObjectController {
         return ResponseEntity.ok().body(new SuccessResponse("The object has been updated"));
     }
 
+    /**
+     * delete the object with the id passed in parameter
+     * @param id the id of the object
+     * @return a success message if the object has been deleted
+     * @throws Exception
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<SuccessResponse> delete(@PathVariable Integer id) throws Exception {
         ezObjectService.deleteObject(id);
         return ResponseEntity.ok().body(new SuccessResponse("The object has been deleted"));
     }
 
+    /**
+     * delete the image with the id passed in parameter
+     * @param id the if of the image
+     * @return a success message if the image has been deleted
+     * @throws Exception
+     */
     @DeleteMapping("/delete/image/{id}")
     public ResponseEntity<SuccessResponse> deleteImage(@PathVariable int id) throws Exception
     {
@@ -110,6 +155,11 @@ public class EZObjectController {
         return ResponseEntity.ok().body(new SuccessResponse("The image has been deleted"));
     }
 
+    /**
+     * @param objectName name of the object
+     * @param pageno number of the page
+     * @return every object with a name which looks like objectName
+     */
     @GetMapping("find/name/{objectName}")
     @ResponseBody
     public List<EZObjectView> getByName(@PathVariable String objectName, @RequestParam(name = "page", defaultValue="0") int pageno)
@@ -117,7 +167,11 @@ public class EZObjectController {
         return ezObjectService.getObjectByName(objectName);
     }
 
-
+    /**
+     * @param content content of object
+     * @param pageno number of the page
+     * @return every object with the description which looks like content
+     */
     @GetMapping("find/description/{content}")
     @ResponseBody
     public List<EZObjectView> getByDescription(@PathVariable String content, @RequestParam(name = "page", defaultValue="0") int pageno)
@@ -125,7 +179,12 @@ public class EZObjectController {
         return ezObjectService.getObjectByDescription(content);
     }
 
-
+    /**
+     * @param lat
+     * @param lng
+     * @param pageno  number of the page
+     * @return every object with the latitude and longitude (lat and lng)
+     */
     @GetMapping("find/localisation")
     @ResponseBody
     public List<EZObjectView> getByLocalisation(@RequestParam(name = "Latitude") BigDecimal lat, @RequestParam(name = "Longitude") BigDecimal lng, @RequestParam(name = "page", defaultValue="0") int pageno)
@@ -133,6 +192,11 @@ public class EZObjectController {
         return ezObjectService.getObjectsByLocalisation(lat,lng);
     }
 
+    /**
+     * @param tags list of the tags
+     * @param pageno number of the page
+     * @return every object with possed at least one of the tags
+     */
     @GetMapping("find/tags")
     @ResponseBody
     public List<EZObjectView> getByTags(@RequestBody List<Tag> tags, @RequestParam(name = "page", defaultValue="0") int pageno)
@@ -140,6 +204,15 @@ public class EZObjectController {
         return ezObjectService.getObjectsByTag(tags);
     }
 
+    /**
+     * return the objects with filters applied
+     * @param names list of the names of the object
+     * @param owners list of the usernames of the owner
+     * @param description list of the description of the object
+     * @param tags list of the tags of the object
+     * @param pageno number of page
+     * @return the list of views on the objects
+     */
     @GetMapping("filter")
     public List<EZObjectView> findFiltered(
             @RequestParam(name = "names", required = false) List<String> names,
@@ -154,6 +227,16 @@ public class EZObjectController {
 
         return objects.stream().map(this::convertToView).collect(Collectors.toList());
     }
+
+    /**
+     * return the number of the obejct with filters applied
+     * @param names list of the names of the object
+     * @param owners list of the usernames of the owner
+     * @param description list of the description of the object
+     * @param tags list of the tags of the object
+     * @param pageno number of page
+     * @return the number of the object
+     */
     @GetMapping("filter/count")
     public ResponseEntity<Integer> getFilteredCount(
             @RequestParam(name = "names", required = false) List<String> names,
@@ -166,12 +249,19 @@ public class EZObjectController {
         return ResponseEntity.ok(ezObjectService.getFilteredCount(names,owners,description,tags, pageno));
     }
 
+    /**
+     * @return the list of all the reported objects
+     */
     @GetMapping("find/report")
     public List<EZObjectView> findReportedObject()
     {
         return ezObjectService.getReportedObject();
     }
 
+    /**
+     * @param id
+     * @return the images for an id given
+     */
     @GetMapping("/images/{id}")
     @ResponseBody
     public List<EZObjectImage> getObjecImagePath(@PathVariable int id)
@@ -179,7 +269,10 @@ public class EZObjectController {
         return ezObjectService.getObjectImages(id);
     }
 
-
+    /**
+     * @param obj object to convert
+     * @return a view for a object given
+     */
     public EZObjectView convertToView(EZObject obj)
     {
         User owner  = obj.getOwner();

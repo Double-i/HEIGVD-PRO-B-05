@@ -17,6 +17,10 @@ public class TagController {
     @Autowired
     private TagService tagService;
 
+    /**
+     * @param name name of the tag searched
+     * @return the list of all tags
+     */
     @GetMapping
     public List<Tag> index(
             @RequestParam(value = "name", required = false) String name){

@@ -38,6 +38,11 @@ class AuthenticationController {
     @Autowired
     private UserService userService;
 
+    /**
+     * authenticates the used asked in the request
+     * @param authenticationRequest the request of the user
+     * @return the responseEntity which should contain the cookie
+     */
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest){
 
@@ -47,6 +52,10 @@ class AuthenticationController {
         return generateResponseEntity(authenticationRequest.getUserName());
     }
 
+    /**
+     * refresh the authToken
+     * @return the request HTTP with a new cookie
+     */
     @GetMapping("/authrefresh")
     public ResponseEntity<?> refreshToken(){
         User userDetails = authenticationService.getTheDetailsOfCurrentUser();
@@ -57,6 +66,11 @@ class AuthenticationController {
         }
     }
 
+    /**
+     * signs up the user passed in parameter
+     * @param user
+     * @return a HTTP OK status with a success message
+     */
     @PostMapping(value = "/signup", consumes = "application/json")
     public ResponseEntity<JSONObject> signUp(@RequestBody User user){
         user.setAdmin(false);
@@ -64,6 +78,10 @@ class AuthenticationController {
         return ResponseEntity.ok().body(new SuccessResponse("The user has been stored"));
     }
 
+    /**
+     * logs out the current connected user
+     * @return a HTTP OK status with a success message
+     */
     @GetMapping(value = "/logout")
     public  ResponseEntity<?> logOut(){
 
@@ -82,6 +100,11 @@ class AuthenticationController {
 
     }
 
+    /**
+     * generates a response entity with the username passed in parameter
+     * @param username the username of the user which will be connected
+     * @return the response entity generated
+     */
     private ResponseEntity<?> generateResponseEntity(String username){
         User userDetails = authenticationService.loadByUsername(username);
 

@@ -24,6 +24,13 @@ public class UserController {
     @Autowired
     AuthenticationService authenticationService;
 
+    /**
+     * @param firstName
+     * @param lastName
+     * @param userName
+     * @param email
+     * @return all users filtered by the filters passed in parameters
+     */
     @GetMapping
     public List<User> index(
             @RequestParam(value="firstName", required = false) String firstName,
@@ -34,9 +41,13 @@ public class UserController {
         return userService.filters(firstName, lastName, userName, email);
     }
 
+    /**
+     * @param username username of the user
+     * @param alreadyRead if the user has already read the notification
+     * @return the notifications of a user
+     */
     @GetMapping("/{username}/notifications")
     public List<Notification> getNotifications(@PathVariable String username, @RequestParam(defaultValue="false")boolean alreadyRead) {
-        System.out.println("testUSER "+authenticationService.getTheDetailsOfCurrentUser());
         return userService.getNotifications(username, alreadyRead);
     }
 

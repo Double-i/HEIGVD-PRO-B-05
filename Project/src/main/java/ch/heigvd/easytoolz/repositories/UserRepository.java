@@ -7,10 +7,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
+    /**
+     * @param userName username of the user
+     * @return sort by the username
+     */
     User userNameIs(String userName);
-    List<User> findByFirstNameLike(String firstName);
-    List<User> findByLastNameLike(String lastName);
-    List<User> findByFirstNameLikeAndLastNameLike(String firstName, String lastName);
-    List<User> findByUserNameLike(String userName);
-    List<User> findByEmailLike(String email);
 }

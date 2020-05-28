@@ -9,32 +9,22 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public interface ReportRepository extends JpaRepository<Report,String>, JpaSpecificationExecutor<Report>{
-    List<Report> findReportByReportType_OrderByEZObject(@NotNull ReportType reportType);
-    List<Report> findReportByEZObject_Owner_UserName(String reporter);
-    List<Report> findReportByReporter_UserName(String reported);
-    List<Report> findReportByValidTrue();
-
-
-
-    /*
-    @Query("SELECT ezobject.id, report.type" +
-            " FROM ezobject" +
-            " INNER JOIN report ON report.ezobject = ezobject.id" +
-            " GROUP BY ezobject.id, report.type")   // get all loans with dateStart during the new loan period
-    List<Report> findAll();
+    /**
+     * @param reportType type of the report
+     * @return sort the reports by a report type
      */
+    List<Report> findReportByReportType_OrderByEZObject(@NotNull ReportType reportType);
 
-/*
-    @Query("UPDATE report" +
-    " SET valid = false" +
-    " WHERE report.ezobject = :idEZobject")
-   void reportObject1(int idEZobject);
+    /**
+     * @param owner the username of the report
+     * @return sort the reports by the username of the owner of the object
+     */
+    List<Report> findReportByEZObject_Owner_UserName(String owner);
 
-    @Query("UPDATE ezObject" +
-            " SET is_active = false" +
-            " WHERE id = :idEZobject")
-    void reportObject2(int idEZobject);
-    */
-
+    /**
+     * @param reported
+     * @return sorts the reports by the username of reporter
+     */
+    List<Report> findReportByReporter_UserName(String reported);
 }
 

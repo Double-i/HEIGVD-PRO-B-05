@@ -9,6 +9,9 @@ public class StompPrincipal implements Principal {
         this.name = name;
     }
 
+    /**
+     * @return the name of the stomp
+     */
     @Override
     public String getName() {
         return this.name;

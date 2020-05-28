@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CountryRepository extends JpaRepository<Country, Integer> {
-    List<Country> findByCountryLike(String country);
+    /**
+     * @param country the name of the country
+     * @return sort by the name of the country (must exactly the value of the parameter)
+     */
     List<Country> findByCountry(String country);
 }

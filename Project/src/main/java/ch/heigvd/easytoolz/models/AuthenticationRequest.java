@@ -23,9 +23,6 @@ public class AuthenticationRequest implements Serializable {
     private String userName;
     private String password;
 
-
-
-    //need default constructor for JSON Parsing
     public AuthenticationRequest() {
     }
 

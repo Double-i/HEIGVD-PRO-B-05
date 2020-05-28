@@ -23,6 +23,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     AuthenticationService service;
 
 
+    /**
+     * configure message broker
+     *
+     * Message borkers translates a message from the messaging protocol of the sender
+     * to the protocol of the receiver
+     *
+     * @param config
+     */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/secured/user/queue/loan-room");
@@ -30,9 +38,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     }
 
+    /**
+     * Add endpoints from where to send messages
+     * Using the STOMP protocol
+     * @param registry
+     */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
 
+        //create a custom handshake to create a unique session ID
         class Handshake extends DefaultHandshakeHandler
         {
             @Override

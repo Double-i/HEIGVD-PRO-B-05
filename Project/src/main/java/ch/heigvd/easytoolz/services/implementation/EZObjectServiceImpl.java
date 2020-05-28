@@ -115,6 +115,8 @@ public class EZObjectServiceImpl implements EZObjectService {
 
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<EZObject> countRoot = countQuery.from(EZObject.class);
+
+        //query to count objects
         countQuery.select(cb.count(countRoot)).where(buildPredicates(namesList,ownersList,descriptionList,tagList,cb,countRoot));
         Long count =  entityManager.createQuery(countQuery).getSingleResult();
 
@@ -172,6 +174,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         newObject.setOwner(owner);
         ezObjectRepository.save(newObject);
 
+        //only insert images if there are images
         if(files != null)
         {
             List<EZObjectImage>images = new ArrayList<>();
@@ -218,6 +221,7 @@ public class EZObjectServiceImpl implements EZObjectService {
         ezObjectRepository.save(updated);
     }
 
+    //handled with soft delete
     public void deleteObject(int id) throws Exception {
         EZObject toDelete = ezObjectRepository.findByID(id);
 

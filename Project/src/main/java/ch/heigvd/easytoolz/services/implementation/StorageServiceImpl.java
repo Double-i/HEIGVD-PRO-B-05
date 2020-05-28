@@ -80,9 +80,5 @@ public class StorageServiceImpl implements StorageService {
         }
     }
 
-    @Override
-    public void delete(String file)
-    {
 
-    }
 }

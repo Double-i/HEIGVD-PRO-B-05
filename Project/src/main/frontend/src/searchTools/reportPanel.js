@@ -98,11 +98,11 @@ class ReportPanel extends React.Component {
                         () => {
                             this.handleSubmit()
                             this.props.onHide()
-                        }}>Send</Button>
+                        }}>Signaler</Button>
                     <Button variant="danger" onClick={
                         () => {
                             this.props.onHide()
-                        }}>Close</Button>
+                        }}>Annuler</Button>
                 </Modal.Footer>
 
             </Modal>

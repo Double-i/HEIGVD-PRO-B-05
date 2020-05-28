@@ -6,27 +6,29 @@ import Button from "react-bootstrap/Button";
 import BorrowPanel from "./BorrowPanel";
 import ReportPanel from "./reportPanel";
 
-class ToolDetails extends React.Component{
+/**
+ * Tool details Page.
+ */
+class ToolDetails extends React.Component {
 
     SEARCH_URI = '/objects'
 
-    constructor(props)
-    {
+    constructor(props) {
         super(props);
         this.state = {
             description: "",
             name: "",
             images:
-            [{
-                src : undefined,
-                thumbnail: undefined,
-                thumbnailWidth: undefined,
-                thumbnailHeight:undefined,
-            }],
+                [{
+                    src: undefined,
+                    thumbnail: undefined,
+                    thumbnailWidth: undefined,
+                    thumbnailHeight: undefined,
+                }],
 
             objectTags: [],
             owner: {},
-            toolId:"",
+            toolId: "",
             borrowModalShow: false,
             reportModalShow: false
         }
@@ -39,21 +41,22 @@ class ToolDetails extends React.Component{
                 let temp = []
                 response.images.map(image => (
                     temp.push(
-                    {
-                        src : "http://127.0.0.1:8080/api/image/"+image.pathToImage.toString(),
-                        thumbnail :"http://127.0.0.1:8080/api/image/"+image.pathToImage.toString(),
-                        thumbnailWidth: "10%",
-                        thumbnailHeight: "10%"
-                    })
+                        {
+                            src: "http://127.0.0.1:8080/api/image/" + image.pathToImage.toString(),
+                            thumbnail: "http://127.0.0.1:8080/api/image/" + image.pathToImage.toString(),
+                            thumbnailWidth: "10%",
+                            thumbnailHeight: "10%"
+                        })
                 ));
 
                 this.setState(
-                    {images : temp,
-                        owner : response.owner,
-                        name : response.name,
-                        description : response.description,
-                        objectTags : response.objectTags,
-                        toolId:response.id
+                    {
+                        images: temp,
+                        owner: response.owner,
+                        name: response.name,
+                        description: response.description,
+                        objectTags: response.objectTags,
+                        toolId: response.id
                     })
             })
             .catch(err => alert(err));
@@ -66,35 +69,35 @@ class ToolDetails extends React.Component{
     setBorrowModalShow(value) {
         this.setState({borrowModalShow: value});
     }
-    setReportModalShow(value)
-    {
-        this.setState({reportModalShow:value})
+
+    setReportModalShow(value) {
+        this.setState({reportModalShow: value})
     }
-    render()
-    {
+
+    render() {
         return (
-        <Container class="align-content-center">
-            {}
-            <div className="detailsTitle" style={{
-                backgroundImage: `url(${this.state.images.length > 0 ? this.state.images[0].src : "http://127.0.0.1:8080/api/image/default.png"})`,
-                backgroundRepeat: 'no-repeat',
-                height: '400px'
-            }}>
-                <div className="tagsDetails">
-                {
-                    this.state.objectTags.map(tag =>(
-                        <Button class="btn-light" style={{marginRight: "10px"}}>{tag.name}</Button>
-                    ))
-                }
-                </div>
-            </div>
-             <Card style={
+            <Container class="align-content-center">
+                {}
+                <div className="detailsTitle" style={{
+                    backgroundImage: `url(${this.state.images.length > 0 ? this.state.images[0].src : "http://127.0.0.1:8080/api/image/default.png"})`,
+                    backgroundRepeat: 'no-repeat',
+                    height: '400px'
+                }}>
+                    <div className="tagsDetails">
                         {
-                            width:'100%',
-                            margin: '0 auto',
-                            float: 'none',
-                            marginBottom: '10px'
-                        }}>
+                            this.state.objectTags.map(tag => (
+                                <Button class="btn-light" style={{marginRight: "10px"}}>{tag.name}</Button>
+                            ))
+                        }
+                    </div>
+                </div>
+                <Card style={
+                    {
+                        width: '100%',
+                        margin: '0 auto',
+                        float: 'none',
+                        marginBottom: '10px'
+                    }}>
                     <Card.Body>
                         <Card.Title>
                             {this.state.name}
@@ -111,52 +114,51 @@ class ToolDetails extends React.Component{
                         </Card.Text>
 
 
-
                     </Card.Body>
 
-                        {/*Modals*/}
-                        <ReportPanel
-                            show={this.state.reportModalShow}
-                            onHide={() => this.setReportModalShow(false)}
-                            toolId={this.state.toolId}
-                        />
-                        <BorrowPanel
-                            show={this.state.borrowModalShow}
-                            onHide={() => this.setBorrowModalShow(false)}
-                            tool={{
-                                    name:this.state.name,
-                                    id:this.state.toolId
-                                }}
+                    {/*Modals*/}
+                    <ReportPanel
+                        show={this.state.reportModalShow}
+                        onHide={() => this.setReportModalShow(false)}
+                        toolId={this.state.toolId}
+                    />
+                    <BorrowPanel
+                        show={this.state.borrowModalShow}
+                        onHide={() => this.setBorrowModalShow(false)}
+                        tool={{
+                            name: this.state.name,
+                            id: this.state.toolId
+                        }}
 
 
-                        />
-                        <Card.Footer>
-                            <Button
-                                disabled={false} //TODO : avoir une props de l'item isBorrowable !
-                                key={"buttonId" + this.props.id}
-                                style={{
-                                    marginBottom: '10px',
-                                    marginRight: '10px'
-                                }}
-                                onClick={() => this.setBorrowModalShow(true)}
-                            >
-                                Emprunter
-                            </Button>
+                    />
+                    <Card.Footer>
+                        <Button
+                            disabled={false}
+                            key={"buttonId" + this.props.id}
+                            style={{
+                                marginBottom: '10px',
+                                marginRight: '10px'
+                            }}
+                            onClick={() => this.setBorrowModalShow(true)}
+                        >
+                            Emprunter
+                        </Button>
 
 
-                            <Button
-                                disabled={false} //TODO : avoir une props de l'item isBorrowable !
-                                key={"buttonId" + this.props.id}
-                                style={{
-                                    marginBottom: '10px'
-                                }}
-                                onClick={() => this.setReportModalShow(true)}
-                            >
-                                Signaler
-                            </Button>
-                        </Card.Footer>
+                        <Button
+                            disabled={false}
+                            key={"buttonId" + this.props.id}
+                            style={{
+                                marginBottom: '10px'
+                            }}
+                            onClick={() => this.setReportModalShow(true)}
+                        >
+                            Signaler
+                        </Button>
+                    </Card.Footer>
                 </Card>
-            <Gallery  images={this.state.images}/>
+                <Gallery images={this.state.images}/>
 
             </Container>
         )

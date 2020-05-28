@@ -99,7 +99,7 @@ class BorrowPanel extends React.Component {
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={this.props.onHide}>Close</Button>
+                    <Button onClick={this.props.onHide}>Annuler</Button>
                 </Modal.Footer>
             </Modal>
         );

@@ -10,11 +10,18 @@ const mapStyles = {
     width :  '80%'
 }
 
+/**
+ * The component containing the google-map
+ */
 class MapContainer extends React.Component {
     static contextType = SessionContext
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
 
+    /**
+     * Constructor
+     * @param props Should contain a list of tools
+     */
     constructor(props)
     {
         console.log(props);
@@ -27,29 +34,16 @@ class MapContainer extends React.Component {
             searchTags : [],
             showingInfoWindow: false,
             activeMarker: {},
-            selectedTool: {},
-            initialPos: {lat:46.6, lng:6.6}
+            selectedTool: {}
         }
     }
 
-    componentDidMount() {
-
-       /* if (!navigator.geolocation) {
-            alert("Geolocaton is not supported by your browser");
-        } else {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const initialPosition = JSON.stringify(position);
-                    this.setState({ initialPosition });
-                    console.log(this.state.initialPosition);
-                },
-                (error) => console.log("Geolocation : "+error.message),
-                { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-            );
-        }*/
-
-    }
-
+    /**
+     * Called whenever a marker on the map is clicked
+     * @param props Should contain the selected tool's name
+     * @param marker the marker that was clicked
+     * @param e Event (unused)
+     */
     onMarkerClick = (props, marker, e) => {
         console.log("Clicked on marker !");
         this.setState({
@@ -60,6 +54,10 @@ class MapContainer extends React.Component {
         console.log(this.state.selectedTool);
     }
 
+    /**
+     * Called whenever the map is clicked
+     * @param props
+     */
     onMapClicked = (props) => {
         if (this.state.showingInfoWindow) {
             this.setState({
@@ -69,6 +67,12 @@ class MapContainer extends React.Component {
         }
     };
 
+    /**
+     * gets all the tools With the address of the current selected Tool
+     * (aka position of the clicked marker)
+     * @param selectedTool the currently selected tool (corresponding to the clicked marker)
+     * @returns multiple divs, each containing info on a tool
+     */
     getToolsFromMarker(selectedTool)
     {
         console.log(selectedTool);
@@ -93,6 +97,10 @@ class MapContainer extends React.Component {
         }
     }
 
+    /**
+     * gets the infoWindow corresponding to the selected tool
+     * @returns {*}
+     */
     getInfoWindow()
     {
         console.log("Reloading InfoWindow")
@@ -105,6 +113,10 @@ class MapContainer extends React.Component {
         </InfoWindow>;
     }
 
+    /**
+     * gets a marker for each tool passed as prop to the component
+     * @returns all markers corresponding to the tools
+     */
     getMarkers()
     {
         return this.props.tools.map(tool => {

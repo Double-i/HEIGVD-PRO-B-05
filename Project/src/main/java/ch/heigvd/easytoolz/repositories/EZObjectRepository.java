@@ -97,14 +97,14 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
     //REQUETES SUR DES PROJECTIONS(VUES)
 
     /**
-     * permet de récuperer un objet via son ID
+     * get object by IDs
      * @param id
      * @return
      */
     EZObjectView getEZObjectByID(int id);
 
     /**
-     * Permet de récuperer une liste d'objet qui sont actif
+     * get all active objects
      * @param active
      * @param page
      * @return
@@ -112,28 +112,28 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
     Page<EZObjectView> getAllByIsActive(boolean active, Pageable page);
 
     /**
-     * permet de récuperer une liste d'objets filtré par utilisateur
+     * get object by username
      * @param username
      * @return
      */
     List<EZObjectView> getByOwner_UserName(String username);
 
     /**
-     * permet de récupérer une liste d'objet filtré par contenu de leurs noms
+     * get object by content of its name
      * @param name
      * @return
      */
     List<EZObjectView> getAllByNameContaining(String name);
 
     /**
-     * permet de récuperer une liste d'objet filtré par contenu de leurs description
+     * get object by content of its description
      * @param name
      * @return
      */
     List<EZObjectView> getAllByDescriptionContaining(String name);
 
     /**
-     * permet de récuperer un objet grace aux coordonées géographique de l'objet
+     * get object by geographic coordinates(from the current user)
      * @param lat
      * @param lng
      * @return
@@ -141,14 +141,14 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
     List<EZObjectView> getAllByOwner_Address_LatAndOwner_Address_Lng(BigDecimal lat,BigDecimal lng);
 
     /**
-     * Permet de récuperer une liste d'objet grace a leurs catégories
+     * get all object by tags
      * @param tags
      * @return
      */
     List<EZObjectView> getAllByObjectTagsIn(List<Tag> tags);
 
     /**
-     * permet de récuprer une liste  d'ID des objet signalés
+     * get all reported object
      * @return
      */
     @Query("SELECT e.ID FROM EZObject e" +
@@ -156,14 +156,14 @@ public interface EZObjectRepository extends JpaRepository<EZObject, String> {
     List<Integer> getReportedObject();
 
     /**
-     * permet de récuperer une liste d'objets
+     * get all object by IDs in List
      * @param ezObjectListID
      * @return
      */
     List<EZObjectView> getAllByIDIn(List<Integer> ezObjectListID);
 
     /**
-     * Compte tout les objet actif
+     * Count all active objects
      * @param active
      * @return
      */

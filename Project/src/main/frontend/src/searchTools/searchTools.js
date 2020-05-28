@@ -6,13 +6,20 @@ import {Form, Button,  Row, Col} from "react-bootstrap";
 import {  GoogleApiWrapper, Marker, InfoWindow} from 'google-maps-react';
 import MapContainer  from "./map";
 
-
+/**
+ * The component for the home page, containing a list of tools
+ * and a map showing their location
+ */
 export class SearchTools extends React.Component{
     SEARCH_URI = '/objects'
     TAGS_URI = '/tags'
 
     static contextType = SessionContext
 
+    /**
+     * Constructor
+     * @param props Nothing, normally
+     */
     constructor(props){
         super(props);
 
@@ -36,7 +43,9 @@ export class SearchTools extends React.Component{
         this.handleTagChange = this.handleTagChange.bind(this)
     }
 
-    //Au chargement, on affiche tout les tools
+    /**
+     * Au chargement, on affiche tout les tools
+     */
     componentDidMount() {
 
         //all the objects
@@ -77,6 +86,10 @@ export class SearchTools extends React.Component{
 
     }
 
+    /**
+     * Searches for the tools corresponding to the given criteria
+     * @param page The page number of the tool list
+     */
     loadPage(page)
     {
         let URL = this.SEARCH_URI
@@ -115,7 +128,11 @@ export class SearchTools extends React.Component{
                     console.log('Connection PAS ok', error)
                 })
     }
-    //En cas de submit, on recherche la query dans
+
+    /**
+     * Handles the user's query for tools
+     * @param event
+     */
     handleSubmit(event){
 
         //Si le champ est vide, on affiche tout les objects
@@ -188,7 +205,10 @@ export class SearchTools extends React.Component{
                 })
     }
 
-    //Dynamic update of searched tags fields
+    /**
+     * Updates the selected tags list, for later query
+     * @param e tag click
+     */
     handleTagChange(e){
         let options = e.target.options;
         let value = [];
@@ -200,50 +220,10 @@ export class SearchTools extends React.Component{
         this.setState({searchTags: value});
     }
 
-    onMarkerClick = (props, marker, e) => {
-        this.setState({
-            selectedTool: this.state.tools.find(tool => tool.name ===props.name),
-            activeMarker: marker,
-            showingInfoWindow: true
-        });
-    }
-
-    onMapClicked = (props) => {
-        if (this.state.showingInfoWindow) {
-            this.setState({
-                showingInfoWindow: false,
-                activeMarker: null
-            })
-        }
-    };
-
-    getInfoWindow()
-    {
-        return <InfoWindow
-            marker = {this.state.activeMarker}
-            visible = {this.state.showingInfoWindow}>
-            <div>
-                <h1>{this.state.selectedTool === undefined ? "" : this.state.selectedTool.name}</h1>
-                <p>
-                    {this.state.selectedTool === undefined ? "" : this.state.selectedTool.description}
-                </p>
-            </div>
-        </InfoWindow>;
-    }
-
-    getMarkers()
-    {
-        return this.state.tools.map((tool, idx) => {
-            return <Marker onClick = {this.onMarkerClick}
-                           key ={`search-tool-maps-marker-${idx}-${tool.name}`}
-                           name = {tool.name}
-                           position={{
-                               lat: tool.owner.address.lat,
-                               lng: tool.owner.address.lng
-                           }}/>
-        })
-    }
-
+    /**
+     * Renders the component
+     * @returns The main component of the home page
+     */
     render(){
         return (
             <>

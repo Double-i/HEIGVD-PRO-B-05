@@ -1,0 +1,92 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.notification-container{
+  min-width: 450px;
+  overflow: hidden;
+}
+.notification-item-list{
+  max-width: 470px;
+  width:100%;
+}
+.notification-item{
+  cursor: pointer;
+  padding: 5px;
+  min-width: 400px;
+  margin-top: 5px;
+}
+.notification-item:hover{
+  background-color: #007bff;
+  color: #ffffff;
+}
+.notification-item-body{
+  padding: 5px;
+}
+.text-link{
+  left:auto;
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: #0f6674;
+}
+.notification-item-list{
+  max-height: 260px;
+  min-width: 450px;
+  overflow-y: auto;
+}
+
+.paginationTools{
+  margin-top: 10px;
+}
+
+.paginationTools li:hover a{
+  cursor: pointer;
+}
+
+.speechBubble{
+  cursor: pointer;
+}
+
+.tagsDetails{
+  position: relative;
+  top: 10px;
+  left: 10px;
+}
+
+.onHoverCusor{
+  cursor: pointer;
+}

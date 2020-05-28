@@ -30,11 +30,13 @@ build/
 ### VS Code ###
 .vscode/
 
-
-##System
+*.properties
 *.ini
-
 
 src/main/frontend/node_modules
 src/main/frontend/node
 src/main/frontend/build
+
+src/main/resources/application.properties
+
+images/*

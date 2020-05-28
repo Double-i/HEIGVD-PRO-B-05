@@ -1,2 +1,5 @@
-
+Project/.idea
+Project/images/*
 *.ini
+*.properties
+.idea

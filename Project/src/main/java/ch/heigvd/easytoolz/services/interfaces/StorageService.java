@@ -10,13 +10,28 @@ import java.nio.file.Path;
 
 public interface StorageService {
 
+    /**
+     * Set the root of image directory
+     * @param prop proprety to be loaded from application propreties files
+     * @throws Exception
+     */
     void init(FileStorageProperties prop) throws Exception;
 
-
+    /**
+     * Load images
+     * @param fileName
+     * @return
+     */
     Path load(String fileName);
     Resource loadAsRessource(String filename) throws Exception;
 
+    /**
+     * Store image into server
+     * @param file
+     * @param ezObject
+     * @param img
+     * @throws Exception
+     */
     void store(MultipartFile file, EZObject ezObject, EZObjectImage img) throws Exception;
 
-    void delete(String filename);
 }
